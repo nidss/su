@@ -300,11 +300,10 @@ const I18N = {
     /* terms */
     "terms.eyebrow":"ขั้นตอนที่ 2","terms.title":"ข้อตกลงและเงื่อนไข",
     "terms.sub":"โปรดอ่านและยอมรับเอกสารก่อนดำเนินการต่อ",
-    "terms.info":"กรุณาอ่านเอกสารทั้ง 2 ฉบับก่อนกดยอมรับ",
+    "terms.info":"กรุณาอ่านเอกสารทั้ง 3 ฉบับก่อนกดยอมรับ",
     "doc.privacy":"นโยบายคุ้มครองข้อมูลส่วนบุคคล","doc.privacy.d":"ข้อมูลการเก็บและใช้ข้อมูลส่วนบุคคล",
     "doc.rules":"กฎ กติกาการแข่งขัน","doc.rules.d":"ระเบียบและข้อบังคับการแข่งขัน",
-    "doc.raceguar":"การค้ำประกันการแข่งขัน","doc.raceguar.d":"เงื่อนไขการค้ำประกันการแข่งขัน",
-    "doc.dmgguar":"การค้ำประกันความเสียหาย","doc.dmgguar.d":"เงื่อนไขการค้ำประกันความเสียหาย",
+    "doc.guarantee":"การค้ำประกันการแข่งขันและการค้ำประกันความเสียหาย","doc.guarantee.d":"เงื่อนไขการค้ำประกันการแข่งขันและความเสียหาย",
     "doc.read":"กดอ่าน","doc.accepted":"รับทราบและยอมรับแล้ว","doc.pending":"ยังไม่ได้อ่าน",
     "modal.close":"ปิด","modal.accept":"รับทราบและยอมรับ",
     /* applicant */
@@ -387,11 +386,10 @@ const I18N = {
     "ph.password":"At least 6 characters","ph.confirm":"Re-enter your password","ph.loginid":"Email or username",
     "terms.eyebrow":"Step 2","terms.title":"Terms & Conditions",
     "terms.sub":"Please read and accept the documents before continuing",
-    "terms.info":"Please read both documents before accepting.",
+    "terms.info":"Please read all 3 documents before accepting.",
     "doc.privacy":"Personal Data Protection Policy","doc.privacy.d":"How we collect and use personal data",
     "doc.rules":"Competition Rules","doc.rules.d":"Regulations and rules of the competition",
-    "doc.raceguar":"Competition Guarantee","doc.raceguar.d":"Terms of competition guarantee",
-    "doc.dmgguar":"Damage Guarantee","doc.dmgguar.d":"Terms of damage guarantee",
+    "doc.guarantee":"Competition & Damage Guarantee","doc.guarantee.d":"Terms of competition and damage guarantee",
     "doc.read":"Read","doc.accepted":"Acknowledged & Accepted","doc.pending":"Not read yet",
     "modal.close":"Close","modal.accept":"Acknowledge & Accept",
     "ap.eyebrow":"Step 3","ap.title":"Applicant Information","ap.sub":"ข้อมูลผู้สมัคร",
@@ -470,7 +468,7 @@ const state = {
   step:"auth",
   authTab:"register",
   account:null,
-  terms:{privacy:false,rules:false,raceguar:false,dmgguar:false},
+  terms:{privacy:false,rules:false,guarantee:false},
   applicant:{},
   racer:{},
   parking:{pit:"",privatePit:false},
@@ -646,7 +644,7 @@ SCREEN_INIT.auth = function(){
 function markField(id,msg){const f=el(id).closest('.field');f.classList.add('invalid');const em=f.querySelector('.err-msg');if(em)em.textContent=msg;f.scrollIntoView({behavior:'smooth',block:'center'});}
 
 /* ---- TERMS ---- */
-const DOC_KEYS=[["privacy","doc.privacy","doc.privacy.d",true],["rules","doc.rules","doc.rules.d",true],["raceguar","doc.raceguar","doc.raceguar.d",false],["dmgguar","doc.dmgguar","doc.dmgguar.d",false]];
+const DOC_KEYS=[["privacy","doc.privacy","doc.privacy.d",true],["rules","doc.rules","doc.rules.d",true],["guarantee","doc.guarantee","doc.guarantee.d",true]];
 SCREENS.terms = function(){
   const docs = DOC_KEYS.map(([k,tk,dk,readable])=>{
     const acc=state.terms[k];
@@ -679,7 +677,7 @@ SCREEN_INIT.terms = function(){
   const nx=el('termsNext'); nx.onclick=()=>{ if(Object.values(state.terms).every(Boolean)) go('applicant'); else toast(t('t.acceptall')); };
 };
 function openDoc(key){
-  const map={privacy:'doc.privacy',rules:'doc.rules',raceguar:'doc.raceguar',dmgguar:'doc.dmgguar'};
+  const map={privacy:'doc.privacy',rules:'doc.rules',guarantee:'doc.guarantee'};
   el('modalTitle').textContent=t(map[key]);
   el('modalBody').innerHTML=DOC_BODY[key][state.lang];
   el('modalClose').textContent=t('modal.close');
@@ -701,13 +699,9 @@ const DOC_BODY={
     th:`<h4>1. คุณสมบัติผู้เข้าแข่งขัน</h4><p>ผู้เข้าแข่งขันต้องมีอายุ 18 ปีบริบูรณ์ขึ้นไป และมีใบอนุญาตขับขี่ที่ถูกต้อง</p><h4>2. รถที่ใช้แข่งขัน</h4><p>รถแข่ง 1 คัน สมัครได้เพียง 1 รุ่นการแข่งขันเท่านั้น รถต้องผ่านการตรวจสภาพความปลอดภัยก่อนลงแข่ง</p><h4>3. อุปกรณ์ความปลอดภัย</h4><p>ผู้แข่งขันต้องสวมหมวกกันน็อค ชุดแข่ง และอุปกรณ์นิรภัยตามมาตรฐานที่กำหนดตลอดเวลาที่อยู่ในสนาม</p><h4>4. การประพฤติ</h4><p>ห้ามใช้สารกระตุ้น ห้ามประพฤติผิดกติกาหรือมารยาท ผู้จัดมีสิทธิ์ตัดสิทธิ์ผู้ที่ฝ่าฝืน</p><h4>5. การตัดสิน</h4><p>การตัดสินของคณะกรรมการถือเป็นที่สิ้นสุด</p>`,
     en:`<h4>1. Eligibility</h4><p>Competitors must be at least 18 years old and hold a valid driver's license.</p><h4>2. Competition Vehicles</h4><p>One race car may register for only one competition model. Vehicles must pass a safety inspection before racing.</p><h4>3. Safety Equipment</h4><p>Competitors must wear helmets, racing suits, and approved safety gear at all times on the track.</p><h4>4. Conduct</h4><p>No performance-enhancing substances or unsportsmanlike conduct. Organizers may disqualify violators.</p><h4>5. Judging</h4><p>The decision of the judging committee is final.</p>`
   },
-  raceguar:{
-    th:`<h4>การค้ำประกันการแข่งขัน</h4><p>ผู้เข้าแข่งขันตกลงวางหลักประกันการเข้าร่วมการแข่งขันตามที่ผู้จัดกำหนด เพื่อยืนยันการเข้าร่วมและปฏิบัติตามกำหนดการแข่งขัน</p><p>หลักประกันจะถูกคืนภายหลังสิ้นสุดการแข่งขัน หากผู้เข้าแข่งขันปฏิบัติตามเงื่อนไขครบถ้วน และไม่มีความเสียหายหรือค่าปรับใดๆ</p><p>ในกรณีที่ผู้เข้าแข่งขันสละสิทธิ์หรือไม่มาแข่งขันโดยไม่แจ้งล่วงหน้า ผู้จัดมีสิทธิ์ริบหลักประกันตามที่เห็นสมควร</p>`,
-    en:`<h4>Competition Guarantee</h4><p>Competitors agree to place a participation guarantee as specified by the organizer to confirm participation and adherence to the competition schedule.</p><p>The guarantee will be refunded after the competition ends, provided all conditions are met and there are no damages or penalties.</p><p>If a competitor withdraws or fails to attend without prior notice, the organizer reserves the right to forfeit the guarantee as it deems appropriate.</p>`
-  },
-  dmgguar:{
-    th:`<h4>การค้ำประกันความเสียหาย</h4><p>ผู้เข้าแข่งขันตกลงรับผิดชอบต่อความเสียหายใดๆ ที่เกิดขึ้นต่อทรัพย์สินของผู้จัด สนามแข่ง หรือบุคคลอื่น อันเนื่องมาจากการกระทำของตน</p><p>ผู้จัดอาจเรียกเก็บหลักประกันความเสียหาย และจะคืนให้เมื่อไม่มีความเสียหายเกิดขึ้น</p><p>หากเกิดความเสียหาย ผู้จัดมีสิทธิ์หักค่าเสียหายจากหลักประกัน และผู้เข้าแข่งขันต้องรับผิดชอบส่วนที่เกินกว่าหลักประกัน</p>`,
-    en:`<h4>Damage Guarantee</h4><p>Competitors agree to be responsible for any damage caused to the organizer's property, the racetrack, or others resulting from their actions.</p><p>The organizer may collect a damage guarantee, refundable when no damage occurs.</p><p>In case of damage, the organizer may deduct costs from the guarantee, and the competitor remains liable for any amount exceeding it.</p>`
+  guarantee:{
+    th:`<h4>การค้ำประกันการแข่งขัน</h4><p>ผู้เข้าแข่งขันตกลงวางหลักประกันการเข้าร่วมการแข่งขันตามที่ผู้จัดกำหนด เพื่อยืนยันการเข้าร่วมและปฏิบัติตามกำหนดการแข่งขัน</p><p>หลักประกันจะถูกคืนภายหลังสิ้นสุดการแข่งขัน หากผู้เข้าแข่งขันปฏิบัติตามเงื่อนไขครบถ้วน และไม่มีความเสียหายหรือค่าปรับใดๆ</p><p>ในกรณีที่ผู้เข้าแข่งขันสละสิทธิ์หรือไม่มาแข่งขันโดยไม่แจ้งล่วงหน้า ผู้จัดมีสิทธิ์ริบหลักประกันตามที่เห็นสมควร</p><h4>การค้ำประกันความเสียหาย</h4><p>ผู้เข้าแข่งขันตกลงรับผิดชอบต่อความเสียหายใดๆ ที่เกิดขึ้นต่อทรัพย์สินของผู้จัด สนามแข่ง หรือบุคคลอื่น อันเนื่องมาจากการกระทำของตน</p><p>ผู้จัดอาจเรียกเก็บหลักประกันความเสียหาย และจะคืนให้เมื่อไม่มีความเสียหายเกิดขึ้น</p><p>หากเกิดความเสียหาย ผู้จัดมีสิทธิ์หักค่าเสียหายจากหลักประกัน และผู้เข้าแข่งขันต้องรับผิดชอบส่วนที่เกินกว่าหลักประกัน</p>`,
+    en:`<h4>Competition Guarantee</h4><p>Competitors agree to place a participation guarantee as specified by the organizer to confirm participation and adherence to the competition schedule.</p><p>The guarantee will be refunded after the competition ends, provided all conditions are met and there are no damages or penalties.</p><p>If a competitor withdraws or fails to attend without prior notice, the organizer reserves the right to forfeit the guarantee as it deems appropriate.</p><h4>Damage Guarantee</h4><p>Competitors agree to be responsible for any damage caused to the organizer's property, the racetrack, or others resulting from their actions.</p><p>The organizer may collect a damage guarantee, refundable when no damage occurs.</p><p>In case of damage, the organizer may deduct costs from the guarantee, and the competitor remains liable for any amount exceeding it.</p>`
   }
 };
 
@@ -1061,7 +1055,7 @@ SCREENS.done = function(){
 SCREEN_INIT.done = function(){
   el('newReg').onclick=()=>{
     state.step='auth';state.authTab='register';
-    state.terms={privacy:false,rules:false,raceguar:false,dmgguar:false};
+    state.terms={privacy:false,rules:false,guarantee:false};
     state.applicant={};state.racer={};state.parking={pit:'',privatePit:false};
     state.bank={};state.discount={code:'',amount:0};state.files={};state.tax=false;state.result=null;
     genTakenPits();render();
