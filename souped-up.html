@@ -1,0 +1,1118 @@
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#0a0b0d;
+  --bg-2:#111318;
+  --panel:#15181e;
+  --panel-2:#1b1f27;
+  --line:#2a2f3a;
+  --line-2:#363c49;
+  --txt:#e8eaee;
+  --txt-dim:#9aa1ad;
+  --txt-faint:#6b7280;
+  --red:#e10600;
+  --red-2:#ff2b1c;
+  --amber:#ffb400;
+  --green:#25c26e;
+  --carbon:repeating-linear-gradient(45deg,#0e0f12 0 2px,#121317 2px 4px);
+  --radius:12px;
+  --shadow:0 12px 40px rgba(0,0,0,.55);
+  --font:'Rajdhani','Noto Sans Thai',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:
+    radial-gradient(1200px 600px at 50% -200px,rgba(225,6,0,.18),transparent 60%),
+    radial-gradient(900px 500px at 100% 100%,rgba(255,180,0,.06),transparent 60%),
+    var(--bg);
+  color:var(--txt);
+  font-family:var(--font);
+  min-height:100vh;
+  letter-spacing:.2px;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%}
+button{font-family:inherit}
+input,select,textarea{font-family:inherit}
+
+/* ---------- Top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:40;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px clamp(16px,4vw,48px);
+  background:rgba(10,11,13,.82);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:2px}
+.brand .mark{
+  width:38px;height:38px;border-radius:9px;
+  background:linear-gradient(135deg,var(--red),#7a0400);
+  display:grid;place-items:center;font-size:20px;font-weight:800;
+  box-shadow:0 4px 14px rgba(225,6,0,.5);position:relative;overflow:hidden;
+}
+.brand .mark::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent 0 6px,rgba(0,0,0,.25) 6px 12px)}
+.brand small{display:block;font-size:10px;letter-spacing:3px;color:var(--txt-dim);font-weight:600}
+.brand b{font-size:20px}
+.lang-switch{display:flex;border:1px solid var(--line-2);border-radius:999px;overflow:hidden}
+.lang-switch button{
+  background:transparent;color:var(--txt-dim);border:0;padding:7px 15px;
+  font-weight:700;font-size:13px;letter-spacing:1px;cursor:pointer;transition:.15s;
+}
+.lang-switch button.active{background:var(--red);color:#fff}
+
+/* ---------- Layout ---------- */
+.wrap{max-width:900px;margin:0 auto;padding:clamp(18px,4vw,40px) clamp(14px,4vw,20px) 80px}
+.card{
+  background:linear-gradient(180deg,var(--panel),var(--bg-2));
+  border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.card-pad{padding:clamp(20px,4vw,34px)}
+.speed-line{height:4px;background:linear-gradient(90deg,var(--red),var(--amber),transparent)}
+
+/* ---------- Stepper ---------- */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 8px;padding:0 clamp(14px,4vw,20px)}
+.stepper .st{
+  flex:1;min-width:70px;font-size:10px;letter-spacing:.5px;color:var(--txt-faint);
+  padding:9px 8px 8px;border-top:3px solid var(--line);text-transform:uppercase;font-weight:600;
+  transition:.2s;
+}
+.stepper .st.active{color:#fff;border-top-color:var(--red)}
+.stepper .st.done{color:var(--green);border-top-color:var(--green)}
+.stepper .st .n{opacity:.6;margin-right:4px}
+
+h1.page-title{font-size:clamp(22px,4vw,30px);margin:0 0 4px;font-weight:700;letter-spacing:.5px}
+.page-sub{color:var(--txt-dim);margin:0 0 22px;font-size:14px}
+.eyebrow{color:var(--red-2);font-weight:700;letter-spacing:3px;font-size:12px;text-transform:uppercase;margin:0 0 8px}
+
+/* ---------- Forms ---------- */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid .full{grid-column:1/-1}
+@media(max-width:640px){.grid{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:2px}
+.field label{font-size:13px;color:var(--txt-dim);font-weight:600;letter-spacing:.3px}
+.field label .req{color:var(--red-2);margin-left:3px}
+.field .hint{font-size:11px;color:var(--txt-faint);line-height:1.5}
+.control{
+  background:var(--bg);border:1px solid var(--line-2);color:var(--txt);
+  border-radius:9px;padding:12px 13px;font-size:15px;width:100%;transition:.15s;outline:none;
+}
+.control::placeholder{color:#5a616e}
+.control:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(225,6,0,.18)}
+select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' stroke='%239aa1ad' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px}
+.field.invalid .control{border-color:var(--red);box-shadow:0 0 0 3px rgba(225,6,0,.15)}
+.err-msg{color:var(--red-2);font-size:11px;display:none}
+.field.invalid .err-msg{display:block}
+
+.checkbox{display:flex;align-items:flex-start;gap:10px;cursor:pointer;user-select:none;font-size:13.5px;color:var(--txt-dim);line-height:1.5}
+.checkbox input{margin-top:2px;width:17px;height:17px;accent-color:var(--red);flex:0 0 auto}
+.info-box{
+  display:flex;gap:10px;background:rgba(255,180,0,.08);border:1px solid rgba(255,180,0,.28);
+  border-radius:9px;padding:11px 13px;font-size:12.5px;color:#e9d9b3;line-height:1.6;margin:6px 0;
+}
+.info-box .ico{color:var(--amber);flex:0 0 auto}
+.note{font-size:12px;color:var(--amber);background:rgba(255,180,0,.06);border-left:3px solid var(--amber);padding:8px 12px;border-radius:0 6px 6px 0;line-height:1.55}
+
+/* upload */
+.upload{border:1.5px dashed var(--line-2);border-radius:10px;padding:16px;text-align:center;cursor:pointer;transition:.15s;background:var(--bg)}
+.upload:hover{border-color:var(--red);background:rgba(225,6,0,.04)}
+.upload input{display:none}
+.upload .u-ico{font-size:24px}
+.upload .u-txt{font-size:13px;color:var(--txt-dim);margin-top:4px}
+.upload .u-file{font-size:12px;color:var(--green);margin-top:6px;word-break:break-all}
+.upload.has-file{border-color:var(--green);border-style:solid}
+.thumb{margin-top:10px;max-height:120px;border-radius:8px;border:1px solid var(--line)}
+
+/* tabs (auth) */
+.tabs{display:flex;background:var(--bg);border-radius:10px;padding:5px;gap:5px;margin-bottom:24px;border:1px solid var(--line)}
+.tabs button{flex:1;background:transparent;border:0;color:var(--txt-dim);padding:12px;border-radius:7px;font-weight:700;font-size:15px;letter-spacing:.5px;cursor:pointer;transition:.15s}
+.tabs button.active{background:linear-gradient(180deg,var(--red),#a80400);color:#fff;box-shadow:0 4px 12px rgba(225,6,0,.35)}
+
+/* buttons */
+.actions{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+.actions .spacer{flex:1}
+.btn{
+  border:0;border-radius:9px;padding:13px 22px;font-weight:700;font-size:15px;letter-spacing:.5px;
+  cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:8px;justify-content:center;
+}
+.btn-primary{background:linear-gradient(135deg,var(--red-2),#b30400);color:#fff;box-shadow:0 6px 18px rgba(225,6,0,.35)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(225,6,0,.5)}
+.btn-primary:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none;filter:grayscale(.4)}
+.btn-ghost{background:transparent;border:1px solid var(--line-2);color:var(--txt-dim)}
+.btn-ghost:hover{border-color:var(--txt-dim);color:var(--txt)}
+.btn-block{width:100%}
+.btn-lg{padding:15px 26px;font-size:16px}
+.link{color:var(--red-2);text-decoration:none;font-size:13px;font-weight:600;cursor:pointer;background:none;border:0;padding:0}
+.link:hover{text-decoration:underline}
+.row-between{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin:4px 0 20px}
+
+/* terms doc cards */
+.doc{display:flex;align-items:center;gap:14px;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:12px;flex-wrap:wrap}
+.doc .doc-ico{width:44px;height:44px;border-radius:9px;background:var(--carbon);border:1px solid var(--line-2);display:grid;place-items:center;font-size:20px;flex:0 0 auto}
+.doc .doc-body{flex:1;min-width:180px}
+.doc .doc-title{font-weight:700;font-size:15.5px}
+.doc .doc-desc{font-size:12px;color:var(--txt-dim)}
+.doc .doc-state{font-size:12px;font-weight:700;color:var(--txt-faint);display:flex;align-items:center;gap:6px}
+.doc.accepted{border-color:rgba(37,194,110,.4)}
+.doc.accepted .doc-state{color:var(--green)}
+.badge-req{font-size:10px;letter-spacing:1px;color:var(--amber);border:1px solid rgba(255,180,0,.4);border-radius:5px;padding:2px 6px;font-weight:700}
+
+/* modal */
+.modal-back{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(3px);z-index:100;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-back.open{display:flex}
+.modal{background:linear-gradient(180deg,var(--panel),var(--bg-2));border:1px solid var(--line-2);border-radius:14px;max-width:640px;width:100%;max-height:88vh;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.modal-head{padding:20px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.modal-head h3{margin:0;font-size:18px;letter-spacing:.5px}
+.modal-x{background:none;border:0;color:var(--txt-dim);font-size:24px;cursor:pointer;line-height:1}
+.modal-body{padding:22px;overflow-y:auto;font-size:13.5px;line-height:1.75;color:var(--txt-dim)}
+.modal-body h4{color:var(--txt);margin:16px 0 6px;font-size:14.5px}
+.modal-body p{margin:0 0 10px}
+.modal-body ol,.modal-body ul{margin:0 0 10px;padding-left:20px}
+.modal-body li{margin-bottom:6px}
+.modal-foot{padding:16px 22px;border-top:1px solid var(--line);display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap}
+
+/* parking map */
+.parking-legend{display:flex;gap:18px;flex-wrap:wrap;margin:14px 0;font-size:12px;color:var(--txt-dim)}
+.parking-legend span{display:flex;align-items:center;gap:7px}
+.dot{width:14px;height:14px;border-radius:4px;display:inline-block}
+.dot.free{background:var(--panel-2);border:1px solid var(--line-2)}
+.dot.sel{background:var(--red)}
+.dot.taken{background:#2a1416;border:1px solid #4a2225}
+.track{background:var(--carbon);border:1px solid var(--line);border-radius:12px;padding:18px;position:relative;overflow-x:auto}
+.track-label{position:absolute;top:8px;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:4px;color:var(--txt-faint);font-weight:700}
+.pit-rows{display:flex;flex-direction:column;gap:10px;margin-top:22px;min-width:420px}
+.pit-row{display:flex;align-items:center;gap:8px}
+.pit-row .rlab{width:22px;font-size:11px;color:var(--txt-faint);font-weight:700;flex:0 0 auto}
+.pit-cells{display:flex;gap:8px;flex-wrap:wrap}
+.pit{
+  width:40px;height:34px;border-radius:6px;background:var(--panel-2);border:1px solid var(--line-2);
+  color:var(--txt-dim);font-size:11px;font-weight:700;cursor:pointer;display:grid;place-items:center;transition:.12s;
+}
+.pit:hover:not(.taken){border-color:var(--red);color:#fff;transform:translateY(-2px)}
+.pit.taken{background:#2a1416;border-color:#4a2225;color:#5c3a3c;cursor:not-allowed}
+.pit.sel{background:var(--red);border-color:var(--red-2);color:#fff;box-shadow:0 4px 12px rgba(225,6,0,.5)}
+
+/* summary */
+.sum-line{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.sum-line .lab{color:var(--txt-dim)}
+.sum-line.total{border-bottom:0;font-size:20px;font-weight:700;padding-top:16px}
+.sum-line.total .val{color:var(--amber)}
+.sum-line.discount .val{color:var(--green)}
+.discount-row{display:flex;gap:10px;margin:16px 0}
+.discount-row .control{flex:1}
+
+/* pay methods */
+.pay-methods{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px}
+@media(max-width:560px){.pay-methods{grid-template-columns:1fr}}
+.pay-opt{border:1.5px solid var(--line-2);border-radius:11px;padding:18px;cursor:pointer;transition:.15s;background:var(--bg)}
+.pay-opt:hover{border-color:var(--txt-dim)}
+.pay-opt.sel{border-color:var(--red);background:rgba(225,6,0,.06);box-shadow:0 0 0 3px rgba(225,6,0,.12)}
+.pay-opt .p-ico{font-size:26px}
+.pay-opt .p-name{font-weight:700;margin-top:6px}
+.pay-opt .p-desc{font-size:12px;color:var(--txt-dim)}
+.qr-box{text-align:center;padding:18px;border:1px dashed var(--line-2);border-radius:10px;margin-top:14px;background:var(--bg)}
+.qr-img{width:170px;height:170px;background:#fff;border-radius:10px;display:inline-block;padding:10px}
+
+/* success */
+.success-wrap{text-align:center;padding:20px 0}
+.success-ico{width:88px;height:88px;border-radius:50%;background:radial-gradient(circle,rgba(37,194,110,.25),transparent 70%);display:grid;place-items:center;margin:0 auto 18px;border:2px solid var(--green);font-size:44px;color:var(--green)}
+.receipt{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;text-align:left;margin:22px auto 0;max-width:460px;overflow:hidden}
+.receipt .r-head{background:var(--carbon);padding:12px 18px;font-weight:700;letter-spacing:2px;font-size:12px;color:var(--txt-dim);border-bottom:1px dashed var(--line-2)}
+.receipt .r-row{display:flex;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--line);font-size:14px}
+.receipt .r-row:last-child{border-bottom:0}
+.receipt .r-row .rl{color:var(--txt-dim)}
+.receipt .r-row .rv{font-weight:700}
+.ref-num{font-family:'Rajdhani',monospace;letter-spacing:2px;color:var(--amber)}
+
+.hidden{display:none!important}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--panel-2);border:1px solid var(--line-2);color:var(--txt);padding:12px 20px;border-radius:10px;box-shadow:var(--shadow);opacity:0;transition:.25s;z-index:200;font-size:14px;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.chan-input{margin-top:8px}
+.foot{text-align:center;color:var(--txt-faint);font-size:11px;padding:24px;letter-spacing:1px}
+</style>
+
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">S</div>
+    <div><b>SOUPED UP</b><small data-i18n="brand.tag">COMPETITION REGISTRATION</small></div>
+  </div>
+  <div class="lang-switch">
+    <button data-setlang="th" class="active">TH</button>
+    <button data-setlang="en">EN</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <!-- ============ STEPPER ============ -->
+  <div class="stepper" id="stepper"></div>
+
+  <div class="card">
+    <div class="speed-line"></div>
+    <div class="card-pad" id="screen"></div>
+  </div>
+  <div class="foot">© 2026 SOUPED UP · <span data-i18n="foot.rights">All rights reserved</span></div>
+</div>
+
+<!-- modal -->
+<div class="modal-back" id="modalBack">
+  <div class="modal">
+    <div class="modal-head"><h3 id="modalTitle"></h3><button class="modal-x" id="modalX">×</button></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="modalClose"></button>
+      <button class="btn btn-primary" id="modalAccept"></button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= i18n ================= */
+const I18N = {
+  th:{
+    "brand.tag":"ระบบลงทะเบียนการแข่งขัน",
+    "foot.rights":"สงวนลิขสิทธิ์",
+    /* steps */
+    "step.auth":"สมาชิก","step.terms":"ข้อตกลง","step.applicant":"ผู้สมัคร","step.racer":"นักแข่ง",
+    "step.parking":"ที่จอดรถ","step.bank":"บัญชี","step.summary":"สรุปยอด","step.pay":"ชำระเงิน","step.done":"สำเร็จ",
+    /* auth */
+    "auth.eyebrow":"ยินดีต้อนรับ","auth.title":"เข้าร่วมการแข่งขัน",
+    "auth.sub":"สมัครสมาชิกหรือเข้าสู่ระบบเพื่อลงทะเบียนการแข่งขัน Souped Up",
+    "tab.register":"สมัครสมาชิก","tab.login":"เข้าสู่ระบบ",
+    "f.username":"ชื่อผู้ใช้","f.phone":"เบอร์โทรศัพท์","f.email":"อีเมล","f.password":"รหัสผ่าน",
+    "f.confirm":"ยืนยันรหัสผ่าน","btn.register":"สมัครสมาชิก",
+    "f.loginid":"อีเมลหรือชื่อผู้ใช้","f.forgot":"ลืมรหัสผ่าน?","f.remember":"จดจำฉันในระบบ","btn.login":"เข้าสู่ระบบ",
+    "ph.username":"เช่น speed_racer","ph.phone":"08X-XXX-XXXX","ph.email":"you@email.com",
+    "ph.password":"อย่างน้อย 6 ตัวอักษร","ph.confirm":"กรอกรหัสผ่านอีกครั้ง","ph.loginid":"อีเมลหรือชื่อผู้ใช้",
+    /* terms */
+    "terms.eyebrow":"ขั้นตอนที่ 2","terms.title":"ข้อตกลงและเงื่อนไข",
+    "terms.sub":"โปรดอ่านและยอมรับเอกสารก่อนดำเนินการต่อ",
+    "terms.info":"กรุณาอ่านเอกสารทั้ง 2 ฉบับก่อนกดยอมรับ",
+    "doc.privacy":"นโยบายคุ้มครองข้อมูลส่วนบุคคล","doc.privacy.d":"ข้อมูลการเก็บและใช้ข้อมูลส่วนบุคคล",
+    "doc.rules":"กฎ กติกาการแข่งขัน","doc.rules.d":"ระเบียบและข้อบังคับการแข่งขัน",
+    "doc.raceguar":"การค้ำประกันการแข่งขัน","doc.raceguar.d":"เงื่อนไขการค้ำประกันการแข่งขัน",
+    "doc.dmgguar":"การค้ำประกันความเสียหาย","doc.dmgguar.d":"เงื่อนไขการค้ำประกันความเสียหาย",
+    "doc.read":"กดอ่าน","doc.accepted":"รับทราบและยอมรับแล้ว","doc.pending":"ยังไม่ได้อ่าน",
+    "modal.close":"ปิด","modal.accept":"รับทราบและยอมรับ",
+    /* applicant */
+    "ap.eyebrow":"ขั้นตอนที่ 3","ap.title":"ข้อมูลผู้สมัคร","ap.sub":"Applicant Information",
+    "f.date":"วัน/เดือน/ปี (Date)","f.name":"ชื่อ (Name)","f.surname":"นามสกุล (Surname)",
+    "f.idaddr":"ที่อยู่ตามบัตรประชาชน (Address on ID card)","f.deliaddr":"ที่อยู่สำหรับจัดส่งพัสดุ (Delivery Address)",
+    "f.usidaddr":"ใช้ที่อยู่ตามบัตรประชาชน (Use Address on ID Card)",
+    "ap.deli.info":"เป็นที่อยู่สำหรับจัดส่งหนังสือ Souped Up ประจำปี (โปรดให้ข้อมูลที่สามารถจัดส่งหนังสือได้) · Address for Annual Souped Up Book Delivery (Please provide information for delivery)",
+    "f.chan":"ช่องทางติดต่อเพิ่มเติม","f.idcard.ap":"อัปโหลดรูปบัตรประชาชนผู้สมัคร (ID Card image)",
+    "upload.hint":"รองรับไฟล์ .jpg .png","upload.click":"คลิกเพื่ออัปโหลด",
+    /* racer */
+    "rc.eyebrow":"ขั้นตอนที่ 4","rc.title":"ข้อมูลนักแข่ง","rc.sub":"Racer Information",
+    "f.rname":"ชื่อนักแข่ง (Racer Name)","f.rsurname":"นามสกุลนักแข่ง (Racer Surname)",
+    "f.vehicle":"ข้อมูลรถยนต์ รุ่น/รหัสเครื่องยนต์ (Model / Engine code)",
+    "f.model":"รุ่นการแข่งขัน (Model Competition)","f.team":"ทีมแข่ง/อู่โมดิฟาย (Racing Team Name)",
+    "f.carno":"เบอร์รถแข่ง (Race Car Number 1-120)",
+    "rc.team.note":"หมายเหตุ: รถแข่ง 1 คัน สมัครได้เพียง 1 รุ่นการแข่งขันเท่านั้น",
+    "f.idcard.rc":"อัปโหลดบัตรประชาชนนักแข่ง (ID Card Racer)","f.rphoto":"อัปโหลดรูปนักแข่ง (หน้าตรง) (Racer Image)",
+    "opt.select":"— กรุณาเลือก —","opt.carno":"— เลือกเบอร์รถ —",
+    /* parking */
+    "pk.eyebrow":"ขั้นตอนที่ 5","pk.title":"เลือกที่จอดรถ","pk.sub":"เลือกช่องจอดจากผังด้านล่าง",
+    "pk.map.hint":"คลิกเลือกช่องจอดจากผัง (คล้ายการจองที่นั่ง)",
+    "pk.free":"ว่าง","pk.sel":"ที่เลือก","pk.taken":"ถูกจอง",
+    "f.pit":"เลือกช่องจอดรถ (Pit Select)","opt.pit":"— เลือกช่องจอด —",
+    "f.privatepit":"จอดพีทถาวร (Private-Owned Pit)","track.label":"PIT LANE",
+    /* bank */
+    "bk.eyebrow":"ขั้นตอนที่ 6","bk.title":"บัญชีคืนเงิน · รับเงิน","bk.sub":"ข้อมูลบัญชีธนาคาร",
+    "bk.refund.t":"บัญชีคืนเงินมัดจำผู้สมัคร","bk.refund.s":"Account Name for Applicant's Deposit Refund",
+    "bk.prize.t":"บัญชีรับเงินรางวัลสำหรับผู้ชนะ","bk.prize.s":"Account Name for Winner's Prize Payment (ชื่อต้องตรงกับนักแข่งที่ลงทะเบียน)",
+    "f.bank":"ธนาคาร (Bank Name)","f.bankother":"ระบุชื่อธนาคาร","f.accno":"เลขที่บัญชี (Account Number)",
+    "f.accname":"ชื่อบัญชี (Name)","f.accsur":"นามสกุล (Surname)","opt.bank":"— เลือกธนาคาร —","bank.other":"อื่นๆ",
+    /* summary */
+    "sm.eyebrow":"ขั้นตอนที่ 7","sm.title":"สรุปยอดการลงทะเบียน","sm.sub":"ตรวจสอบรายการและยอดชำระ",
+    "sm.entry":"ค่าสมัครการแข่งขัน","sm.pit":"ค่าช่องจอด (Pit)","sm.privatepit":"พีทถาวร (Private Pit)",
+    "sm.discount":"ส่วนลด","sm.total":"ยอดชำระทั้งหมด","sm.code.ph":"กรอกโค้ดส่วนลด","sm.code.apply":"ใช้โค้ด",
+    "sm.code.ok":"ใช้โค้ดส่วนลดสำเร็จ","sm.code.bad":"โค้ดส่วนลดไม่ถูกต้อง",
+    /* payment */
+    "py.eyebrow":"ขั้นตอนที่ 8","py.title":"ชำระเงิน","py.sub":"เลือกวิธีการชำระเงิน",
+    "py.card":"บัตรเครดิต","py.card.d":"Visa / Mastercard / JCB","py.qr":"QR / โอนเงิน","py.qr.d":"พร้อมเพย์ / โอนผ่านธนาคาร",
+    "py.tax":"ต้องการออกใบกำกับภาษี","py.tax.name":"ชื่อ-นามสกุล / บริษัท","py.tax.taxid":"เลขประจำตัวผู้เสียภาษี",
+    "py.tax.addr":"ที่อยู่สำหรับออกใบกำกับภาษี",
+    "py.card.num":"หมายเลขบัตร","py.card.exp":"วันหมดอายุ (MM/YY)","py.card.cvv":"CVV","py.card.holder":"ชื่อบนบัตร",
+    "py.qr.scan":"สแกน QR เพื่อชำระเงิน หรือโอนตามข้อมูลบัญชี",
+    "py.terms.t":"เงื่อนไขการชำระเงิน",
+    "py.t1.t":"1. การตรวจสอบยอดเงิน (Verification of the registration fee)",
+    "py.t1.b":"ผู้สมัคร/ผู้ชำระเงิน มีหน้าที่ตรวจสอบยอดเงินที่ต้องชำระให้ถูกต้องครบถ้วนก่อนทำการโอนเงินทุกครั้ง · Please ensure you verify the correct total amount payable before proceeding with any money transfer.",
+    "py.t2.t":"2. การตรวจสอบหลักฐานการโอนเงิน (สลิป) (Verification of proof of payment slip)",
+    "py.t2.b":"กรุณาตรวจสอบความถูกต้องและความชัดเจนของข้อมูลบนสลิปโอนเงิน (เช่น วันที่, เวลา, จำนวนเงิน, บัญชีผู้รับ) ก่อนทำการแนบไฟล์หรือส่งเป็นหลักฐาน · Kindly verify the accuracy and clarity of the information on your transfer slip before submitting it as proof of payment.",
+    "py.t3.t":"3. นโยบายการคืนเงิน (Refund Policy)",
+    "py.t3.b":"ทางผู้จัดการแข่งขันขอสงวนสิทธิ์ในการไม่คืนเงินค่าสมัครในทุกกรณี · The competition organizer reserves the right to make entry fees non-refundable in all cases.",
+    "py.confirm":"ยืนยันชำระเงิน",
+    /* success */
+    "dn.title":"ชำระเงินสำเร็จ!","dn.sub":"เราได้ส่งอีเมลยืนยันการลงทะเบียนให้คุณแล้ว",
+    "dn.ref":"หมายเลขอ้างอิง","dn.racer":"ชื่อนักแข่ง","dn.comp":"รายการแข่ง","dn.amount":"ยอดที่ชำระ",
+    "dn.email":"ส่งไปที่","dn.new":"ลงทะเบียนรายการใหม่","dn.print":"พิมพ์ใบเสร็จ",
+    /* buttons */
+    "btn.back":"ย้อนกลับ","btn.continue":"ดำเนินการต่อ","btn.next":"ถัดไป","btn.next.racer":"ถัดไป (ข้อมูลนักแข่ง)",
+    "btn.next.parking":"ถัดไป (ที่จอดรถ)","btn.next.bank":"ถัดไป (บัญชี)","btn.summary":"สรุปยอดการลงทะเบียน",
+    "btn.pay":"ชำระเงิน",
+    /* validation / toast */
+    "v.required":"จำเป็นต้องกรอก","v.email":"อีเมลไม่ถูกต้อง","v.pwshort":"รหัสผ่านอย่างน้อย 6 ตัวอักษร",
+    "v.pwmatch":"รหัสผ่านไม่ตรงกัน","v.fixerr":"กรุณากรอกข้อมูลให้ครบถ้วนและถูกต้อง",
+    "t.registered":"สมัครสมาชิกสำเร็จ!","t.loginok":"เข้าสู่ระบบสำเร็จ","t.loginfail":"อีเมล/รหัสผ่านไม่ถูกต้อง",
+    "t.forgot":"ระบบจะส่งลิงก์รีเซ็ตรหัสผ่านไปยังอีเมลของคุณ (เดโม)",
+    "t.acceptall":"กรุณาอ่านและยอมรับเอกสารทั้งหมดก่อน","t.pit":"เลือกช่องจอด ","t.uploaded":"อัปโหลดไฟล์แล้ว",
+    "lang.name":"ภาษาไทย"
+  },
+  en:{
+    "brand.tag":"COMPETITION REGISTRATION",
+    "foot.rights":"All rights reserved",
+    "step.auth":"Account","step.terms":"Terms","step.applicant":"Applicant","step.racer":"Racer",
+    "step.parking":"Parking","step.bank":"Accounts","step.summary":"Summary","step.pay":"Payment","step.done":"Done",
+    "auth.eyebrow":"Welcome","auth.title":"Join The Competition",
+    "auth.sub":"Register or sign in to enter the Souped Up competition",
+    "tab.register":"Register","tab.login":"Sign In",
+    "f.username":"Username","f.phone":"Phone Number","f.email":"Email","f.password":"Password",
+    "f.confirm":"Confirm Password","btn.register":"Register",
+    "f.loginid":"Email or Username","f.forgot":"Forgot password?","f.remember":"Remember me","btn.login":"Sign In",
+    "ph.username":"e.g. speed_racer","ph.phone":"08X-XXX-XXXX","ph.email":"you@email.com",
+    "ph.password":"At least 6 characters","ph.confirm":"Re-enter your password","ph.loginid":"Email or username",
+    "terms.eyebrow":"Step 2","terms.title":"Terms & Conditions",
+    "terms.sub":"Please read and accept the documents before continuing",
+    "terms.info":"Please read both documents before accepting.",
+    "doc.privacy":"Personal Data Protection Policy","doc.privacy.d":"How we collect and use personal data",
+    "doc.rules":"Competition Rules","doc.rules.d":"Regulations and rules of the competition",
+    "doc.raceguar":"Competition Guarantee","doc.raceguar.d":"Terms of competition guarantee",
+    "doc.dmgguar":"Damage Guarantee","doc.dmgguar.d":"Terms of damage guarantee",
+    "doc.read":"Read","doc.accepted":"Acknowledged & Accepted","doc.pending":"Not read yet",
+    "modal.close":"Close","modal.accept":"Acknowledge & Accept",
+    "ap.eyebrow":"Step 3","ap.title":"Applicant Information","ap.sub":"ข้อมูลผู้สมัคร",
+    "f.date":"Date (DD/MM/YYYY)","f.name":"Name","f.surname":"Surname",
+    "f.idaddr":"Address on ID card","f.deliaddr":"Delivery Address",
+    "f.usidaddr":"Use Address on ID Card",
+    "ap.deli.info":"Address for Annual Souped Up Book Delivery (Please provide information for delivery) · ที่อยู่สำหรับจัดส่งหนังสือ Souped Up ประจำปี",
+    "f.chan":"Additional Contact Channels","f.idcard.ap":"Upload Applicant's ID Card (ID Card image)",
+    "upload.hint":"Supports .jpg .png","upload.click":"Click to upload",
+    "rc.eyebrow":"Step 4","rc.title":"Racer Information","rc.sub":"ข้อมูลนักแข่ง",
+    "f.rname":"Racer Name","f.rsurname":"Racer Surname",
+    "f.vehicle":"Vehicle Information Model / Engine code",
+    "f.model":"Model Competition","f.team":"Racing Team Name",
+    "f.carno":"Race Car Number (1-120)",
+    "rc.team.note":"Note: One race car may register for only one competition model.",
+    "f.idcard.rc":"Upload Racer's ID Card (ID Card Racer)","f.rphoto":"Upload Racer Image (front-facing)",
+    "opt.select":"— Please select —","opt.carno":"— Select number —",
+    "pk.eyebrow":"Step 5","pk.title":"Select Parking / Pit","pk.sub":"Choose a pit from the map below",
+    "pk.map.hint":"Click to select a pit from the map (like seat booking)",
+    "pk.free":"Available","pk.sel":"Selected","pk.taken":"Taken",
+    "f.pit":"Pit Select","opt.pit":"— Select a pit —",
+    "f.privatepit":"Private-Owned Pit","track.label":"PIT LANE",
+    "bk.eyebrow":"Step 6","bk.title":"Refund · Prize Accounts","bk.sub":"Bank account details",
+    "bk.refund.t":"Applicant's Deposit Refund Account","bk.refund.s":"Account Name for Applicant's Deposit Refund",
+    "bk.prize.t":"Winner's Prize Payment Account","bk.prize.s":"Account Name for Winner's Prize Payment (same as registered racer's name)",
+    "f.bank":"Bank Name","f.bankother":"Specify bank name","f.accno":"Bank Account Number",
+    "f.accname":"Name","f.accsur":"Surname","opt.bank":"— Select bank —","bank.other":"Other",
+    "sm.eyebrow":"Step 7","sm.title":"Registration Summary","sm.sub":"Review your items and amount due",
+    "sm.entry":"Competition Entry Fee","sm.pit":"Pit Fee","sm.privatepit":"Private Pit",
+    "sm.discount":"Discount","sm.total":"Total Amount","sm.code.ph":"Enter discount code","sm.code.apply":"Apply",
+    "sm.code.ok":"Discount code applied","sm.code.bad":"Invalid discount code",
+    "py.eyebrow":"Step 8","py.title":"Payment","py.sub":"Choose a payment method",
+    "py.card":"Credit Card","py.card.d":"Visa / Mastercard / JCB","py.qr":"QR / Transfer","py.qr.d":"PromptPay / Bank transfer",
+    "py.tax":"Request a tax invoice","py.tax.name":"Name / Company","py.tax.taxid":"Tax ID",
+    "py.tax.addr":"Address for tax invoice",
+    "py.card.num":"Card Number","py.card.exp":"Expiry (MM/YY)","py.card.cvv":"CVV","py.card.holder":"Cardholder Name",
+    "py.qr.scan":"Scan the QR to pay, or transfer using the account details",
+    "py.terms.t":"Payment Terms",
+    "py.t1.t":"1. Verification of the registration fee",
+    "py.t1.b":"Please ensure you verify the correct total amount payable before proceeding with any money transfer.",
+    "py.t2.t":"2. Verification of proof of payment slip",
+    "py.t2.b":"Kindly verify the accuracy and clarity of the information on your transfer slip (e.g., date, time, amount, recipient account) before attaching or submitting it as proof of payment.",
+    "py.t3.t":"3. Refund Policy",
+    "py.t3.b":"The competition organizer reserves the right to make entry fees non-refundable in all cases.",
+    "py.confirm":"Confirm Payment",
+    "dn.title":"Payment Successful!","dn.sub":"A confirmation email has been sent to you.",
+    "dn.ref":"Reference No.","dn.racer":"Racer Name","dn.comp":"Competition","dn.amount":"Amount Paid",
+    "dn.email":"Sent to","dn.new":"Register another entry","dn.print":"Print receipt",
+    "btn.back":"Back","btn.continue":"Continue","btn.next":"Next","btn.next.racer":"Next (Racer Info)",
+    "btn.next.parking":"Next (Parking)","btn.next.bank":"Next (Accounts)","btn.summary":"Registration Summary",
+    "btn.pay":"Proceed to Payment",
+    "v.required":"This field is required","v.email":"Invalid email","v.pwshort":"Password must be at least 6 characters",
+    "v.pwmatch":"Passwords do not match","v.fixerr":"Please complete all fields correctly",
+    "t.registered":"Registration successful!","t.loginok":"Signed in successfully","t.loginfail":"Invalid email/password",
+    "t.forgot":"A password reset link will be sent to your email (demo)",
+    "t.acceptall":"Please read and accept all documents first","t.pit":"Selected pit ","t.uploaded":"File uploaded",
+    "lang.name":"English"
+  }
+};
+
+/* ================= Data ================= */
+const BANKS = {
+  th:["ธนาคารกสิกรไทย (KBank)","ธนาคารไทยพาณิชย์ (SCB)","ธนาคารกรุงเทพ (BBL)","ธนาคารกรุงไทย (KTB)","ธนาคารกรุงศรีอยุธยา (BAY)","ธนาคารทหารไทยธนชาต (ttb)","ธนาคารออมสิน (GSB)","ธนาคารเกียรตินาคินภัทร (KKP)"],
+  en:["Kasikornbank (KBank)","Siam Commercial Bank (SCB)","Bangkok Bank (BBL)","Krungthai Bank (KTB)","Bank of Ayudhya (BAY)","TMBThanachart (ttb)","Government Savings Bank (GSB)","Kiatnakin Phatra (KKP)"]
+};
+const MODELS = {
+  th:["Pro Street 6 (สูงสุด 6 วินาที)","Pro Street 7","Super Max 4WD","Super Street 2WD","Bracket 8.5","Bracket 10.5","Diesel Truck","Bike Drag"],
+  en:["Pro Street 6 (max 6 sec)","Pro Street 7","Super Max 4WD","Super Street 2WD","Bracket 8.5","Bracket 10.5","Diesel Truck","Bike Drag"]
+};
+const PRICES = {entry:5000, pit:1500, privatePit:8000};
+const DISCOUNTS = {"SOUPEDUP":500,"EARLYBIRD":1000,"VIP2026":1500};
+
+/* ================= State ================= */
+const state = {
+  lang:"th",
+  step:"auth",
+  authTab:"register",
+  account:null,
+  terms:{privacy:false,rules:false,raceguar:false,dmgguar:false},
+  applicant:{},
+  racer:{},
+  parking:{pit:"",privatePit:false},
+  bank:{},
+  discount:{code:"",amount:0},
+  payMethod:"card",
+  tax:false,
+  files:{},
+  takenPits:[]
+};
+const STEPS = ["auth","terms","applicant","racer","parking","bank","summary","pay","done"];
+
+/* ================= Helpers ================= */
+function t(k){return (I18N[state.lang][k]!==undefined?I18N[state.lang][k]:k);}
+function el(id){return document.getElementById(id);}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function toast(msg){const x=el("toast");x.textContent=msg;x.classList.add("show");clearTimeout(x._t);x._t=setTimeout(()=>x.classList.remove("show"),2600);}
+function money(n){return n.toLocaleString(state.lang==="th"?"th-TH":"en-US")+" ฿";}
+function genTakenPits(){const taken=new Set();while(taken.size<14){taken.add("ABCDEF"[Math.floor(Math.random()*6)]+(Math.floor(Math.random()*10)+1));}state.takenPits=[...taken];}
+genTakenPits();
+
+/* ================= Render root ================= */
+function render(){
+  renderStepper();
+  const s=el("screen");
+  s.innerHTML = SCREENS[state.step]();
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(SCREEN_INIT[state.step]) SCREEN_INIT[state.step]();
+}
+function go(step){state.step=step;render();}
+function stepIndex(s){return STEPS.indexOf(s);}
+
+function renderStepper(){
+  const cur=stepIndex(state.step);
+  const labels=[["auth","step.auth"],["terms","step.terms"],["applicant","step.applicant"],["racer","step.racer"],["parking","step.parking"],["bank","step.bank"],["summary","step.summary"],["pay","step.pay"],["done","step.done"]];
+  el("stepper").innerHTML = labels.map((l,i)=>{
+    const cls = i<cur?"done":(i===cur?"active":"");
+    return `<div class="st ${cls}"><span class="n">${String(i+1).padStart(2,"0")}</span>${esc(t(l[1]))}</div>`;
+  }).join("");
+}
+
+/* ================= Field builder ================= */
+function fieldText(opts){
+  const {id,labelKey,ph,req,type="text",value="",hintKey,full}=opts;
+  return `<div class="field ${full?'full':''}" data-field="${id}">
+    <label>${esc(t(labelKey))}${req?'<span class="req">*</span>':''}</label>
+    <input class="control" id="${id}" type="${type}" placeholder="${ph?esc(t(ph)):''}" value="${esc(value)}" ${req?'data-req':''} ${type==='email'?'data-email':''}/>
+    ${hintKey?`<div class="hint">${esc(t(hintKey))}</div>`:''}
+    <div class="err-msg">${esc(t('v.required'))}</div>
+  </div>`;
+}
+function fieldSelect(opts){
+  const {id,labelKey,req,options,placeholderKey,value="",full}=opts;
+  const opts2=options.map(o=>`<option value="${esc(o.v)}" ${o.v===value?'selected':''}>${esc(o.l)}</option>`).join("");
+  return `<div class="field ${full?'full':''}" data-field="${id}">
+    <label>${esc(t(labelKey))}${req?'<span class="req">*</span>':''}</label>
+    <select class="control" id="${id}" ${req?'data-req':''}>
+      <option value="">${esc(t(placeholderKey||'opt.select'))}</option>${opts2}
+    </select>
+    <div class="err-msg">${esc(t('v.required'))}</div>
+  </div>`;
+}
+function fieldUpload(opts){
+  const {id,labelKey,req}=opts;
+  const f=state.files[id];
+  return `<div class="field full" data-field="${id}">
+    <label>${esc(t(labelKey))}${req?'<span class="req">*</span>':''}</label>
+    <label class="upload ${f?'has-file':''}" for="${id}">
+      <div class="u-ico">⬆️</div>
+      <div class="u-txt">${esc(t('upload.click'))} · ${esc(t('upload.hint'))}</div>
+      ${f?`<div class="u-file">✓ ${esc(f.name)}</div>${f.thumb?`<img class="thumb" src="${f.thumb}"/>`:''}`:''}
+      <input type="file" id="${id}" accept=".jpg,.jpeg,.png,image/png,image/jpeg" data-upload ${req?'data-req':''}/>
+    </label>
+    <div class="err-msg">${esc(t('v.required'))}</div>
+  </div>`;
+}
+function backNext(backStep,nextLabelKey,onNext){
+  return {html:`<div class="actions">
+    <button class="btn btn-ghost" data-back>${esc(t('btn.back'))}</button>
+    <div class="spacer"></div>
+    <button class="btn btn-primary" data-next>${esc(t(nextLabelKey))}</button>
+  </div>`, backStep, onNext};
+}
+
+/* ================= Validation ================= */
+function validateScreen(scope){
+  let ok=true; let firstBad=null;
+  scope.querySelectorAll('[data-req]').forEach(inp=>{
+    const field=inp.closest('.field'); field.classList.remove('invalid');
+    let bad=false, msg=t('v.required');
+    if(inp.type==='file'){ if(!state.files[inp.id]) bad=true; }
+    else if(!inp.value.trim()){ bad=true; }
+    else if(inp.hasAttribute('data-email') && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value.trim())){ bad=true; msg=t('v.email'); }
+    if(bad){ ok=false; field.classList.add('invalid'); const em=field.querySelector('.err-msg'); if(em)em.textContent=msg; if(!firstBad)firstBad=field; }
+  });
+  if(firstBad) firstBad.scrollIntoView({behavior:"smooth",block:"center"});
+  return ok;
+}
+function collect(scope,obj){
+  scope.querySelectorAll('input:not([type=file]):not([type=checkbox]),select,textarea').forEach(inp=>{if(inp.id)obj[inp.id]=inp.value;});
+}
+
+/* ================= SCREENS ================= */
+const SCREENS = {};
+const SCREEN_INIT = {};
+
+/* ---- AUTH ---- */
+SCREENS.auth = function(){
+  const isReg = state.authTab==="register";
+  return `
+  <p class="eyebrow">${esc(t('auth.eyebrow'))}</p>
+  <h1 class="page-title">${esc(t('auth.title'))}</h1>
+  <p class="page-sub">${esc(t('auth.sub'))}</p>
+  <div class="tabs">
+    <button data-tab="register" class="${isReg?'active':''}">${esc(t('tab.register'))}</button>
+    <button data-tab="login" class="${!isReg?'active':''}">${esc(t('tab.login'))}</button>
+  </div>
+  <form id="authForm" novalidate>
+  ${isReg ? `
+    ${fieldText({id:'r_username',labelKey:'f.username',ph:'ph.username',req:true,full:true})}
+    <div class="grid">
+      ${fieldText({id:'r_phone',labelKey:'f.phone',ph:'ph.phone',req:true,type:'tel'})}
+      ${fieldText({id:'r_email',labelKey:'f.email',ph:'ph.email',req:true,type:'email'})}
+    </div>
+    <div class="grid">
+      ${fieldText({id:'r_password',labelKey:'f.password',ph:'ph.password',req:true,type:'password'})}
+      ${fieldText({id:'r_confirm',labelKey:'f.confirm',ph:'ph.confirm',req:true,type:'password'})}
+    </div>
+    <div class="actions"><button type="submit" class="btn btn-primary btn-block btn-lg">${esc(t('btn.register'))}</button></div>
+  ` : `
+    ${fieldText({id:'l_id',labelKey:'f.loginid',ph:'ph.loginid',req:true,full:true})}
+    ${fieldText({id:'l_password',labelKey:'f.password',ph:'ph.password',req:true,type:'password',full:true})}
+    <div class="row-between">
+      <label class="checkbox"><input type="checkbox" id="l_remember"/> ${esc(t('f.remember'))}</label>
+      <button type="button" class="link" id="forgotBtn">${esc(t('f.forgot'))}</button>
+    </div>
+    <div class="actions"><button type="submit" class="btn btn-primary btn-block btn-lg">${esc(t('btn.login'))}</button></div>
+  `}
+  </form>`;
+};
+SCREEN_INIT.auth = function(){
+  el('screen').querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{state.authTab=b.dataset.tab;render();});
+  const form=el('authForm');
+  const fb=el('forgotBtn'); if(fb)fb.onclick=()=>toast(t('t.forgot'));
+  form.onsubmit=(e)=>{
+    e.preventDefault();
+    if(!validateScreen(form)) return;
+    if(state.authTab==="register"){
+      const pw=el('r_password').value, cf=el('r_confirm').value;
+      if(pw.length<6){markField('r_password',t('v.pwshort'));return;}
+      if(pw!==cf){markField('r_confirm',t('v.pwmatch'));return;}
+      state.account={username:el('r_username').value.trim(),phone:el('r_phone').value.trim(),email:el('r_email').value.trim(),password:pw};
+      // pre-fill applicant/racer where sensible
+      state.applicant.a_email=state.account.email;
+      state.applicant.a_phone=state.account.phone;
+      toast(t('t.registered'));
+      go('terms');
+    } else {
+      // demo login: accept if account exists & matches, else accept any (demo) and go to terms
+      const idv=el('l_id').value.trim(), pw=el('l_password').value;
+      if(state.account && (idv===state.account.email||idv===state.account.username) && pw===state.account.password){
+        toast(t('t.loginok')); go('terms');
+      } else if(!state.account){
+        // no registered account yet in this demo session -> allow proceed
+        state.account={username:idv,email:idv.includes('@')?idv:'',phone:'',password:pw};
+        toast(t('t.loginok')); go('terms');
+      } else {
+        toast(t('t.loginfail'));
+      }
+    }
+  };
+};
+function markField(id,msg){const f=el(id).closest('.field');f.classList.add('invalid');const em=f.querySelector('.err-msg');if(em)em.textContent=msg;f.scrollIntoView({behavior:'smooth',block:'center'});}
+
+/* ---- TERMS ---- */
+const DOC_KEYS=[["privacy","doc.privacy","doc.privacy.d",true],["rules","doc.rules","doc.rules.d",true],["raceguar","doc.raceguar","doc.raceguar.d",false],["dmgguar","doc.dmgguar","doc.dmgguar.d",false]];
+SCREENS.terms = function(){
+  const docs = DOC_KEYS.map(([k,tk,dk,readable])=>{
+    const acc=state.terms[k];
+    return `<div class="doc ${acc?'accepted':''}">
+      <div class="doc-ico">📄</div>
+      <div class="doc-body">
+        <div class="doc-title">${esc(t(tk))}</div>
+        <div class="doc-desc">${esc(t(dk))}</div>
+      </div>
+      <div class="doc-state">${acc?'✓ '+esc(t('doc.accepted')):esc(t('doc.pending'))}</div>
+      <button class="btn ${acc?'btn-ghost':'btn-primary'}" data-doc="${k}">${esc(t('doc.read'))}</button>
+    </div>`;
+  }).join("");
+  const allAccepted = Object.values(state.terms).every(Boolean);
+  return `
+  <p class="eyebrow">${esc(t('terms.eyebrow'))}</p>
+  <h1 class="page-title">${esc(t('terms.title'))}</h1>
+  <p class="page-sub">${esc(t('terms.sub'))}</p>
+  <div class="info-box"><span class="ico">⚠️</span><span>${esc(t('terms.info'))}</span></div>
+  ${docs}
+  <div class="actions">
+    <button class="btn btn-ghost" data-back>${esc(t('btn.back'))}</button>
+    <div class="spacer"></div>
+    <button class="btn btn-primary" id="termsNext" ${allAccepted?'':'disabled'}>${esc(t('btn.continue'))}</button>
+  </div>`;
+};
+SCREEN_INIT.terms = function(){
+  el('screen').querySelectorAll('[data-doc]').forEach(b=>b.onclick=()=>openDoc(b.dataset.doc));
+  el('screen').querySelector('[data-back]').onclick=()=>go('auth');
+  const nx=el('termsNext'); nx.onclick=()=>{ if(Object.values(state.terms).every(Boolean)) go('applicant'); else toast(t('t.acceptall')); };
+};
+function openDoc(key){
+  const map={privacy:'doc.privacy',rules:'doc.rules',raceguar:'doc.raceguar',dmgguar:'doc.dmgguar'};
+  el('modalTitle').textContent=t(map[key]);
+  el('modalBody').innerHTML=DOC_BODY[key][state.lang];
+  el('modalClose').textContent=t('modal.close');
+  el('modalAccept').textContent=t('modal.accept');
+  el('modalAccept').classList.remove('hidden');
+  el('modalAccept').onclick=()=>{state.terms[key]=true;closeModal();render();};
+  openModal();
+}
+function openModal(){el('modalBack').classList.add('open');}
+function closeModal(){el('modalBack').classList.remove('open');}
+
+/* Document bodies */
+const DOC_BODY={
+  privacy:{
+    th:`<h4>1. การเก็บรวบรวมข้อมูล</h4><p>ผู้จัดการแข่งขัน Souped Up เก็บรวบรวมข้อมูลส่วนบุคคลของท่าน เช่น ชื่อ-นามสกุล ที่อยู่ เบอร์โทรศัพท์ อีเมล สำเนาบัตรประชาชน และข้อมูลบัญชีธนาคาร เพื่อวัตถุประสงค์ในการลงทะเบียนและดำเนินการแข่งขัน</p><h4>2. วัตถุประสงค์การใช้ข้อมูล</h4><p>เพื่อยืนยันตัวตน จัดส่งเอกสาร/ของรางวัล ติดต่อสื่อสาร และปฏิบัติตามข้อกำหนดของการแข่งขัน รวมถึงกฎหมายที่เกี่ยวข้อง</p><h4>3. การเปิดเผยข้อมูล</h4><p>ข้อมูลของท่านจะไม่ถูกเปิดเผยต่อบุคคลภายนอก เว้นแต่ได้รับความยินยอมหรือเป็นไปตามที่กฎหมายกำหนด</p><h4>4. ระยะเวลาการเก็บรักษา</h4><p>ข้อมูลจะถูกเก็บรักษาตลอดระยะเวลาที่จำเป็นตามวัตถุประสงค์ และตามที่กฎหมายกำหนด</p><h4>5. สิทธิของเจ้าของข้อมูล</h4><p>ท่านมีสิทธิขอเข้าถึง แก้ไข ลบ หรือคัดค้านการประมวลผลข้อมูลของท่านตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA)</p>`,
+    en:`<h4>1. Data Collection</h4><p>The Souped Up organizer collects personal data such as your name, address, phone number, email, ID card copy, and bank account details for registration and competition purposes.</p><h4>2. Purpose of Use</h4><p>To verify identity, deliver documents/prizes, communicate, and comply with competition and legal requirements.</p><h4>3. Disclosure</h4><p>Your data will not be disclosed to third parties except with your consent or as required by law.</p><h4>4. Retention Period</h4><p>Data is retained only as long as necessary for the stated purposes and as required by law.</p><h4>5. Data Subject Rights</h4><p>You may request access, correction, deletion, or object to processing under Thailand's PDPA B.E. 2562.</p>`
+  },
+  rules:{
+    th:`<h4>1. คุณสมบัติผู้เข้าแข่งขัน</h4><p>ผู้เข้าแข่งขันต้องมีอายุ 18 ปีบริบูรณ์ขึ้นไป และมีใบอนุญาตขับขี่ที่ถูกต้อง</p><h4>2. รถที่ใช้แข่งขัน</h4><p>รถแข่ง 1 คัน สมัครได้เพียง 1 รุ่นการแข่งขันเท่านั้น รถต้องผ่านการตรวจสภาพความปลอดภัยก่อนลงแข่ง</p><h4>3. อุปกรณ์ความปลอดภัย</h4><p>ผู้แข่งขันต้องสวมหมวกกันน็อค ชุดแข่ง และอุปกรณ์นิรภัยตามมาตรฐานที่กำหนดตลอดเวลาที่อยู่ในสนาม</p><h4>4. การประพฤติ</h4><p>ห้ามใช้สารกระตุ้น ห้ามประพฤติผิดกติกาหรือมารยาท ผู้จัดมีสิทธิ์ตัดสิทธิ์ผู้ที่ฝ่าฝืน</p><h4>5. การตัดสิน</h4><p>การตัดสินของคณะกรรมการถือเป็นที่สิ้นสุด</p>`,
+    en:`<h4>1. Eligibility</h4><p>Competitors must be at least 18 years old and hold a valid driver's license.</p><h4>2. Competition Vehicles</h4><p>One race car may register for only one competition model. Vehicles must pass a safety inspection before racing.</p><h4>3. Safety Equipment</h4><p>Competitors must wear helmets, racing suits, and approved safety gear at all times on the track.</p><h4>4. Conduct</h4><p>No performance-enhancing substances or unsportsmanlike conduct. Organizers may disqualify violators.</p><h4>5. Judging</h4><p>The decision of the judging committee is final.</p>`
+  },
+  raceguar:{
+    th:`<h4>การค้ำประกันการแข่งขัน</h4><p>ผู้เข้าแข่งขันตกลงวางหลักประกันการเข้าร่วมการแข่งขันตามที่ผู้จัดกำหนด เพื่อยืนยันการเข้าร่วมและปฏิบัติตามกำหนดการแข่งขัน</p><p>หลักประกันจะถูกคืนภายหลังสิ้นสุดการแข่งขัน หากผู้เข้าแข่งขันปฏิบัติตามเงื่อนไขครบถ้วน และไม่มีความเสียหายหรือค่าปรับใดๆ</p><p>ในกรณีที่ผู้เข้าแข่งขันสละสิทธิ์หรือไม่มาแข่งขันโดยไม่แจ้งล่วงหน้า ผู้จัดมีสิทธิ์ริบหลักประกันตามที่เห็นสมควร</p>`,
+    en:`<h4>Competition Guarantee</h4><p>Competitors agree to place a participation guarantee as specified by the organizer to confirm participation and adherence to the competition schedule.</p><p>The guarantee will be refunded after the competition ends, provided all conditions are met and there are no damages or penalties.</p><p>If a competitor withdraws or fails to attend without prior notice, the organizer reserves the right to forfeit the guarantee as it deems appropriate.</p>`
+  },
+  dmgguar:{
+    th:`<h4>การค้ำประกันความเสียหาย</h4><p>ผู้เข้าแข่งขันตกลงรับผิดชอบต่อความเสียหายใดๆ ที่เกิดขึ้นต่อทรัพย์สินของผู้จัด สนามแข่ง หรือบุคคลอื่น อันเนื่องมาจากการกระทำของตน</p><p>ผู้จัดอาจเรียกเก็บหลักประกันความเสียหาย และจะคืนให้เมื่อไม่มีความเสียหายเกิดขึ้น</p><p>หากเกิดความเสียหาย ผู้จัดมีสิทธิ์หักค่าเสียหายจากหลักประกัน และผู้เข้าแข่งขันต้องรับผิดชอบส่วนที่เกินกว่าหลักประกัน</p>`,
+    en:`<h4>Damage Guarantee</h4><p>Competitors agree to be responsible for any damage caused to the organizer's property, the racetrack, or others resulting from their actions.</p><p>The organizer may collect a damage guarantee, refundable when no damage occurs.</p><p>In case of damage, the organizer may deduct costs from the guarantee, and the competitor remains liable for any amount exceeding it.</p>`
+  }
+};
+
+/* ---- APPLICANT ---- */
+SCREENS.applicant = function(){
+  const a=state.applicant;
+  const chans=[["line","Line"],["wechat","WeChat"],["whatsapp","WhatsApp"]];
+  const chanHtml = chans.map(([k,lbl])=>{
+    const on=a['chan_'+k+'_on'];
+    return `<div>
+      <label class="checkbox"><input type="checkbox" data-chan="${k}" ${on?'checked':''}/> ${lbl}</label>
+      <input class="control chan-input ${on?'':'hidden'}" id="chan_${k}" placeholder="${lbl} ID" value="${esc(a['chan_'+k]||'')}"/>
+    </div>`;
+  }).join("");
+  return `
+  <p class="eyebrow">${esc(t('ap.eyebrow'))}</p>
+  <h1 class="page-title">${esc(t('ap.title'))}</h1>
+  <p class="page-sub">${esc(t('ap.sub'))}</p>
+  <form id="apForm" novalidate>
+    ${fieldText({id:'a_date',labelKey:'f.date',req:true,type:'date',value:a.a_date||'',full:true})}
+    <div class="grid">
+      ${fieldText({id:'a_name',labelKey:'f.name',req:true,value:a.a_name||''})}
+      ${fieldText({id:'a_surname',labelKey:'f.surname',req:true,value:a.a_surname||''})}
+    </div>
+    ${fieldText({id:'a_idaddr',labelKey:'f.idaddr',req:true,value:a.a_idaddr||'',full:true})}
+    <div class="field full" data-field="a_deliaddr">
+      <label>${esc(t('f.deliaddr'))}<span class="req">*</span></label>
+      <label class="checkbox" style="margin-bottom:8px"><input type="checkbox" id="a_useid"/> ${esc(t('f.usidaddr'))}</label>
+      <input class="control" id="a_deliaddr" data-req value="${esc(a.a_deliaddr||'')}"/>
+      <div class="info-box"><span class="ico">📦</span><span>${esc(t('ap.deli.info'))}</span></div>
+      <div class="err-msg">${esc(t('v.required'))}</div>
+    </div>
+    <div class="grid">
+      ${fieldText({id:'a_phone',labelKey:'f.phone',ph:'ph.phone',req:true,type:'tel',value:a.a_phone||''})}
+      ${fieldText({id:'a_email',labelKey:'f.email',ph:'ph.email',req:true,type:'email',value:a.a_email||''})}
+    </div>
+    <div class="field full">
+      <label>${esc(t('f.chan'))}</label>
+      <div class="grid">${chanHtml}</div>
+    </div>
+    ${fieldUpload({id:'a_idcard',labelKey:'f.idcard.ap',req:true})}
+    <div class="actions">
+      <button type="button" class="btn btn-ghost" data-back>${esc(t('btn.back'))}</button>
+      <div class="spacer"></div>
+      <button type="submit" class="btn btn-primary">${esc(t('btn.next.racer'))}</button>
+    </div>
+  </form>`;
+};
+SCREEN_INIT.applicant = function(){
+  const form=el('apForm');
+  bindUploads(form);
+  el('a_useid').onchange=(e)=>{ if(e.target.checked){ el('a_deliaddr').value=el('a_idaddr').value; } };
+  form.querySelectorAll('[data-chan]').forEach(cb=>cb.onchange=()=>{
+    const k=cb.dataset.chan; el('chan_'+k).classList.toggle('hidden',!cb.checked);
+    state.applicant['chan_'+k+'_on']=cb.checked;
+  });
+  form.querySelector('[data-back]').onclick=()=>{saveApplicant(form);go('terms');};
+  form.onsubmit=(e)=>{e.preventDefault();if(!validateScreen(form)){toast(t('v.fixerr'));return;}saveApplicant(form);go('racer');};
+};
+function saveApplicant(form){collect(form,state.applicant);['line','wechat','whatsapp'].forEach(k=>{const on=form.querySelector('[data-chan="'+k+'"]');state.applicant['chan_'+k+'_on']=on&&on.checked;const inp=el('chan_'+k);if(inp)state.applicant['chan_'+k]=inp.value;});}
+
+/* ---- RACER ---- */
+SCREENS.racer = function(){
+  const r=state.racer;
+  const modelOpts=MODELS[state.lang].map(m=>({v:m,l:m}));
+  const carOpts=[];for(let i=1;i<=120;i++){const taken=(i%17===0);carOpts.push({v:String(i),l:'#'+i+(taken?' ('+t('pk.taken')+')':'')});}
+  return `
+  <p class="eyebrow">${esc(t('rc.eyebrow'))}</p>
+  <h1 class="page-title">${esc(t('rc.title'))}</h1>
+  <p class="page-sub">${esc(t('rc.sub'))}</p>
+  <form id="rcForm" novalidate>
+    <div class="grid">
+      ${fieldText({id:'r_rname',labelKey:'f.rname',req:true,value:r.r_rname||''})}
+      ${fieldText({id:'r_rsurname',labelKey:'f.rsurname',req:true,value:r.r_rsurname||''})}
+    </div>
+    ${fieldText({id:'r_idaddr',labelKey:'f.idaddr',req:true,value:r.r_idaddr||'',full:true})}
+    ${fieldText({id:'r_vehicle',labelKey:'f.vehicle',req:true,value:r.r_vehicle||'',full:true})}
+    ${fieldSelect({id:'r_model',labelKey:'f.model',req:true,options:modelOpts,value:r.r_model||'',full:true})}
+    <div class="field full" data-field="r_team">
+      <label>${esc(t('f.team'))}<span class="req">*</span></label>
+      <input class="control" id="r_team" data-req value="${esc(r.r_team||'')}"/>
+      <div class="note">${esc(t('rc.team.note'))}</div>
+      <div class="err-msg">${esc(t('v.required'))}</div>
+    </div>
+    ${fieldSelect({id:'r_carno',labelKey:'f.carno',req:true,options:carOpts,placeholderKey:'opt.carno',value:r.r_carno||'',full:true})}
+    ${fieldUpload({id:'r_idcard',labelKey:'f.idcard.rc',req:true})}
+    ${fieldUpload({id:'r_photo',labelKey:'f.rphoto',req:true})}
+    <div class="actions">
+      <button type="button" class="btn btn-ghost" data-back>${esc(t('btn.back'))}</button>
+      <div class="spacer"></div>
+      <button type="submit" class="btn btn-primary">${esc(t('btn.next.parking'))}</button>
+    </div>
+  </form>`;
+};
+SCREEN_INIT.racer = function(){
+  const form=el('rcForm');
+  bindUploads(form);
+  form.querySelector('[data-back]').onclick=()=>{collect(form,state.racer);go('applicant');};
+  form.onsubmit=(e)=>{e.preventDefault();if(!validateScreen(form)){toast(t('v.fixerr'));return;}collect(form,state.racer);go('parking');};
+};
+
+/* ---- PARKING ---- */
+SCREENS.parking = function(){
+  const rows="ABCDEF".split("");
+  let map='';
+  rows.forEach(row=>{
+    let cells='';
+    for(let i=1;i<=10;i++){
+      const id=row+i;
+      const taken=state.takenPits.includes(id);
+      const sel=state.parking.pit===id;
+      cells+=`<button type="button" class="pit ${taken?'taken':''} ${sel?'sel':''}" data-pit="${id}" ${taken?'disabled':''}>${id}</button>`;
+    }
+    map+=`<div class="pit-row"><span class="rlab">${row}</span><div class="pit-cells">${cells}</div></div>`;
+  });
+  const pitOpts=[];
+  "ABCDEF".split("").forEach(row=>{for(let i=1;i<=10;i++){const id=row+i;if(!state.takenPits.includes(id))pitOpts.push({v:id,l:'PIT '+id});}});
+  return `
+  <p class="eyebrow">${esc(t('pk.eyebrow'))}</p>
+  <h1 class="page-title">${esc(t('pk.title'))}</h1>
+  <p class="page-sub">${esc(t('pk.sub'))}</p>
+  <div class="info-box"><span class="ico">🅿️</span><span>${esc(t('pk.map.hint'))}</span></div>
+  <div class="parking-legend">
+    <span><i class="dot free"></i>${esc(t('pk.free'))}</span>
+    <span><i class="dot sel"></i>${esc(t('pk.sel'))}</span>
+    <span><i class="dot taken"></i>${esc(t('pk.taken'))}</span>
+  </div>
+  <div class="track"><div class="track-label">${esc(t('track.label'))}</div><div class="pit-rows">${map}</div></div>
+  <form id="pkForm" novalidate style="margin-top:20px">
+    ${fieldSelect({id:'p_pit',labelKey:'f.pit',req:true,options:pitOpts,placeholderKey:'opt.pit',value:state.parking.pit,full:true})}
+    <label class="checkbox"><input type="checkbox" id="p_private" ${state.parking.privatePit?'checked':''}/> ${esc(t('f.privatepit'))}</label>
+    <div class="actions">
+      <button type="button" class="btn btn-ghost" data-back>${esc(t('btn.back'))}</button>
+      <div class="spacer"></div>
+      <button type="submit" class="btn btn-primary">${esc(t('btn.next.bank'))}</button>
+    </div>
+  </form>`;
+};
+SCREEN_INIT.parking = function(){
+  const form=el('pkForm');
+  el('screen').querySelectorAll('[data-pit]').forEach(b=>b.onclick=()=>{
+    state.parking.pit=b.dataset.pit;
+    el('p_pit').value=b.dataset.pit;
+    el('screen').querySelectorAll('.pit').forEach(p=>p.classList.remove('sel'));
+    b.classList.add('sel');
+    toast(t('t.pit')+b.dataset.pit);
+  });
+  el('p_pit').onchange=(e)=>{
+    state.parking.pit=e.target.value;
+    el('screen').querySelectorAll('[data-pit]').forEach(p=>p.classList.toggle('sel',p.dataset.pit===e.target.value));
+  };
+  form.querySelector('[data-back]').onclick=()=>{savePark(form);go('racer');};
+  form.onsubmit=(e)=>{e.preventDefault();if(!validateScreen(form)){toast(t('v.fixerr'));return;}savePark(form);go('bank');};
+};
+function savePark(form){state.parking.pit=el('p_pit').value;state.parking.privatePit=el('p_private').checked;}
+
+/* ---- BANK ---- */
+SCREENS.bank = function(){
+  const b=state.bank;
+  const bankOpts=BANKS[state.lang].map(x=>({v:x,l:x})).concat([{v:'__other__',l:t('bank.other')}]);
+  function acct(prefix){
+    const other=b[prefix+'_bank']==='__other__';
+    return `
+      ${fieldSelect({id:prefix+'_bank',labelKey:'f.bank',req:true,options:bankOpts,placeholderKey:'opt.bank',value:b[prefix+'_bank']||'',full:true})}
+      <div class="field full ${other?'':'hidden'}" data-otherwrap="${prefix}">
+        <label>${esc(t('f.bankother'))}<span class="req">*</span></label>
+        <input class="control" id="${prefix}_bankother" ${other?'data-req':''} value="${esc(b[prefix+'_bankother']||'')}"/>
+        <div class="err-msg">${esc(t('v.required'))}</div>
+      </div>
+      ${fieldText({id:prefix+'_accno',labelKey:'f.accno',req:true,value:b[prefix+'_accno']||'',full:true})}
+      <div class="grid">
+        ${fieldText({id:prefix+'_accname',labelKey:'f.accname',req:true,value:b[prefix+'_accname']||''})}
+        ${fieldText({id:prefix+'_accsur',labelKey:'f.accsur',req:true,value:b[prefix+'_accsur']||''})}
+      </div>`;
+  }
+  return `
+  <p class="eyebrow">${esc(t('bk.eyebrow'))}</p>
+  <h1 class="page-title">${esc(t('bk.title'))}</h1>
+  <p class="page-sub">${esc(t('bk.sub'))}</p>
+  <form id="bkForm" novalidate>
+    <h3 style="margin:6px 0 2px;font-size:16px">${esc(t('bk.refund.t'))}</h3>
+    <p class="page-sub" style="margin-bottom:14px;font-size:12.5px">${esc(t('bk.refund.s'))}</p>
+    ${acct('rf')}
+    <hr style="border:0;border-top:1px solid var(--line);margin:24px 0"/>
+    <h3 style="margin:6px 0 2px;font-size:16px">${esc(t('bk.prize.t'))}</h3>
+    <p class="page-sub" style="margin-bottom:14px;font-size:12.5px">${esc(t('bk.prize.s'))}</p>
+    ${acct('pz')}
+    <div class="actions">
+      <button type="button" class="btn btn-ghost" data-back>${esc(t('btn.back'))}</button>
+      <div class="spacer"></div>
+      <button type="submit" class="btn btn-primary">${esc(t('btn.summary'))}</button>
+    </div>
+  </form>`;
+};
+SCREEN_INIT.bank = function(){
+  const form=el('bkForm');
+  ['rf','pz'].forEach(p=>{
+    el(p+'_bank').onchange=(e)=>{
+      const wrap=form.querySelector('[data-otherwrap="'+p+'"]');
+      const other=e.target.value==='__other__';
+      wrap.classList.toggle('hidden',!other);
+      const inp=el(p+'_bankother'); if(other)inp.setAttribute('data-req','');else{inp.removeAttribute('data-req');wrap.classList.remove('invalid');}
+    };
+  });
+  form.querySelector('[data-back]').onclick=()=>{collect(form,state.bank);go('parking');};
+  form.onsubmit=(e)=>{e.preventDefault();if(!validateScreen(form)){toast(t('v.fixerr'));return;}collect(form,state.bank);go('summary');};
+};
+
+/* ---- SUMMARY ---- */
+function calcTotal(){
+  let sub=PRICES.entry+PRICES.pit+(state.parking.privatePit?PRICES.privatePit:0);
+  return {sub, discount:state.discount.amount, total:Math.max(0,sub-state.discount.amount)};
+}
+SCREENS.summary = function(){
+  const c=calcTotal();
+  return `
+  <p class="eyebrow">${esc(t('sm.eyebrow'))}</p>
+  <h1 class="page-title">${esc(t('sm.title'))}</h1>
+  <p class="page-sub">${esc(t('sm.sub'))}</p>
+  <div class="sum-line"><span class="lab">${esc(t('sm.entry'))}</span><span class="val">${esc(money(PRICES.entry))}</span></div>
+  <div class="sum-line"><span class="lab">${esc(t('sm.pit'))} (${esc(state.parking.pit||'-')})</span><span class="val">${esc(money(PRICES.pit))}</span></div>
+  ${state.parking.privatePit?`<div class="sum-line"><span class="lab">${esc(t('sm.privatepit'))}</span><span class="val">${esc(money(PRICES.privatePit))}</span></div>`:''}
+  ${c.discount>0?`<div class="sum-line discount"><span class="lab">${esc(t('sm.discount'))} (${esc(state.discount.code)})</span><span class="val">- ${esc(money(c.discount))}</span></div>`:''}
+  <div class="discount-row">
+    <input class="control" id="discCode" placeholder="${esc(t('sm.code.ph'))}" value="${esc(state.discount.code)}"/>
+    <button type="button" class="btn btn-ghost" id="applyCode">${esc(t('sm.code.apply'))}</button>
+  </div>
+  <div class="info-box"><span class="ico">🏷️</span><span>SOUPEDUP · EARLYBIRD · VIP2026</span></div>
+  <div class="sum-line total"><span class="lab">${esc(t('sm.total'))}</span><span class="val">${esc(money(c.total))}</span></div>
+  <div class="actions">
+    <button class="btn btn-ghost" data-back>${esc(t('btn.back'))}</button>
+    <div class="spacer"></div>
+    <button class="btn btn-primary" id="toPay">${esc(t('btn.pay'))}</button>
+  </div>`;
+};
+SCREEN_INIT.summary = function(){
+  el('applyCode').onclick=()=>{
+    const code=el('discCode').value.trim().toUpperCase();
+    if(DISCOUNTS[code]){state.discount={code,amount:DISCOUNTS[code]};toast(t('sm.code.ok'));render();}
+    else{state.discount={code:'',amount:0};toast(t('sm.code.bad'));}
+  };
+  el('screen').querySelector('[data-back]').onclick=()=>go('bank');
+  el('toPay').onclick=()=>go('pay');
+};
+
+/* ---- PAYMENT ---- */
+SCREENS.pay = function(){
+  const c=calcTotal();
+  const isCard=state.payMethod==='card';
+  return `
+  <p class="eyebrow">${esc(t('py.eyebrow'))}</p>
+  <h1 class="page-title">${esc(t('py.title'))}</h1>
+  <p class="page-sub">${esc(t('py.sub'))}</p>
+  <div class="pay-methods">
+    <div class="pay-opt ${isCard?'sel':''}" data-pay="card">
+      <div class="p-ico">💳</div><div class="p-name">${esc(t('py.card'))}</div><div class="p-desc">${esc(t('py.card.d'))}</div>
+    </div>
+    <div class="pay-opt ${!isCard?'sel':''}" data-pay="qr">
+      <div class="p-ico">📱</div><div class="p-name">${esc(t('py.qr'))}</div><div class="p-desc">${esc(t('py.qr.d'))}</div>
+    </div>
+  </div>
+  <div id="payDetail" style="margin-top:6px"></div>
+
+  <label class="checkbox" style="margin:18px 0 4px"><input type="checkbox" id="taxCb" ${state.tax?'checked':''}/> ${esc(t('py.tax'))}</label>
+  <div id="taxFields" class="${state.tax?'':'hidden'}">
+    <div class="field full"><label>${esc(t('py.tax.name'))}</label><input class="control" id="tax_name"/></div>
+    <div class="grid">
+      <div class="field"><label>${esc(t('py.tax.taxid'))}</label><input class="control" id="tax_id"/></div>
+      <div class="field"><label>${esc(t('py.tax.addr'))}</label><input class="control" id="tax_addr"/></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin:18px 0;background:var(--panel-2)">
+    <div class="card-pad" style="padding:16px 18px">
+      <h4 style="margin:0 0 10px;font-size:14px">${esc(t('py.terms.t'))}</h4>
+      <p class="note" style="margin-bottom:10px"><b>${esc(t('py.t1.t'))}</b><br/>${esc(t('py.t1.b'))}</p>
+      <p class="note" style="margin-bottom:10px"><b>${esc(t('py.t2.t'))}</b><br/>${esc(t('py.t2.b'))}</p>
+      <p class="note"><b>${esc(t('py.t3.t'))}</b><br/>${esc(t('py.t3.b'))}</p>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-ghost" data-back>${esc(t('btn.back'))}</button>
+    <div class="spacer"></div>
+    <button class="btn btn-primary btn-lg" id="confirmPay">${esc(t('py.confirm'))} · ${esc(money(c.total))}</button>
+  </div>`;
+};
+SCREEN_INIT.pay = function(){
+  renderPayDetail();
+  el('screen').querySelectorAll('[data-pay]').forEach(o=>o.onclick=()=>{state.payMethod=o.dataset.pay;el('screen').querySelectorAll('.pay-opt').forEach(p=>p.classList.toggle('sel',p===o));renderPayDetail();});
+  el('taxCb').onchange=(e)=>{state.tax=e.target.checked;el('taxFields').classList.toggle('hidden',!e.target.checked);};
+  el('screen').querySelector('[data-back]').onclick=()=>go('summary');
+  el('confirmPay').onclick=()=>{finishPayment();};
+};
+function renderPayDetail(){
+  const box=el('payDetail');
+  if(state.payMethod==='card'){
+    box.innerHTML=`
+      <div class="field full"><label>${esc(t('py.card.num'))}</label><input class="control" placeholder="0000 0000 0000 0000" inputmode="numeric"/></div>
+      <div class="grid">
+        <div class="field"><label>${esc(t('py.card.exp'))}</label><input class="control" placeholder="MM/YY"/></div>
+        <div class="field"><label>${esc(t('py.card.cvv'))}</label><input class="control" placeholder="123" inputmode="numeric"/></div>
+      </div>
+      <div class="field full"><label>${esc(t('py.card.holder'))}</label><input class="control" placeholder="NAME SURNAME"/></div>`;
+  } else {
+    box.innerHTML=`<div class="qr-box">
+      <div class="qr-img">${qrSvg()}</div>
+      <p style="margin:12px 0 0;font-size:13px;color:var(--txt-dim)">${esc(t('py.qr.scan'))}</p>
+      <p style="margin:6px 0 0;font-weight:700">PromptPay · 0XX-XXX-XXXX · SOUPED UP CO., LTD.</p>
+    </div>`;
+  }
+}
+function qrSvg(){
+  // simple decorative QR-like pattern
+  let cells='';const n=17;const seed=12345;let s=seed;
+  function rnd(){s=(s*1103515245+12345)&0x7fffffff;return s/0x7fffffff;}
+  for(let y=0;y<n;y++)for(let x=0;x<n;x++){
+    const corner=(x<3&&y<3)||(x>=n-3&&y<3)||(x<3&&y>=n-3);
+    if(corner||rnd()>0.55)cells+=`<rect x="${x*9}" y="${y*9}" width="9" height="9"/>`;
+  }
+  return `<svg viewBox="0 0 ${n*9} ${n*9}" width="150" height="150" fill="#000">${cells}</svg>`;
+}
+function finishPayment(){
+  const c=calcTotal();
+  const ref='SU26-'+Math.random().toString(36).slice(2,7).toUpperCase()+'-'+Math.floor(1000+Math.random()*9000);
+  state.result={ref, racer:(state.racer.r_rname||'')+' '+(state.racer.r_rsurname||''), model:state.racer.r_model||'-', amount:c.total, email:state.applicant.a_email||(state.account&&state.account.email)||''};
+  go('done');
+}
+
+/* ---- DONE ---- */
+SCREENS.done = function(){
+  const r=state.result||{};
+  return `
+  <div class="success-wrap">
+    <div class="success-ico">🏁</div>
+    <h1 class="page-title">${esc(t('dn.title'))}</h1>
+    <p class="page-sub">${esc(t('dn.sub'))} ${r.email?('· '+esc(t('dn.email'))+' '+esc(r.email)):''}</p>
+    <div class="receipt">
+      <div class="r-head">SOUPED UP · OFFICIAL RECEIPT</div>
+      <div class="r-row"><span class="rl">${esc(t('dn.ref'))}</span><span class="rv ref-num">${esc(r.ref||'')}</span></div>
+      <div class="r-row"><span class="rl">${esc(t('dn.racer'))}</span><span class="rv">${esc(r.racer||'-')}</span></div>
+      <div class="r-row"><span class="rl">${esc(t('dn.comp'))}</span><span class="rv">${esc(r.model||'-')}</span></div>
+      <div class="r-row"><span class="rl">${esc(t('dn.amount'))}</span><span class="rv" style="color:var(--amber)">${esc(money(r.amount||0))}</span></div>
+    </div>
+    <div class="actions" style="justify-content:center">
+      <button class="btn btn-ghost" onclick="window.print()">${esc(t('dn.print'))}</button>
+      <button class="btn btn-primary" id="newReg">${esc(t('dn.new'))}</button>
+    </div>
+  </div>`;
+};
+SCREEN_INIT.done = function(){
+  el('newReg').onclick=()=>{
+    state.step='auth';state.authTab='register';
+    state.terms={privacy:false,rules:false,raceguar:false,dmgguar:false};
+    state.applicant={};state.racer={};state.parking={pit:'',privatePit:false};
+    state.bank={};state.discount={code:'',amount:0};state.files={};state.tax=false;state.result=null;
+    genTakenPits();render();
+  };
+};
+
+/* ================= Uploads ================= */
+function bindUploads(scope){
+  scope.querySelectorAll('[data-upload]').forEach(inp=>{
+    inp.onchange=(e)=>{
+      const f=e.target.files[0]; if(!f)return;
+      const rec={name:f.name,thumb:null};
+      if(/^image\//.test(f.type)){
+        const reader=new FileReader();
+        reader.onload=ev=>{rec.thumb=ev.target.result;state.files[inp.id]=rec;refreshUpload(inp.id);};
+        reader.readAsDataURL(f);
+      } else {state.files[inp.id]=rec;refreshUpload(inp.id);}
+      toast(t('t.uploaded'));
+    };
+  });
+}
+function refreshUpload(id){
+  const inp=el(id); if(!inp)return;
+  const label=inp.closest('.upload'); const field=inp.closest('.field');
+  const f=state.files[id];
+  label.classList.add('has-file'); field.classList.remove('invalid');
+  let ex=label.querySelector('.u-file'); if(!ex){ex=document.createElement('div');ex.className='u-file';label.appendChild(ex);}
+  ex.textContent='✓ '+f.name;
+  let img=label.querySelector('.thumb'); if(f.thumb){if(!img){img=document.createElement('img');img.className='thumb';label.appendChild(img);}img.src=f.thumb;}
+}
+
+/* ================= Language ================= */
+function setLang(lang){
+  state.lang=lang;
+  document.documentElement.setAttribute('lang',lang);
+  document.documentElement.setAttribute('data-lang',lang);
+  document.querySelectorAll('[data-setlang]').forEach(b=>b.classList.toggle('active',b.dataset.setlang===lang));
+  document.querySelectorAll('[data-i18n]').forEach(n=>n.textContent=t(n.dataset.i18n));
+  // persist current form values before re-render
+  persistCurrentForm();
+  render();
+}
+function persistCurrentForm(){
+  const form=el('apForm'); if(form)saveApplicant(form);
+  const rf=el('rcForm'); if(rf)collect(rf,state.racer);
+  const pf=el('pkForm'); if(pf)savePark(pf);
+  const bf=el('bkForm'); if(bf)collect(bf,state.bank);
+}
+
+/* ================= Boot ================= */
+document.querySelectorAll('[data-setlang]').forEach(b=>b.onclick=()=>setLang(b.dataset.setlang));
+el('modalX').onclick=closeModal;
+el('modalClose').onclick=closeModal;
+el('modalBack').onclick=(e)=>{if(e.target===el('modalBack'))closeModal();};
+// generic back handler fallback
+document.addEventListener('click',(e)=>{
+  const b=e.target.closest('[data-back]');
+  if(b && b.closest('#screen') && !b.onclick){ /* handled per-screen */ }
+});
+setLang('th');
+render();
+</script>
