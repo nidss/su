@@ -239,14 +239,22 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .spot.sel{background:var(--mint);color:#06141d;box-shadow:inset 0 0 0 3px #0c142a}
 .sponsor{background:#e23b32;color:#fff;text-align:center;font-weight:800;letter-spacing:3px;border-radius:3px;padding:7px 4px;font-size:14px;font-family:'Rajdhani',sans-serif}
 .admin-box{background:#0c2b4a;color:#fff;border-radius:4px;padding:8px 12px;font-size:11px;font-weight:600;display:grid;place-items:center;text-align:center;min-width:118px;line-height:1.35;min-height:36px}
-.recv-box{background:#fff;border:1.6px solid #26331f;border-radius:4px;padding:6px 8px;font-size:11px;color:#22371a;font-weight:700;display:grid;place-items:center;text-align:center;width:134px;line-height:1.35;align-self:center}
+.recv-box{background:#fff;border:1.6px solid #26331f;border-radius:4px;padding:2px 8px;font-size:10.5px;color:#22371a;font-weight:700;display:grid;place-items:center;text-align:center;width:134px;height:39px;box-sizing:border-box;line-height:1.15}
+.dim-v{width:30px;flex:0 0 auto;position:relative;display:flex;align-items:center;justify-content:center;align-self:stretch}
+.dim-v .l{position:absolute;left:50%;top:24px;bottom:2px;border-left:1.5px dashed #c3c7bc}
+.dim-v .t{writing-mode:vertical-rl;transform:rotate(180deg);color:#a7ada0;font-size:11px;font-weight:700;background:#edefe6;padding:4px 0;z-index:1;letter-spacing:1px}
+.dim-h{width:96px;flex:0 0 auto;align-self:center;display:flex;flex-direction:column;align-items:center;gap:3px;color:#a7ada0;font-size:11px;font-weight:800;letter-spacing:1px}
+.dim-h .dl{width:82px;height:0;border-top:1.5px dashed #c3c7bc;position:relative}
+.dim-h .dl::before,.dim-h .dl::after{content:"";position:absolute;top:-4px;border:4px solid transparent}
+.dim-h .dl::before{left:-2px;border-right-color:#c3c7bc}
+.dim-h .dl::after{right:-2px;border-left-color:#c3c7bc}
 .air-bar{background:#fff;border:1.6px dashed #333;color:#222;text-align:center;font-weight:800;letter-spacing:3px;border-radius:3px;padding:7px 4px;font-size:14px;font-family:'Rajdhani','Noto Sans Thai',sans-serif}
 .aisle-gap{width:34px;flex:0 0 auto}
 .tent-gap{width:134px;flex:0 0 auto}
 .row-indent{width:134px;flex:0 0 auto}
 .bldg-slot{width:134px;flex:0 0 auto;display:flex;justify-content:center;align-items:center;align-self:stretch}
-.lot-lane{align-self:stretch;height:0;border-top:2px dashed #e08a2b;margin:2px 0;position:relative}
-.lot-lane::after{content:"▶ ▶ ▶ ▶ ▶ ▶ ▶ ▶ ▶ ▶ ▶ ▶ ▶ ▶";position:absolute;top:-9px;left:20%;color:#e08a2b;font-size:11px;letter-spacing:10px}
+.lot-lane{align-self:stretch;height:44px}
+.arrow-svg{position:absolute;left:0;top:0;pointer-events:none;z-index:1;overflow:visible}
 .fence{align-self:stretch;background:#1c7d3f;color:#fff;text-align:center;font-weight:800;letter-spacing:6px;padding:14px;border-radius:6px;font-size:17px;margin-top:6px;font-family:'Rajdhani','Noto Sans Thai',sans-serif}
 .bldg{background:#fff;border:1.6px solid #26331f;border-radius:4px;color:#22371a;font-size:11px;font-weight:700;padding:8px 6px;writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;min-height:74px;display:grid;place-items:center}
 .map-box{position:relative}
@@ -900,27 +908,68 @@ function pkRenderTent(tn){
     const booked=PARK_BOOKED(s), sel=String(state.parking.pit)===String(s), air=tn.c==='yellow';
     return `<button type="button" class="spot${air?' air':''}${booked?' booked':''}${sel?' sel':''}" data-spot="${s}" ${booked?'disabled':''}>${s}</button>`;
   }).join('');
-  return `<div class="tent"><div class="tent-no">${tn.n}</div><div class="tent-spots">${spots}</div></div>`;
+  return `<div class="tent" data-tent="${tn.n}"><div class="tent-no">${tn.n}</div><div class="tent-spots">${spots}</div></div>`;
 }
 function pkRenderBlk(b){
   if(b.t==='admin') return `<div class="blk"><div class="tent"><div class="tent-no">${b.n}</div><div class="admin-box">${esc(t('pk.admin'))}</div></div></div>`;
-  if(b.t==='recv') return `<div class="blk"><div class="recv-box">${esc(t('pk.recv'))}</div></div>`;
+  if(b.t==='recv') return `<div class="blk"><div class="tent"><div class="recv-box">${esc(t('pk.recv'))}</div></div></div>`;
   if(b.t==='aisle') return `<div class="aisle-gap"></div>`;
   if(b.t==='gap') return `<div class="tent-gap"></div>`;
   const air = b.air?`<div class="air-bar">${esc(t('pk.air'))}</div>`:'';
   const sponsor = b.sponsor?`<div class="sponsor">${esc(b.sponsor)}</div>`:'';
   return `<div class="blk"><div class="blk-tents">${b.tents.map(pkRenderTent).join('')}</div>${sponsor}${air}</div>`;
 }
+function pkDimV(){return `<div class="dim-v"><span class="l"></span><span class="t">5 m</span></div>`;}
 function parkingLotHTML(){
   const rows = pkRows();
+  const dimH = `<div class="dim-h"><span>12 M</span><span class="dl"></span></div>`;
   return `<div class="lot">
-    <div class="lot-row"><div class="bldg-slot"><div class="bldg">${esc(t('pk.bldg'))}</div></div>${rows[0].map(pkRenderBlk).join('')}</div>
+    <div class="lot-row">${pkDimV()}<div class="bldg-slot"><div class="bldg">${esc(t('pk.bldg'))}</div></div>${rows[0].map(pkRenderBlk).join('')}</div>
     <div class="lot-lane"></div>
-    <div class="lot-row"><div class="row-indent"></div>${rows[1].map(pkRenderBlk).join('')}</div>
+    <div class="lot-row">${pkDimV()}<div class="row-indent"></div>${rows[1].map(pkRenderBlk).join('')}${dimH}</div>
     <div class="lot-lane"></div>
     <div class="lot-row">${rows[2].map(pkRenderBlk).join('')}</div>
     <div class="fence">${esc(t('pk.fence'))}</div>
   </div>`;
+}
+function drawLotArrows(lot){
+  if(!lot) return;
+  const old=lot.querySelector('.arrow-svg'); if(old)old.remove();
+  const gap=lot.querySelector('.tent-gap'); if(!gap) return;
+  const B=lot.getBoundingClientRect();
+  const rel=e=>{const r=e.getBoundingClientRect();return {l:r.left-B.left,t:r.top-B.top,r:r.right-B.left,b:r.bottom-B.top,cx:(r.left+r.right)/2-B.left,cy:(r.top+r.bottom)/2-B.top};};
+  const rows=lot.querySelectorAll('.lot-row');
+  const spotsOf=row=>[...row.querySelectorAll('.tent-spots')].map(rel);
+  const r1=spotsOf(rows[0]), r2=spotsOf(rows[1]), r3=spotsOf(rows[2]);
+  if(!r1.length||!r2.length||!r3.length) return;
+  const lane1Y=(Math.max(...r1.map(x=>x.b))+Math.min(...r2.map(x=>x.t)))/2;
+  const lane2Y=(Math.max(...r2.map(x=>x.b))+Math.min(...r3.map(x=>x.t)))/2;
+  const g=rel(gap), gapX=g.cx;
+  const t28=lot.querySelector('[data-tent="28"] .tent-spots');
+  const rightX=(t28?rel(t28).r:Math.max(Math.max(...r1.map(x=>x.r)),Math.max(...r2.map(x=>x.r))))+18;
+  const topY=Math.min(...r1.map(x=>x.t))-14;
+  const downX=gapX+7, upX=gapX-7;
+  const W=lot.scrollWidth, H=lot.scrollHeight, C='#e88a1e', ns='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(ns,'svg'); svg.setAttribute('class','arrow-svg'); svg.setAttribute('width',W); svg.setAttribute('height',H); svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const path=document.createElementNS(ns,'path');
+  path.setAttribute('d',`M ${downX} ${topY} V ${lane1Y} H ${rightX} V ${lane2Y} H ${upX} V ${topY}`);
+  path.setAttribute('fill','none'); path.setAttribute('stroke',C); path.setAttribute('stroke-width','2'); path.setAttribute('stroke-dasharray','7 6'); path.setAttribute('stroke-linecap','round');
+  svg.appendChild(path);
+  function arrow(x,y,dir){
+    const s=6, p=document.createElementNS(ns,'polygon');
+    let pts;
+    if(dir==='right') pts=`${x-s},${y-s} ${x+s},${y} ${x-s},${y+s}`;
+    else if(dir==='left') pts=`${x+s},${y-s} ${x-s},${y} ${x+s},${y+s}`;
+    else if(dir==='down') pts=`${x-s},${y-s} ${x+s},${y-s} ${x},${y+s}`;
+    else pts=`${x-s},${y+s} ${x+s},${y+s} ${x},${y-s}`;
+    p.setAttribute('points',pts); p.setAttribute('fill',C); svg.appendChild(p);
+  }
+  arrow(downX,(topY+lane1Y)/2,'down');
+  const n1=4; for(let i=1;i<=n1;i++){ arrow(downX+(rightX-downX)*i/(n1+1),lane1Y,'right'); }
+  arrow(rightX,(lane1Y+lane2Y)/2,'down');
+  const n2=6; for(let i=1;i<=n2;i++){ arrow(rightX-(rightX-upX)*i/(n2+1),lane2Y,'left'); }
+  arrow(upX,(topY+lane1Y)/2,'up');
+  lot.appendChild(svg);
 }
 const EXPAND_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 15 6 6"/><path d="m15 9 6-6"/><path d="M21 16v5h-5"/><path d="M21 8V3h-5"/><path d="M3 16v5h5"/><path d="m3 21 6-6"/><path d="M3 8V3h5"/><path d="M9 9 3 3"/></svg>';
 SCREENS.parking = function(){
@@ -960,11 +1009,13 @@ SCREEN_INIT.parking = function(){
   }
   function bindSpots(scope, fromModal){ scope.querySelectorAll('.spot:not(.booked)').forEach(b=>b.onclick=()=>pkSelect(b.dataset.spot, fromModal)); }
   bindSpots(el('screen'), false);
+  requestAnimationFrame(()=>drawLotArrows(el('screen').querySelector('.lot')));
   el('p_pit').onchange=(e)=>{ state.parking.pit=e.target.value; pkMarkSel(el('screen'),e.target.value); };
   el('mapExpand').onclick=()=>{
     el('mapModalBody').innerHTML=parkingLotHTML();
     el('mapModalBack').classList.add('open');
     bindSpots(el('mapModalBody'), true);
+    requestAnimationFrame(()=>drawLotArrows(el('mapModalBody').querySelector('.lot')));
   };
   form.querySelector('[data-back]').onclick=()=>{savePark(form);go('racer');};
   form.onsubmit=(e)=>{e.preventDefault();if(!validateScreen(form)){toast(t('v.fixerr'));return;}savePark(form);go('bank');};
