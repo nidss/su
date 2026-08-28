@@ -303,6 +303,7 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 
 
 #screen form{display:flex;flex-direction:column;gap:16px}#screen form .field{margin-bottom:0}#a_date{cursor:pointer}
+#taxFields{display:flex;flex-direction:column;gap:16px;margin-top:12px}#taxFields .field{margin-bottom:0}
 </style>
 
 
@@ -409,7 +410,7 @@ const I18N = {
     "f.accname":"ชื่อบัญชี (Name)","f.accsur":"นามสกุล (Surname)","opt.bank":"— เลือกธนาคาร —","bank.other":"อื่นๆ",
     /* summary */
     "sm.eyebrow":"ขั้นตอนที่ 7","sm.title":"สรุปยอดการลงทะเบียน","sm.sub":"ตรวจสอบรายการและยอดชำระ",
-    "sm.entry":"ค่าสมัครการแข่งขัน","sm.pit":"ค่าช่องจอด (Pit)","sm.privatepit":"พีทถาวร (Private Pit)",
+    "sm.entry":"ค่าสมัคร","sm.deposit":"ค่ามัดจำการแข่งขัน","sm.pit":"ค่าช่องจอด (Pit)","sm.privatepit":"พีทถาวร (Private Pit)",
     "sm.discount":"ส่วนลด","sm.total":"ยอดชำระทั้งหมด","sm.code.ph":"กรอกโค้ดส่วนลด","sm.code.apply":"ใช้โค้ด",
     "sm.code.ok":"ใช้โค้ดส่วนลดสำเร็จ","sm.code.bad":"โค้ดส่วนลดไม่ถูกต้อง",
     /* payment */
@@ -418,7 +419,7 @@ const I18N = {
     "py.tax":"ต้องการออกใบกำกับภาษี","py.tax.name":"ชื่อ-นามสกุล / บริษัท","py.tax.taxid":"เลขประจำตัวผู้เสียภาษี",
     "py.tax.addr":"ที่อยู่สำหรับออกใบกำกับภาษี",
     "py.card.num":"หมายเลขบัตร","py.card.exp":"วันหมดอายุ (MM/YY)","py.card.cvv":"CVV","py.card.holder":"ชื่อบนบัตร",
-    "py.qr.scan":"สแกน QR เพื่อชำระเงิน หรือโอนตามข้อมูลบัญชี",
+    "py.qr.scan":"สแกน QR เพื่อชำระเงิน",
     "py.terms.t":"เงื่อนไขการชำระเงิน",
     "py.t1.t":"1. การตรวจสอบยอดเงิน (Verification of the registration fee)",
     "py.t1.b":"ผู้สมัคร/ผู้ชำระเงิน มีหน้าที่ตรวจสอบยอดเงินที่ต้องชำระให้ถูกต้องครบถ้วนก่อนทำการโอนเงินทุกครั้ง · Please ensure you verify the correct total amount payable before proceeding with any money transfer.",
@@ -491,7 +492,7 @@ const I18N = {
     "f.bank":"Bank Name","f.bankother":"Specify bank name","f.accno":"Bank Account Number",
     "f.accname":"Name","f.accsur":"Surname","opt.bank":"— Select bank —","bank.other":"Other",
     "sm.eyebrow":"Step 7","sm.title":"Registration Summary","sm.sub":"Review your items and amount due",
-    "sm.entry":"Competition Entry Fee","sm.pit":"Pit Fee","sm.privatepit":"Private Pit",
+    "sm.entry":"Registration Fee","sm.deposit":"Competition Deposit","sm.pit":"Pit Fee","sm.privatepit":"Private Pit",
     "sm.discount":"Discount","sm.total":"Total Amount","sm.code.ph":"Enter discount code","sm.code.apply":"Apply",
     "sm.code.ok":"Discount code applied","sm.code.bad":"Invalid discount code",
     "py.eyebrow":"Step 8","py.title":"Payment","py.sub":"Choose a payment method",
@@ -499,7 +500,7 @@ const I18N = {
     "py.tax":"Request a tax invoice","py.tax.name":"Name / Company","py.tax.taxid":"Tax ID",
     "py.tax.addr":"Address for tax invoice",
     "py.card.num":"Card Number","py.card.exp":"Expiry (MM/YY)","py.card.cvv":"CVV","py.card.holder":"Cardholder Name",
-    "py.qr.scan":"Scan the QR to pay, or transfer using the account details",
+    "py.qr.scan":"Scan the QR to pay",
     "py.terms.t":"Payment Terms",
     "py.t1.t":"1. Verification of the registration fee",
     "py.t1.b":"Please ensure you verify the correct total amount payable before proceeding with any money transfer.",
@@ -532,7 +533,7 @@ const MODELS = {
   th:["Pro Street 6 (สูงสุด 6 วินาที)","Pro Street 7","Super Max 4WD","Super Street 2WD","Bracket 8.5","Bracket 10.5","Diesel Truck","Bike Drag"],
   en:["Pro Street 6 (max 6 sec)","Pro Street 7","Super Max 4WD","Super Street 2WD","Bracket 8.5","Bracket 10.5","Diesel Truck","Bike Drag"]
 };
-const PRICES = {entry:5000, pit:1500, privatePit:8000};
+const PRICES = {entry:7000, deposit:10000};
 const DISCOUNTS = {"SOUPEDUP":500,"EARLYBIRD":1000,"VIP2026":1500};
 
 /* ================= State ================= */
@@ -1070,7 +1071,7 @@ SCREEN_INIT.bank = function(){
 
 /* ---- SUMMARY ---- */
 function calcTotal(){
-  let sub=PRICES.entry+PRICES.pit+(state.parking.privatePit?PRICES.privatePit:0);
+  let sub=PRICES.entry+PRICES.deposit;
   return {sub, discount:state.discount.amount, total:Math.max(0,sub-state.discount.amount)};
 }
 SCREENS.summary = function(){
@@ -1080,8 +1081,7 @@ SCREENS.summary = function(){
   <h1 class="page-title">${esc(t('sm.title'))}</h1>
   <p class="page-sub">${esc(t('sm.sub'))}</p>
   <div class="sum-line"><span class="lab">${esc(t('sm.entry'))}</span><span class="val">${esc(money(PRICES.entry))}</span></div>
-  <div class="sum-line"><span class="lab">${esc(t('sm.pit'))} (${esc(state.parking.pit||'-')})</span><span class="val">${esc(money(PRICES.pit))}</span></div>
-  ${state.parking.privatePit?`<div class="sum-line"><span class="lab">${esc(t('sm.privatepit'))}</span><span class="val">${esc(money(PRICES.privatePit))}</span></div>`:''}
+  <div class="sum-line"><span class="lab">${esc(t('sm.deposit'))}</span><span class="val">${esc(money(PRICES.deposit))}</span></div>
   ${c.discount>0?`<div class="sum-line discount"><span class="lab">${esc(t('sm.discount'))} (${esc(state.discount.code)})</span><span class="val">- ${esc(money(c.discount))}</span></div>`:''}
   <div class="discount-row">
     <input class="control" id="discCode" placeholder="${esc(t('sm.code.ph'))}" value="${esc(state.discount.code)}"/>
@@ -1168,7 +1168,6 @@ function renderPayDetail(){
     box.innerHTML=`<div class="qr-box">
       <div class="qr-img">${qrSvg()}</div>
       <p style="margin:12px 0 0;font-size:13px;color:var(--txt-dim)">${esc(t('py.qr.scan'))}</p>
-      <p style="margin:6px 0 0;font-weight:700">PromptPay · 0XX-XXX-XXXX · SOUPED UP CO., LTD.</p>
     </div>`;
   }
 }
