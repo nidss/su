@@ -216,7 +216,7 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 
 /* venue map (car park plan) */
 .lot-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:12px;background:#edefe6;padding:20px 18px;margin:6px 0 4px}
-.lot{min-width:1200px;display:flex;flex-direction:column;gap:16px;position:relative}
+.lot{min-width:1200px;width:max-content;display:flex;flex-direction:column;gap:16px;position:relative}
 .lot-row{display:flex;align-items:flex-start;gap:12px}
 .lot-row.center{align-items:stretch}
 .blk{display:flex;flex-direction:column;gap:6px;align-self:flex-start}
@@ -232,13 +232,24 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .spot.sel{background:var(--mint);color:#06141d;box-shadow:inset 0 0 0 3px #0c142a}
 .sponsor{background:#e23b32;color:#fff;text-align:center;font-weight:800;letter-spacing:3px;border-radius:3px;padding:7px 4px;font-size:14px;font-family:'Rajdhani',sans-serif}
 .admin-box{background:#0c2b4a;color:#fff;border-radius:4px;padding:8px 12px;font-size:11px;font-weight:600;display:grid;place-items:center;text-align:center;min-width:118px;line-height:1.35;min-height:36px}
-.recv-box{background:#fff;border:1.6px solid #26331f;border-radius:4px;padding:6px 12px;font-size:11px;color:#22371a;font-weight:700;display:grid;place-items:center;text-align:center;min-width:96px;line-height:1.35;align-self:center}
-.air-label{border:1.6px dashed #333;border-radius:5px;text-align:center;font-size:11px;font-weight:800;letter-spacing:2px;color:#222;padding:3px 4px;margin-bottom:2px}
+.recv-box{background:#fff;border:1.6px solid #26331f;border-radius:4px;padding:6px 8px;font-size:11px;color:#22371a;font-weight:700;display:grid;place-items:center;text-align:center;width:134px;line-height:1.35;align-self:center}
+.air-bar{background:#fff;border:1.6px dashed #333;color:#222;text-align:center;font-weight:800;letter-spacing:3px;border-radius:3px;padding:7px 4px;font-size:14px;font-family:'Rajdhani','Noto Sans Thai',sans-serif}
 .aisle-gap{width:34px;flex:0 0 auto}
-.lot-lane{min-width:1200px;height:0;border-top:2px dashed #e08a2b;margin:2px 0;position:relative}
-.lot-lane::after{content:"▶ ▶ ▶ ▶ ▶ ▶ ▶ ▶ ▶ ▶";position:absolute;top:-9px;left:34%;color:#e08a2b;font-size:11px;letter-spacing:10px}
-.fence{min-width:1200px;background:#1c7d3f;color:#fff;text-align:center;font-weight:800;letter-spacing:6px;padding:14px;border-radius:6px;font-size:17px;margin-top:6px;font-family:'Rajdhani','Noto Sans Thai',sans-serif}
-.bldg{align-self:center;background:#fff;border:1.6px solid #26331f;border-radius:4px;color:#22371a;font-size:11px;font-weight:700;padding:8px 6px;writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;min-height:74px;display:grid;place-items:center}
+.tent-gap{width:134px;flex:0 0 auto}
+.row-indent{width:134px;flex:0 0 auto}
+.bldg-slot{width:134px;flex:0 0 auto;display:flex;justify-content:center;align-items:center;align-self:stretch}
+.lot-lane{align-self:stretch;height:0;border-top:2px dashed #e08a2b;margin:2px 0;position:relative}
+.lot-lane::after{content:"▶ ▶ ▶ ▶ ▶ ▶ ▶ ▶ ▶ ▶ ▶ ▶ ▶ ▶";position:absolute;top:-9px;left:20%;color:#e08a2b;font-size:11px;letter-spacing:10px}
+.fence{align-self:stretch;background:#1c7d3f;color:#fff;text-align:center;font-weight:800;letter-spacing:6px;padding:14px;border-radius:6px;font-size:17px;margin-top:6px;font-family:'Rajdhani','Noto Sans Thai',sans-serif}
+.bldg{background:#fff;border:1.6px solid #26331f;border-radius:4px;color:#22371a;font-size:11px;font-weight:700;padding:8px 6px;writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;min-height:74px;display:grid;place-items:center}
+.map-box{position:relative}
+.map-expand{position:absolute;top:8px;right:8px;z-index:6;width:36px;height:36px;border-radius:9px;background:rgba(12,20,42,.9);border:1px solid rgba(255,255,255,.28);color:#fff;cursor:pointer;display:grid;place-items:center;transition:.15s}
+.map-expand:hover{background:var(--mint);color:#0c142a;border-color:var(--mint)}
+.map-expand svg{width:19px;height:19px}
+.map-modal-back{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(3px);z-index:120;display:none;align-items:center;justify-content:center;padding:14px}
+.map-modal-back.open{display:flex}
+.map-modal{background:#edefe6;border-radius:12px;max-width:96vw;max-height:92vh;overflow:auto;position:relative;padding:30px 22px 22px;box-shadow:var(--shadow)}
+.map-modal-x{position:absolute;top:8px;right:10px;background:#0c2b4a;color:#fff;border:0;width:32px;height:32px;border-radius:8px;font-size:20px;line-height:1;cursor:pointer;z-index:3}
 
 /* summary */
 .sum-line{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);font-size:14.5px}
@@ -322,6 +333,13 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
   </div>
 </div>
 
+<div class="map-modal-back" id="mapModalBack">
+  <div class="map-modal">
+    <button class="map-modal-x" id="mapModalX">×</button>
+    <div class="map-modal-body" id="mapModalBody"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -374,7 +392,7 @@ const I18N = {
     "pk.free":"ว่าง","pk.sel":"ที่เลือก","pk.taken":"ถูกจอง",
     "f.pit":"เลือกช่องจอดรถ (Pit Select)","opt.pit":"— เลือกช่องจอด —",
     "f.privatepit":"จอดพีทถาวร (Private-Owned Pit)","track.label":"PIT LANE",
-    "pk.admin":"กองอำนวยการ โต๊ะ 5 / เก้าอี้ 10","pk.recv":"ที่จอดรถ กรับไซร์","pk.air":"TENT AIR","pk.fence":"หลังรั้ว","pk.bldg":"อาคาร สูฬ","pk.tent":"เต็นท์","pk.persold":"จองแล้ว (Sponsor)","pk.spotsel":"เลือกที่จอด #",
+    "pk.admin":"กองอำนวยการ โต๊ะ 5 / เก้าอี้ 10","pk.recv":"ที่จอดรถกรังปรีซ์","pk.air":"TENT AIR","pk.fence":"หลังรั้ว","pk.bldg":"รถสุขา","pk.tent":"เต็นท์","pk.persold":"จองแล้ว (Sponsor)","pk.spotsel":"เลือกที่จอด #","pk.expand":"ดูผังแบบเต็ม",
     /* bank */
     "bk.eyebrow":"ขั้นตอนที่ 6","bk.title":"บัญชีคืนเงิน · รับเงิน","bk.sub":"ข้อมูลบัญชีธนาคาร",
     "bk.refund.t":"บัญชีคืนเงินมัดจำผู้สมัคร","bk.refund.s":"Account Name for Applicant's Deposit Refund",
@@ -458,7 +476,7 @@ const I18N = {
     "pk.free":"Available","pk.sel":"Selected","pk.taken":"Taken",
     "f.pit":"Pit Select","opt.pit":"— Select a pit —",
     "f.privatepit":"Private-Owned Pit","track.label":"PIT LANE",
-    "pk.admin":"Organizer · 5 tables / 10 chairs","pk.recv":"Marshal Parking","pk.air":"TENT AIR","pk.fence":"Back Fence","pk.bldg":"SULA Building","pk.tent":"Tent","pk.persold":"Booked (Sponsor)","pk.spotsel":"Selected spot #",
+    "pk.admin":"Organizer · 5 tables / 10 chairs","pk.recv":"Grand Prix Parking","pk.air":"TENT AIR","pk.fence":"Back Fence","pk.bldg":"Restroom","pk.tent":"Tent","pk.persold":"Booked (Sponsor)","pk.spotsel":"Selected spot #","pk.expand":"View full map",
     "bk.eyebrow":"Step 6","bk.title":"Refund · Prize Accounts","bk.sub":"Bank account details",
     "bk.refund.t":"Applicant's Deposit Refund Account","bk.refund.s":"Account Name for Applicant's Deposit Refund",
     "bk.prize.t":"Winner's Prize Payment Account","bk.prize.s":"Account Name for Winner's Prize Payment (same as registered racer's name)",
@@ -859,6 +877,7 @@ function pkTent(n,a,b,c){return {n,spots:pkSeq(a,b),c:c||'green'};}
 function pkRows(){return [
   [ {t:'tents',sponsor:'TOYOTA',tents:[pkTent(1,1,4,'red'),pkTent(2,5,8,'red'),pkTent(3,9,12,'red'),pkTent(4,13,16,'red')]},
     {t:'tents',tents:[pkTent(5,17,20),pkTent(6,21,24),pkTent(7,25,28)]},
+    {t:'gap'},
     {t:'admin',n:8},
     {t:'tents',tents:[pkTent(9,29,32),pkTent(10,33,36),pkTent(11,37,40)]},
     {t:'tents',air:true,tents:[pkTent(12,41,44,'yellow'),pkTent(13,45,48,'yellow')]} ],
@@ -869,31 +888,36 @@ function pkRows(){return [
     {t:'recv'} ],
   [ {t:'tents',tents:[pkTent(14,49,52),pkTent(15,53,56),pkTent(16,57,60),pkTent(17,61,64),pkTent(18,65,68),pkTent(19,69,72),pkTent(20,73,76),pkTent(21,77,80),pkTent(22,81,84),pkTent(23,85,88),pkTent(24,89,92),pkTent(25,93,96),pkTent(26,97,100),pkTent(27,101,104),pkTent(28,105,108)]} ],
 ];}
-SCREENS.parking = function(){
-  const renderTent = tn => {
-    const spots = tn.spots.map(s=>{
-      const booked=PARK_BOOKED(s), sel=String(state.parking.pit)===String(s), air=tn.c==='yellow';
-      return `<button type="button" class="spot${air?' air':''}${booked?' booked':''}${sel?' sel':''}" data-spot="${s}" ${booked?'disabled':''}>${s}</button>`;
-    }).join('');
-    return `<div class="tent"><div class="tent-no">${tn.n}</div><div class="tent-spots">${spots}</div></div>`;
-  };
-  const renderBlk = b => {
-    if(b.t==='admin') return `<div class="blk"><div class="tent"><div class="tent-no">${b.n}</div><div class="admin-box">${esc(t('pk.admin'))}</div></div></div>`;
-    if(b.t==='recv') return `<div class="blk"><div class="recv-box">${esc(t('pk.recv'))}</div></div>`;
-    if(b.t==='aisle') return `<div class="aisle-gap"></div>`;
-    const air = b.air?`<div class="air-label">${esc(t('pk.air'))}</div>`:'';
-    const sponsor = b.sponsor?`<div class="sponsor">${esc(b.sponsor)}</div>`:'';
-    return `<div class="blk">${air}<div class="blk-tents">${b.tents.map(renderTent).join('')}</div>${sponsor}</div>`;
-  };
+function pkRenderTent(tn){
+  const spots = tn.spots.map(s=>{
+    const booked=PARK_BOOKED(s), sel=String(state.parking.pit)===String(s), air=tn.c==='yellow';
+    return `<button type="button" class="spot${air?' air':''}${booked?' booked':''}${sel?' sel':''}" data-spot="${s}" ${booked?'disabled':''}>${s}</button>`;
+  }).join('');
+  return `<div class="tent"><div class="tent-no">${tn.n}</div><div class="tent-spots">${spots}</div></div>`;
+}
+function pkRenderBlk(b){
+  if(b.t==='admin') return `<div class="blk"><div class="tent"><div class="tent-no">${b.n}</div><div class="admin-box">${esc(t('pk.admin'))}</div></div></div>`;
+  if(b.t==='recv') return `<div class="blk"><div class="recv-box">${esc(t('pk.recv'))}</div></div>`;
+  if(b.t==='aisle') return `<div class="aisle-gap"></div>`;
+  if(b.t==='gap') return `<div class="tent-gap"></div>`;
+  const air = b.air?`<div class="air-bar">${esc(t('pk.air'))}</div>`:'';
+  const sponsor = b.sponsor?`<div class="sponsor">${esc(b.sponsor)}</div>`:'';
+  return `<div class="blk"><div class="blk-tents">${b.tents.map(pkRenderTent).join('')}</div>${sponsor}${air}</div>`;
+}
+function parkingLotHTML(){
   const rows = pkRows();
-  const map = `<div class="lot-wrap"><div class="lot">
-    <div class="lot-row"><div class="bldg">${esc(t('pk.bldg'))}</div>${rows[0].map(renderBlk).join('')}</div>
+  return `<div class="lot">
+    <div class="lot-row"><div class="bldg-slot"><div class="bldg">${esc(t('pk.bldg'))}</div></div>${rows[0].map(pkRenderBlk).join('')}</div>
     <div class="lot-lane"></div>
-    <div class="lot-row">${rows[1].map(renderBlk).join('')}</div>
+    <div class="lot-row"><div class="row-indent"></div>${rows[1].map(pkRenderBlk).join('')}</div>
     <div class="lot-lane"></div>
-    <div class="lot-row">${rows[2].map(renderBlk).join('')}</div>
+    <div class="lot-row">${rows[2].map(pkRenderBlk).join('')}</div>
     <div class="fence">${esc(t('pk.fence'))}</div>
-  </div></div>`;
+  </div>`;
+}
+const EXPAND_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 15 6 6"/><path d="m15 9 6-6"/><path d="M21 16v5h-5"/><path d="M21 8V3h-5"/><path d="M3 16v5h5"/><path d="m3 21 6-6"/><path d="M3 8V3h5"/><path d="M9 9 3 3"/></svg>';
+SCREENS.parking = function(){
+  const map = `<div class="map-box"><button type="button" class="map-expand" id="mapExpand" title="${esc(t('pk.expand'))}">${EXPAND_SVG}</button><div class="lot-wrap">${parkingLotHTML()}</div></div>`;
   const pitOpts=[];for(let s=1;s<=152;s++){if(!PARK_BOOKED(s))pitOpts.push({v:String(s),l:'PIT '+s});}
   return `
   <p class="eyebrow">${esc(t('pk.eyebrow'))}</p>
@@ -917,23 +941,28 @@ SCREENS.parking = function(){
     </div>
   </form>`;
 };
+function pkMarkSel(scope,s){scope.querySelectorAll('.spot').forEach(x=>x.classList.toggle('sel',x.dataset.spot===String(s) && !x.classList.contains('booked')));}
 SCREEN_INIT.parking = function(){
   const form=el('pkForm');
-  el('screen').querySelectorAll('.spot:not(.booked)').forEach(b=>b.onclick=()=>{
-    const s=b.dataset.spot;
-    state.parking.pit=s;
-    el('p_pit').value=s;
-    el('screen').querySelectorAll('.spot').forEach(x=>x.classList.remove('sel'));
-    b.classList.add('sel');
+  function pkSelect(s, fromModal){
+    state.parking.pit=String(s);
+    if(fromModal){ closeMapModal(); go('parking'); return; }
+    el('p_pit').value=String(s);
+    pkMarkSel(el('screen'),s);
     toast(t('pk.spotsel')+s);
-  });
-  el('p_pit').onchange=(e)=>{
-    state.parking.pit=e.target.value;
-    el('screen').querySelectorAll('.spot').forEach(x=>x.classList.toggle('sel',x.dataset.spot===e.target.value && !x.classList.contains('booked')));
+  }
+  function bindSpots(scope, fromModal){ scope.querySelectorAll('.spot:not(.booked)').forEach(b=>b.onclick=()=>pkSelect(b.dataset.spot, fromModal)); }
+  bindSpots(el('screen'), false);
+  el('p_pit').onchange=(e)=>{ state.parking.pit=e.target.value; pkMarkSel(el('screen'),e.target.value); };
+  el('mapExpand').onclick=()=>{
+    el('mapModalBody').innerHTML=parkingLotHTML();
+    el('mapModalBack').classList.add('open');
+    bindSpots(el('mapModalBody'), true);
   };
   form.querySelector('[data-back]').onclick=()=>{savePark(form);go('racer');};
   form.onsubmit=(e)=>{e.preventDefault();if(!validateScreen(form)){toast(t('v.fixerr'));return;}savePark(form);go('bank');};
 };
+function closeMapModal(){ const m=el('mapModalBack'); if(m)m.classList.remove('open'); }
 function savePark(form){state.parking.pit=el('p_pit').value;state.parking.privatePit=el('p_private').checked;}
 
 /* ---- BANK ---- */
@@ -1188,6 +1217,8 @@ document.querySelectorAll('[data-setlang]').forEach(b=>b.onclick=()=>setLang(b.d
 el('modalX').onclick=closeModal;
 el('modalClose').onclick=closeModal;
 el('modalBack').onclick=(e)=>{if(e.target===el('modalBack'))closeModal();};
+el('mapModalX').onclick=closeMapModal;
+el('mapModalBack').onclick=(e)=>{if(e.target===el('mapModalBack'))closeMapModal();};
 // generic back handler fallback
 document.addEventListener('click',(e)=>{
   const b=e.target.closest('[data-back]');
