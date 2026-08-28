@@ -137,7 +137,8 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .upload{border:1.5px dashed var(--line-2);border-radius:10px;padding:16px;text-align:center;cursor:pointer;transition:.15s;background:var(--bg)}
 .upload:hover{border-color:var(--mint);background:var(--mint-soft)}
 .upload input{display:none}
-.upload .u-ico{font-size:24px}
+.upload .u-ico{font-size:24px;line-height:0;color:var(--mint)}
+.upload .u-ico svg{width:30px;height:30px;display:inline-block;vertical-align:middle}
 .upload .u-txt{font-size:13px;color:var(--txt-dim);margin-top:4px}
 .upload .u-file{font-size:12px;color:var(--green);margin-top:6px;word-break:break-all}
 .upload.has-file{border-color:var(--green);border-style:solid}
@@ -561,7 +562,7 @@ function fieldUpload(opts){
   return `<div class="field full" data-field="${id}">
     <label>${esc(t(labelKey))}${req?'<span class="req">*</span>':''}</label>
     <label class="upload ${f?'has-file':''}" for="${id}">
-      <div class="u-ico">⬆️</div>
+      <div class="u-ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10l-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/><path d="m14 19.5 3-3 3 3"/><path d="M17 22v-5.5"/><circle cx="9" cy="9" r="2"/></svg></div>
       <div class="u-txt">${esc(t('upload.click'))} · ${esc(t('upload.hint'))}</div>
       ${f?`<div class="u-file">✓ ${esc(f.name)}</div>${f.thumb?`<img class="thumb" src="${f.thumb}"/>`:''}`:''}
       <input type="file" id="${id}" accept=".jpg,.jpeg,.png,image/png,image/jpeg" data-upload ${req?'data-req':''}/>
