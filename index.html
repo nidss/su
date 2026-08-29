@@ -373,6 +373,25 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .ei-actions{display:flex;flex-direction:column;gap:8px}
 .btn-sm{padding:7px 13px;font-size:12.5px}
 .ei-del:disabled{opacity:.4;cursor:not-allowed}
+.prof-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.prof-card{background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.pc-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.pc-head h3{margin:0;font-size:17px}
+.pinfo-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 26px}
+@media(max-width:640px){.pinfo-grid{grid-template-columns:1fr}}
+.pinfo-row.full{grid-column:1/-1}
+.pinfo-row .l{font-size:12px;color:var(--txt-dim)}
+.pinfo-row .v{font-size:14.5px;margin-top:2px;word-break:break-word}
+.pc-img{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.pc-img .l{font-size:12px;color:var(--txt-dim);margin-bottom:8px}
+.prof-thumb{width:150px;height:96px;object-fit:cover;border-radius:8px;border:1px solid var(--line-2);cursor:pointer}
+.prof-thumb:hover{border-color:var(--mint)}
+.racer-card{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+.rc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.rc-badge{background:var(--mint-soft);color:var(--mint);font-weight:700;font-size:12.5px;padding:4px 13px;border-radius:999px}
+.rc-imgs{display:flex;gap:8px}
+.prof-empty{color:var(--txt-dim);text-align:center;padding:26px;font-size:14px}
+.badge-paid{background:rgba(37,194,110,.15);color:var(--green);border:1px solid rgba(37,194,110,.4);border-radius:6px;padding:3px 10px;font-size:12px;font-weight:700}
 </style>
 </head>
 <body>
@@ -514,6 +533,10 @@ const I18N = {
     "t.registered":"สมัครสมาชิกสำเร็จ!","t.loginok":"เข้าสู่ระบบสำเร็จ","t.loginfail":"อีเมล/รหัสผ่านไม่ถูกต้อง",
     "t.forgot":"ระบบจะส่งลิงก์รีเซ็ตรหัสผ่านไปยังอีเมลของคุณ (เดโม)",
     "t.acceptall":"กรุณาอ่านและยอมรับเอกสารทั้งหมดก่อน","t.pit":"เลือกช่องจอด ","t.uploaded":"อัปโหลดไฟล์แล้ว",
+    "prof.title":"ประวัติของฉัน","prof.info":"ข้อมูลของฉัน","prof.racers":"ข้อมูลนักแข่ง","prof.history":"ประวัติการลงทะเบียน",
+    "prof.edit":"แก้ไข","prof.addracer":"เพิ่มนักแข่ง","prof.logout":"ออกจากระบบ","prof.viewid":"ดูรูปบัตรประชาชน","prof.noracer":"ยังไม่มีข้อมูลนักแข่ง","prof.racerno":"นักแข่งคนที่",
+    "prof.welcome":"ยินดีต้อนรับกลับ","prof.saved":"บันทึกข้อมูลแล้ว",
+    "hist.ref":"หมายเลขอ้างอิง","hist.racer":"นักแข่ง","hist.model":"รุ่นการแข่งขัน","hist.carno":"เบอร์รถ","hist.date":"วันที่","hist.amount":"ยอดชำระ","hist.status":"สถานะ","hist.paid":"ชำระแล้ว","hist.none":"ยังไม่มีประวัติการลงทะเบียน",
     "lang.name":"ภาษาไทย"
   },
   en:{
@@ -592,6 +615,10 @@ const I18N = {
     "t.registered":"Registration successful!","t.loginok":"Signed in successfully","t.loginfail":"Invalid email/password",
     "t.forgot":"A password reset link will be sent to your email (demo)",
     "t.acceptall":"Please read and accept all documents first","t.pit":"Selected pit ","t.uploaded":"File uploaded",
+    "prof.title":"My Profile","prof.info":"My Information","prof.racers":"My Racers","prof.history":"Registration History",
+    "prof.edit":"Edit","prof.addracer":"Add Racer","prof.logout":"Log out","prof.viewid":"View ID card","prof.noracer":"No racer data yet","prof.racerno":"Racer #",
+    "prof.welcome":"Welcome back","prof.saved":"Saved",
+    "hist.ref":"Reference No.","hist.racer":"Racer","hist.model":"Competition","hist.carno":"Car No.","hist.date":"Date","hist.amount":"Amount","hist.status":"Status","hist.paid":"Paid","hist.none":"No registration history yet",
     "lang.name":"English"
   }
 };
@@ -639,6 +666,7 @@ genTakenPits();
 /* ================= Render root ================= */
 function render(){
   renderStepper();
+  el('stepper').classList.toggle('hidden', state.step==='profile');
   const s=el("screen");
   s.innerHTML = SCREENS[state.step]();
   window.scrollTo({top:0,behavior:"smooth"});
@@ -776,11 +804,11 @@ SCREEN_INIT.auth = function(){
       // demo login: accept if account exists & matches, else accept any (demo) and go to terms
       const idv=el('l_id').value.trim(), pw=el('l_password').value;
       if(state.account && (idv===state.account.email||idv===state.account.username) && pw===state.account.password){
-        toast(t('t.loginok')); go('terms');
+        state.profile=buildProfile(state.account); toast(t('t.loginok')); go('profile');
       } else if(!state.account){
         // no registered account yet in this demo session -> allow proceed
         state.account={username:idv,email:idv.includes('@')?idv:'',phone:'',password:pw};
-        toast(t('t.loginok')); go('terms');
+        state.profile=buildProfile(state.account); toast(t('t.loginok')); go('profile');
       } else {
         toast(t('t.loginfail'));
       }
@@ -947,7 +975,7 @@ SCREENS.racer = function(){
 SCREEN_INIT.racer = function(){
   const form=el('rcForm');
   bindUploads(form);
-  form.querySelector('[data-back]').onclick=()=>{collect(form,state.racer);go('applicant');};
+  form.querySelector('[data-back]').onclick=()=>{collect(form,state.racer);go(state.addRacerMode?'profile':'applicant');};
   form.onsubmit=(e)=>{e.preventDefault();if(!validateScreen(form)){toast(t('v.fixerr'));return;}collect(form,state.racer);go('parking');};
 };
 
@@ -1281,13 +1309,116 @@ SCREENS.done = function(){
     </div>
   </div>`;
 };
+/* ================= MY PROFILE ================= */
+const PLUS_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:-3px"><path d="M5 12h14"/><path d="M12 5v14"/></svg>';
+function pfAddr(){return (10+Math.floor(Math.random()*900))+' หมู่ '+(1+Math.floor(Math.random()*15))+' จ.'+dRnd(D_PROV);}
+function genProfRacer(){
+  const fn=dRnd(D_FIRST),ln=dRnd(D_LAST),carno=1+Math.floor(Math.random()*120);
+  return {r_rname:fn,r_rsurname:ln,r_idaddr:pfAddr(),r_vehicle:dRnd(D_VEH),r_model:dRnd(MODELS.th),r_team:dRnd(D_TEAM),r_carno:String(carno),
+    idImg:dImg('บัตรประชาชนนักแข่ง',fn+' '+ln,'#6FFFE8'),photo:dImg('รูปนักแข่ง',fn+' '+ln,'#D1FF03')};
+}
+function buildProfile(acct){
+  const fn=(acct&&acct.username&&/[ก-๙]/.test(acct.username))?acct.username:dRnd(D_FIRST), ln=dRnd(D_LAST), addr=pfAddr();
+  const ap={a_date:'199'+(2+Math.floor(Math.random()*7))+'-0'+(1+Math.floor(Math.random()*8))+'-1'+(1+Math.floor(Math.random()*8)),
+    a_name:fn,a_surname:ln,a_idaddr:addr,a_deliaddr:addr,
+    a_phone:(acct&&acct.phone)||'08'+(1+Math.floor(Math.random()*8))+'-'+dPad(Math.floor(Math.random()*1000))+'-'+dPad(Math.floor(Math.random()*10000)),
+    a_email:(acct&&acct.email)||'you@email.com',
+    chan_line_on:true,chan_line:'line_'+fn.slice(0,3),chan_wechat_on:false,chan_wechat:'',chan_whatsapp_on:false,chan_whatsapp:'',
+    idImg:dImg('บัตรประชาชนผู้สมัคร',fn+' '+ln,'#6FFFE8')};
+  const racers=[genProfRacer(),genProfRacer()];
+  const history=racers.map((r,i)=>({ref:'SU26-'+Math.random().toString(36).slice(2,7).toUpperCase()+'-'+(1000+Math.floor(Math.random()*9000)),
+    racer:r.r_rname+' '+r.r_rsurname,model:r.r_model,carno:r.r_carno,date:'2026-0'+(2+i)+'-'+dPad(8+i*5),amount:17000,status:'paid'}));
+  return {applicant:ap,racers,history};
+}
+function profInfoHTML(p){
+  const a=p.applicant;
+  const chans=[]; if(a.chan_line_on&&a.chan_line)chans.push('Line: '+a.chan_line); if(a.chan_wechat_on&&a.chan_wechat)chans.push('WeChat: '+a.chan_wechat); if(a.chan_whatsapp_on&&a.chan_whatsapp)chans.push('WhatsApp: '+a.chan_whatsapp);
+  const row=(lab,val,full)=>`<div class="pinfo-row ${full?'full':''}"><div class="l">${esc(lab)}</div><div class="v">${esc(val||'-')}</div></div>`;
+  return `<div class="prof-card">
+    <div class="pc-head"><h3>${esc(t('prof.info'))}</h3><button class="ico-btn edit" id="profEdit" title="${esc(t('prof.edit'))}">${D_ICON.edit}</button></div>
+    <div class="pinfo-grid">
+      ${row(t('f.date'),a.a_date)}${row(t('f.phone'),a.a_phone)}
+      ${row(t('f.name'),a.a_name)}${row(t('f.surname'),a.a_surname)}
+      ${row(t('f.idaddr'),a.a_idaddr,true)}
+      ${row(t('f.deliaddr'),a.a_deliaddr,true)}
+      ${row(t('f.email'),a.a_email)}${row(t('f.chan'),chans.length?chans.join('  ·  '):'-')}
+    </div>
+    <div class="pc-img"><div class="l">${esc(t('f.idcard.ap'))}</div>
+      ${a.idImg?`<img class="prof-thumb" src="${a.idImg}" data-pimg="id" title="${esc(t('prof.viewid'))}"/>`:`<div class="ei-empty" style="width:150px;height:96px">ไม่มีรูป</div>`}
+    </div>
+  </div>`;
+}
+function profRacersHTML(p){
+  const row=(lab,val,full)=>`<div class="pinfo-row ${full?'full':''}"><div class="l">${esc(lab)}</div><div class="v">${esc(val||'-')}</div></div>`;
+  const cards=p.racers.length?p.racers.map((r,i)=>`
+    <div class="racer-card">
+      <div class="rc-head"><span class="rc-badge">${esc(t('prof.racerno'))} ${i+1}</span>
+        <span class="rc-imgs"><button class="ico-btn" data-rimg="${i}" data-kind="id" title="บัตรประชาชนนักแข่ง">${D_ICON.image}</button><button class="ico-btn" data-rimg="${i}" data-kind="photo" title="รูปนักแข่ง">${D_ICON.image}</button></span>
+      </div>
+      <div class="pinfo-grid">
+        ${row(t('f.rname'),r.r_rname)}${row(t('f.rsurname'),r.r_rsurname)}
+        ${row(t('f.idaddr'),r.r_idaddr,true)}
+        ${row(t('f.vehicle'),r.r_vehicle,true)}
+        ${row(t('f.model'),r.r_model)}${row(t('f.team'),r.r_team)}
+        ${row(t('f.carno'),'#'+r.r_carno)}
+      </div>
+    </div>`).join(''):`<div class="prof-empty">${esc(t('prof.noracer'))}</div>`;
+  return `<div class="prof-card">
+    <div class="pc-head"><h3>${esc(t('prof.racers'))}</h3><button class="btn btn-primary btn-sm" id="profAddRacer">${PLUS_SVG} ${esc(t('prof.addracer'))}</button></div>
+    ${cards}
+  </div>`;
+}
+function profHistoryHTML(p){
+  const rows=p.history.length?p.history.map(h=>`<tr><td class="ref-num">${esc(h.ref)}</td><td>${esc(h.racer)}</td><td>${esc(h.model)}</td><td>#${esc(h.carno)}</td><td>${esc(h.date)}</td><td>${esc(money(h.amount))}</td><td><span class="badge-paid">${esc(t('hist.paid'))}</span></td></tr>`).join(''):`<tr><td colspan="7" style="text-align:center;color:var(--txt-dim);padding:24px">${esc(t('hist.none'))}</td></tr>`;
+  return `<div class="table-card" style="border:1px solid var(--line);border-radius:12px"><div class="table-scroll"><table class="dtable">
+    <thead><tr><th>${esc(t('hist.ref'))}</th><th>${esc(t('hist.racer'))}</th><th>${esc(t('hist.model'))}</th><th>${esc(t('hist.carno'))}</th><th>${esc(t('hist.date'))}</th><th>${esc(t('hist.amount'))}</th><th>${esc(t('hist.status'))}</th></tr></thead>
+    <tbody>${rows}</tbody></table></div></div>`;
+}
+SCREENS.profile=function(){
+  if(!state.profile)state.profile=buildProfile(state.account);
+  if(!state.profileTab)state.profileTab='info';
+  const p=state.profile, tab=state.profileTab;
+  const menu=[['info','prof.info'],['racers','prof.racers'],['history','prof.history']].map(([k,tk])=>`<button data-ptab="${k}" class="${tab===k?'active':''}">${esc(t(tk))}</button>`).join('');
+  const content = tab==='info'?profInfoHTML(p):(tab==='racers'?profRacersHTML(p):profHistoryHTML(p));
+  return `
+  <div class="prof-top">
+    <div><p class="eyebrow">${esc(t('prof.welcome'))}</p><h1 class="page-title" style="margin:0">${esc(t('prof.title'))}</h1></div>
+    <button class="btn btn-ghost" id="profLogout">${esc(t('prof.logout'))}</button>
+  </div>
+  <div class="dash-tabs" style="margin:18px 0 20px">${menu}</div>
+  <div id="profContent">${content}</div>`;
+};
+SCREEN_INIT.profile=function(){
+  const sc=el('screen');
+  sc.querySelectorAll('[data-ptab]').forEach(b=>b.onclick=()=>{state.profileTab=b.dataset.ptab;render();});
+  const lo=el('profLogout'); if(lo)lo.onclick=()=>{state.profileTab='info';state.authTab='login';go('auth');};
+  const ed=el('profEdit'); if(ed)ed.onclick=()=>openProfEditApplicant();
+  const pi=sc.querySelector('[data-pimg]'); if(pi)pi.onclick=()=>openDashImg(state.profile.applicant.idImg,t('f.idcard.ap'));
+  sc.querySelectorAll('[data-rimg]').forEach(b=>b.onclick=()=>{const r=state.profile.racers[+b.dataset.rimg];openDashImg(b.dataset.kind==='photo'?r.photo:r.idImg,b.dataset.kind==='photo'?'รูปนักแข่ง':'บัตรประชาชนนักแข่ง');});
+  const ar=el('profAddRacer'); if(ar)ar.onclick=()=>{ state.addRacerMode=true; state.racer={}; state.files={}; go('racer'); };
+};
+function openProfEditApplicant(){
+  const a=state.profile.applicant;
+  const fields=[['a_date','f.date','date'],['a_name','f.name'],['a_surname','f.surname'],['a_idaddr','f.idaddr'],['a_deliaddr','f.deliaddr'],['a_phone','f.phone'],['a_email','f.email','email'],['chan_line','Line'],['chan_wechat','WeChat'],['chan_whatsapp','WhatsApp']];
+  let tmp=a.idImg||''; const has=!!tmp;
+  const body=fields.map(([k,lab,type])=>`<div class="field"><label>${esc(t(lab)||lab)}</label><input class="control" data-ek="${k}" type="${type||'text'}" value="${esc(a[k]||'')}"/></div>`).join('');
+  const imgBody=`<div class="field"><label>${esc(t('f.idcard.ap'))}</label><div class="edit-img" data-imgk="idImg"><img class="ei-thumb" src="${tmp}" style="${has?'':'display:none'}"/><div class="ei-empty" style="${has?'display:none':''}">ยังไม่มีรูป</div><div class="ei-actions"><label class="btn btn-ghost btn-sm">อัปโหลดรูป<input type="file" accept=".jpg,.jpeg,.png,image/png,image/jpeg" hidden data-up/></label><button type="button" class="btn btn-ghost btn-sm ei-del" ${has?'':'disabled'}>ลบรูป</button></div></div></div>`;
+  el('dmBody').innerHTML=`<h3>${esc(t('prof.edit'))} · ${esc(t('prof.info'))}</h3><div style="display:flex;flex-direction:column;gap:14px">${body}${imgBody}</div><div class="actions" style="margin-top:20px"><button class="btn btn-ghost" id="dmCancel">ยกเลิก</button><div class="spacer"></div><button class="btn btn-primary" id="dmSave">บันทึก</button></div>`;
+  const box=el('dmBody').querySelector('.edit-img'),thumb=box.querySelector('.ei-thumb'),empty=box.querySelector('.ei-empty'),del=box.querySelector('.ei-del'),up=box.querySelector('[data-up]');
+  up.onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=ev=>{tmp=ev.target.result;thumb.src=tmp;thumb.style.display='';empty.style.display='none';del.disabled=false;toast('อัปโหลดรูปแล้ว');};rd.readAsDataURL(f);e.target.value='';};
+  del.onclick=()=>{tmp='';thumb.removeAttribute('src');thumb.style.display='none';empty.style.display='';del.disabled=true;};
+  el('dmBack').classList.add('open');
+  el('dmCancel').onclick=closeDashModal;
+  el('dmSave').onclick=()=>{ el('dmBody').querySelectorAll('[data-ek]').forEach(inp=>{a[inp.dataset.ek]=inp.value;}); a.chan_line_on=!!a.chan_line; a.chan_wechat_on=!!a.chan_wechat; a.chan_whatsapp_on=!!a.chan_whatsapp; a.idImg=tmp; closeDashModal(); render(); toast(t('prof.saved')); };
+}
+
 SCREEN_INIT.done = function(){
   el('newReg').onclick=()=>{
     state.step='auth';state.authTab='register';
     state.terms={privacy:false,rules:false,guarantee:false};
     state.applicant={};state.racer={};state.parking={pit:'',privatePit:false};
     state.bank={};state.discount={code:'',amount:0};state.files={};state.tax=false;state.result=null;
-    genTakenPits();render();
+    state.addRacerMode=false;genTakenPits();render();
   };
 };
 
