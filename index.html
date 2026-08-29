@@ -313,6 +313,60 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 
 #screen form{display:flex;flex-direction:column;gap:16px}#screen form .field{margin-bottom:0}#a_date{cursor:pointer}
 #taxFields{display:flex;flex-direction:column;gap:16px;margin-top:12px}#taxFields .field{margin-bottom:0}
+/* ================= dashboard ================= */
+.dash-back{position:fixed;inset:0;background:var(--bg);z-index:200;display:none;overflow:auto}
+.dash-back.open{display:block}
+.dash-wrap{max-width:1440px;margin:0 auto;padding:22px clamp(14px,3vw,32px) 70px}
+.dash-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.dash-title{font-size:clamp(22px,3vw,28px);font-weight:700;letter-spacing:.5px}
+.dash-title small{display:block;font-size:11px;color:var(--txt-dim);letter-spacing:2px;font-weight:600;margin-top:2px}
+.dash-close{background:var(--panel-2);border:1px solid var(--line-2);color:var(--txt-dim);width:42px;height:42px;border-radius:11px;cursor:pointer;display:grid;place-items:center;flex:0 0 auto}
+.dash-close:hover{color:#fff;border-color:var(--mint)}
+.dash-close svg{width:20px;height:20px}
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:26px}
+@media(max-width:760px){.kpi-row{grid-template-columns:1fr}}
+.kpi-card{background:linear-gradient(180deg,var(--panel),var(--bg-2));border:1px solid var(--line);border-radius:14px;padding:20px 22px;position:relative;overflow:hidden}
+.kpi-card::after{content:"";position:absolute;right:-24px;top:-24px;width:96px;height:96px;border-radius:50%;background:var(--mint-soft);opacity:.5}
+.kpi-card .k-ico{width:42px;height:42px;border-radius:11px;background:var(--mint-soft);color:var(--mint);display:grid;place-items:center;margin-bottom:14px;position:relative;z-index:1}
+.kpi-card .k-ico svg{width:22px;height:22px}
+.kpi-card .k-val{font-size:clamp(26px,4vw,34px);font-weight:800;letter-spacing:.5px;position:relative;z-index:1;font-variant-numeric:tabular-nums}
+.kpi-card .k-lab{font-size:13px;color:var(--txt-dim);margin-top:3px;position:relative;z-index:1}
+.dash-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line)}
+.dash-tabs button{background:transparent;border:0;border-bottom:2px solid transparent;color:var(--txt-dim);padding:12px 20px;font-weight:700;font-size:14px;cursor:pointer;transition:.15s;margin-bottom:-1px}
+.dash-tabs button.active{color:#fff;border-bottom-color:var(--mint)}
+.table-card{background:var(--panel);border:1px solid var(--line);border-top:0;border-radius:0 0 14px 14px;overflow:hidden}
+.table-tools{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.table-tools .tt-count{font-size:12.5px;color:var(--txt-faint)}
+.btn-export{display:inline-flex;align-items:center;gap:7px;background:var(--mint-grad);color:var(--mint-ink);border:0;border-radius:9px;padding:9px 16px;font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 4px 12px var(--mint-glow)}
+.btn-export:hover{transform:translateY(-1px)}
+.btn-export svg{width:16px;height:16px}
+.table-scroll{overflow-x:auto}
+.dtable{width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap}
+.dtable th{background:var(--panel-2);color:var(--txt-dim);font-weight:700;text-align:left;padding:10px 13px;border-bottom:1px solid var(--line-2);position:sticky;top:0;z-index:1}
+.dtable td{padding:9px 13px;border-bottom:1px solid var(--line);color:var(--txt);vertical-align:middle}
+.dtable tbody tr:hover td{background:rgba(255,255,255,.025)}
+.dtable td.trunc{max-width:220px;overflow:hidden;text-overflow:ellipsis}
+.dtable .grp-th{text-align:center;border-left:1px solid var(--line-2);border-right:1px solid var(--line-2);font-size:11px;letter-spacing:.5px;color:var(--txt-faint)}
+.dtable .sub-th{font-size:12px}
+.ico-btn{background:transparent;border:1px solid var(--line-2);border-radius:7px;width:30px;height:30px;color:var(--mint);cursor:pointer;display:inline-grid;place-items:center;vertical-align:middle}
+.ico-btn:hover{background:var(--mint-soft);border-color:var(--mint)}
+.ico-btn svg{width:16px;height:16px}
+.ico-btn.edit{color:var(--amber)}
+.ico-btn.edit:hover{background:rgba(255,180,0,.12);border-color:var(--amber)}
+.pager{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px;flex-wrap:wrap}
+.pager .pinfo{font-size:12.5px;color:var(--txt-dim)}
+.pager .pbtns{display:flex;gap:4px;flex-wrap:wrap}
+.pager button{min-width:34px;height:34px;padding:0 8px;border:1px solid var(--line-2);background:var(--panel-2);color:var(--txt-dim);border-radius:8px;cursor:pointer;font-weight:700;font-size:13px}
+.pager button.active{background:var(--mint);color:var(--mint-ink);border-color:var(--mint)}
+.pager button:disabled{opacity:.35;cursor:not-allowed}
+.dm-back{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(3px);z-index:220;display:none;align-items:center;justify-content:center;padding:16px}
+.dm-back.open{display:flex}
+.dm{background:linear-gradient(180deg,var(--panel),var(--bg-2));border:1px solid var(--line-2);border-radius:14px;max-width:560px;width:100%;max-height:90vh;overflow:auto;position:relative;box-shadow:var(--shadow)}
+.dm-x{position:absolute;top:10px;right:12px;background:var(--panel-2);border:1px solid var(--line-2);color:var(--txt-dim);width:30px;height:30px;border-radius:8px;font-size:19px;line-height:1;cursor:pointer;z-index:2}
+.dm-body{padding:24px}
+.dm-body h3{margin:0 0 16px;font-size:18px}
+.dm-img{width:100%;border-radius:10px;border:1px solid var(--line);display:block}
+.dm-cap{font-size:12.5px;color:var(--txt-dim);margin-top:10px;text-align:center}
 </style>
 </head>
 <body>
@@ -357,6 +411,9 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
     <div class="map-modal-body" id="mapModalBody"></div>
   </div>
 </div>
+
+<div class="dash-back" id="dashRoot"></div>
+<div class="dm-back" id="dmBack"><div class="dm"><button class="dm-x" id="dmX">×</button><div class="dm-body" id="dmBody"></div></div></div>
 
 <div class="toast" id="toast"></div>
 
@@ -1283,6 +1340,211 @@ document.addEventListener('click',(e)=>{
   const b=e.target.closest('[data-back]');
   if(b && b.closest('#screen') && !b.onclick){ /* handled per-screen */ }
 });
+/* ================= DASHBOARD ================= */
+const D_ICON = {
+  image:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>',
+  edit:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg>',
+  download:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>',
+  x:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
+  users:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  flag:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>',
+  cash:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>'
+};
+const D_FIRST=['สมชาย','สมหญิง','ณัฐพงษ์','ปิยะ','กิตติ','อนุชา','วิชัย','ธนกร','ศักดิ์ชัย','พรทิพย์','จิราภรณ์','สุริยา','เอกชัย','ภูริ','ชนาธิป','ธีรศักดิ์','อภิสิทธิ์','ณัฐวุฒิ','ปกรณ์','วีระ'];
+const D_LAST=['ใจดี','รักษ์ไทย','ศรีสุข','ทองคำ','บุญมี','แสงทอง','วงศ์ไทย','พรหมมา','จันทร์เพ็ญ','มั่งมี','เกียรติศักดิ์','ไชยวงศ์','สุขสันต์','ผ่องใส','ยอดรัก','เจริญสุข','ธนาคาร','กล้าหาญ','รุ่งเรือง','พิทักษ์'];
+const D_TEAM=['Speed Garage','Turbo Modify','NOS Racing','Nitro Works','Apex Tuning','Redline Shop','Boost Lab','Drift King','Torque Team','Dyno Pro'];
+const D_VEH=['Toyota Supra 2JZ-GTE','Honda Civic K20A','Nissan GT-R RB26DETT','Mitsubishi Evo 4G63','Subaru WRX EJ20','Toyota AE86 4A-GE','Mazda RX-7 13B','Ford Mustang Coyote','BMW M3 S54','Nissan Silvia SR20DET'];
+const D_PROV=['กรุงเทพฯ','นนทบุรี','ปทุมธานี','ชลบุรี','ระยอง','เชียงใหม่','ขอนแก่น','นครราชสีมา','ภูเก็ต','สงขลา'];
+function dRnd(a){return a[Math.floor(Math.random()*a.length)];}
+function dPad(n){return n<10?'0'+n:''+n;}
+function dImg(title,name,accent){
+  const nm=String(name).replace(/[<>&]/g,'');
+  const svg="<svg xmlns='http://www.w3.org/2000/svg' width='540' height='340'>"
+   +"<rect width='540' height='340' fill='#12151b'/>"
+   +"<rect x='16' y='16' width='508' height='308' rx='12' fill='#1b2027' stroke='"+accent+"' stroke-width='2'/>"
+   +"<text x='40' y='68' fill='"+accent+"' font-family='sans-serif' font-size='22' font-weight='700'>"+title+"</text>"
+   +"<rect x='40' y='92' width='130' height='165' rx='8' fill='#2a2f3a'/>"
+   +"<circle cx='105' cy='150' r='34' fill='#3a4150'/><rect x='63' y='195' width='84' height='44' rx='22' fill='#3a4150'/>"
+   +"<text x='195' y='150' fill='#e8eaee' font-family='sans-serif' font-size='26' font-weight='700'>"+nm+"</text>"
+   +"<text x='195' y='188' fill='#9aa1ad' font-family='sans-serif' font-size='17'>SOUPED UP 2026</text>"
+   +"<text x='40' y='300' fill='#6b7280' font-family='monospace' font-size='14'>DEMO IMAGE - ตัวอย่างรูปภาพ</text>"
+   +"</svg>";
+  return 'data:image/svg+xml,'+encodeURIComponent(svg);
+}
+function buildDashData(){
+  const N=43, applicants=[], racers=[];
+  for(let i=0;i<N;i++){
+    const fn=dRnd(D_FIRST), ln=dRnd(D_LAST), rfn=dRnd(D_FIRST), rln=dRnd(D_LAST);
+    const y=1980+Math.floor(Math.random()*26), m=1+Math.floor(Math.random()*12), d=1+Math.floor(Math.random()*28);
+    const addr=(10+Math.floor(Math.random()*990))+' หมู่ '+(1+Math.floor(Math.random()*15))+' จ.'+dRnd(D_PROV);
+    const phone='08'+(1+Math.floor(Math.random()*8))+'-'+dPad(Math.floor(Math.random()*1000))+'-'+dPad(Math.floor(Math.random()*10000));
+    const hasL=Math.random()>.35, hasW=Math.random()>.6, hasA=Math.random()>.7;
+    applicants.push({
+      date:y+'-'+dPad(m)+'-'+dPad(d), name:fn, surname:ln, idAddr:addr,
+      deliAddr:Math.random()>.5?addr:(100+i)+' คอนโด จ.'+dRnd(D_PROV),
+      phone, email:'user'+(i+1)+'@email.com',
+      line:hasL?'line_'+fn.slice(0,3)+i:'-', wechat:hasW?'wc'+i:'-', whatsapp:hasA?phone:'-',
+      idImg:dImg('บัตรประชาชนผู้สมัคร', fn+' '+ln, '#6FFFE8')
+    });
+    const carno=1+((i*7+3)%120);
+    racers.push({
+      rname:rfn, rsurname:rln, idAddr:addr, vehicle:dRnd(D_VEH),
+      model:dRnd(MODELS.th), team:dRnd(D_TEAM), carno:String(carno),
+      idImg:dImg('บัตรประชาชนนักแข่ง', rfn+' '+rln, '#6FFFE8'),
+      photo:dImg('รูปนักแข่ง', rfn+' '+rln, '#D1FF03')
+    });
+  }
+  return {applicant:applicants, racer:racers};
+}
+const DASH={open:false, tab:'applicant', page:{applicant:1,racer:1}, data:null, PS:20};
+function openDash(){ if(!DASH.data)DASH.data=buildDashData(); DASH.open=true; renderDash(); el('dashRoot').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeDash(){ DASH.open=false; el('dashRoot').classList.remove('open'); el('dashRoot').innerHTML=''; document.body.style.overflow=''; }
+function dashKPIs(){
+  const a=DASH.data.applicant.length, r=DASH.data.racer.length, paid=a*17000;
+  return [
+    {ico:D_ICON.users, val:a.toLocaleString('th-TH'), lab:'จำนวนคนลงทะเบียน'},
+    {ico:D_ICON.flag, val:r.toLocaleString('th-TH'), lab:'จำนวนนักแข่ง'},
+    {ico:D_ICON.cash, val:money(paid), lab:'ยอดเงินที่ชำระแล้ว'}
+  ];
+}
+function renderDash(){
+  const kpi=dashKPIs().map(k=>`<div class="kpi-card"><div class="k-ico">${k.ico}</div><div class="k-val">${esc(k.val)}</div><div class="k-lab">${esc(k.lab)}</div></div>`).join('');
+  el('dashRoot').innerHTML=`
+  <div class="dash-wrap">
+    <div class="dash-head">
+      <div class="dash-title">Dashboard<small>SOUPED UP 2026 · ADMIN</small></div>
+      <button class="dash-close" id="dashClose" title="ปิด (Ctrl+Shift+Z)">${D_ICON.x}</button>
+    </div>
+    <div class="kpi-row">${kpi}</div>
+    <div class="dash-tabs">
+      <button data-dtab="applicant" class="${DASH.tab==='applicant'?'active':''}">ข้อมูลผู้สมัคร</button>
+      <button data-dtab="racer" class="${DASH.tab==='racer'?'active':''}">ข้อมูลนักแข่ง</button>
+    </div>
+    <div class="table-card" id="dashCard"></div>
+  </div>`;
+  el('dashClose').onclick=closeDash;
+  el('dashRoot').querySelectorAll('[data-dtab]').forEach(b=>b.onclick=()=>{DASH.tab=b.dataset.dtab;renderDash();});
+  renderDashTable();
+}
+function renderDashTable(){
+  const tab=DASH.tab, rows=DASH.data[tab], PS=DASH.PS;
+  const totalPages=Math.max(1,Math.ceil(rows.length/PS));
+  if(DASH.page[tab]>totalPages)DASH.page[tab]=totalPages;
+  const pg=DASH.page[tab], start=(pg-1)*PS, pageRows=rows.slice(start,start+PS);
+  let thead, tbody;
+  if(tab==='applicant'){
+    thead=`<thead>
+      <tr>
+        <th rowspan="2">วัน/เดือน/ปี</th><th rowspan="2">ชื่อ</th><th rowspan="2">นามสกุล</th>
+        <th rowspan="2">ที่อยู่ตามบัตรฯ</th><th rowspan="2">ที่อยู่จัดส่ง</th><th rowspan="2">เบอร์โทรศัพท์</th><th rowspan="2">อีเมล</th>
+        <th colspan="3" class="grp-th">ช่องทางติดต่อเพิ่มเติม</th>
+        <th rowspan="2">บัตรฯ ผู้สมัคร</th><th rowspan="2">แก้ไข</th>
+      </tr>
+      <tr><th class="sub-th">Line</th><th class="sub-th">WeChat</th><th class="sub-th">WhatsApp</th></tr>
+    </thead>`;
+    tbody=pageRows.map((r,i)=>{const idx=start+i;return `<tr>
+      <td>${esc(r.date)}</td><td>${esc(r.name)}</td><td>${esc(r.surname)}</td>
+      <td class="trunc" title="${esc(r.idAddr)}">${esc(r.idAddr)}</td>
+      <td class="trunc" title="${esc(r.deliAddr)}">${esc(r.deliAddr)}</td>
+      <td>${esc(r.phone)}</td><td>${esc(r.email)}</td>
+      <td>${esc(r.line)}</td><td>${esc(r.wechat)}</td><td>${esc(r.whatsapp)}</td>
+      <td><button class="ico-btn" data-img="${idx}" title="ดูรูปบัตรประชาชน">${D_ICON.image}</button></td>
+      <td><button class="ico-btn edit" data-edit="${idx}" title="แก้ไขข้อมูล">${D_ICON.edit}</button></td>
+    </tr>`;}).join('');
+  } else {
+    thead=`<thead><tr>
+      <th>ชื่อนักแข่ง</th><th>นามสกุลนักแข่ง</th><th>ที่อยู่ตามบัตรฯ</th><th>รถยนต์ รุ่น/รหัสเครื่อง</th>
+      <th>รุ่นการแข่งขัน</th><th>ทีมแข่ง/อู่</th><th>เบอร์รถแข่ง</th><th>บัตรฯ นักแข่ง</th><th>รูปนักแข่ง</th><th>แก้ไข</th>
+    </tr></thead>`;
+    tbody=pageRows.map((r,i)=>{const idx=start+i;return `<tr>
+      <td>${esc(r.rname)}</td><td>${esc(r.rsurname)}</td>
+      <td class="trunc" title="${esc(r.idAddr)}">${esc(r.idAddr)}</td>
+      <td class="trunc" title="${esc(r.vehicle)}">${esc(r.vehicle)}</td>
+      <td>${esc(r.model)}</td><td>${esc(r.team)}</td><td>#${esc(r.carno)}</td>
+      <td><button class="ico-btn" data-img="${idx}" data-kind="id" title="ดูบัตรประชาชน">${D_ICON.image}</button></td>
+      <td><button class="ico-btn" data-img="${idx}" data-kind="photo" title="ดูรูปนักแข่ง">${D_ICON.image}</button></td>
+      <td><button class="ico-btn edit" data-edit="${idx}" title="แก้ไขข้อมูล">${D_ICON.edit}</button></td>
+    </tr>`;}).join('');
+  }
+  const from=rows.length?start+1:0, to=Math.min(start+PS,rows.length);
+  el('dashCard').innerHTML=`
+    <div class="table-tools">
+      <span class="tt-count">แสดง ${from}–${to} จาก ${rows.length} รายการ</span>
+      <button class="btn-export" id="dashExport">${D_ICON.download} Export CSV</button>
+    </div>
+    <div class="table-scroll"><table class="dtable">${thead}<tbody>${tbody||'<tr><td>ไม่มีข้อมูล</td></tr>'}</tbody></table></div>
+    <div class="pager">
+      <span class="pinfo">หน้า ${pg} / ${totalPages}</span>
+      <div class="pbtns" id="dashPager"></div>
+    </div>`;
+  // pager buttons
+  const pb=el('dashPager'); let html=`<button ${pg<=1?'disabled':''} data-pg="${pg-1}">‹</button>`;
+  for(let p=1;p<=totalPages;p++) html+=`<button class="${p===pg?'active':''}" data-pg="${p}">${p}</button>`;
+  html+=`<button ${pg>=totalPages?'disabled':''} data-pg="${pg+1}">›</button>`;
+  pb.innerHTML=html;
+  pb.querySelectorAll('[data-pg]').forEach(b=>b.onclick=()=>{const p=+b.dataset.pg;if(p>=1&&p<=totalPages){DASH.page[tab]=p;renderDashTable();}});
+  el('dashExport').onclick=()=>exportDash(tab);
+  el('dashCard').querySelectorAll('[data-img]').forEach(b=>b.onclick=()=>{
+    const r=DASH.data[tab][+b.dataset.img];
+    const kind=b.dataset.kind;
+    openDashImg(kind==='photo'?r.photo:r.idImg, kind==='photo'?'รูปนักแข่ง':'รูปบัตรประชาชน');
+  });
+  el('dashCard').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openDashEdit(tab,+b.dataset.edit));
+}
+function openDashImg(src,cap){
+  el('dmBody').innerHTML=`<h3>${esc(cap)}</h3><img class="dm-img" src="${src}" alt="${esc(cap)}"/><div class="dm-cap">${esc(cap)} · ตัวอย่าง (Demo)</div>`;
+  el('dmBack').classList.add('open');
+}
+function openDashEdit(tab,idx){
+  const r=DASH.data[tab][idx];
+  let fields;
+  if(tab==='applicant'){
+    fields=[['date','วัน/เดือน/ปี','date'],['name','ชื่อ'],['surname','นามสกุล'],['idAddr','ที่อยู่ตามบัตรฯ'],['deliAddr','ที่อยู่จัดส่ง'],['phone','เบอร์โทรศัพท์'],['email','อีเมล','email'],['line','Line'],['wechat','WeChat'],['whatsapp','WhatsApp']];
+  } else {
+    fields=[['rname','ชื่อนักแข่ง'],['rsurname','นามสกุลนักแข่ง'],['idAddr','ที่อยู่ตามบัตรฯ'],['vehicle','รถยนต์ รุ่น/รหัสเครื่อง'],['model','รุ่นการแข่งขัน','select'],['team','ทีมแข่ง/อู่'],['carno','เบอร์รถแข่ง','number']];
+  }
+  const body=fields.map(([k,lab,type])=>{
+    if(type==='select'){
+      const opts=MODELS.th.map(m=>`<option ${m===r[k]?'selected':''}>${esc(m)}</option>`).join('');
+      return `<div class="field"><label>${esc(lab)}</label><select class="control" data-ek="${k}">${opts}</select></div>`;
+    }
+    return `<div class="field"><label>${esc(lab)}</label><input class="control" data-ek="${k}" type="${type||'text'}" value="${esc(r[k])}"/></div>`;
+  }).join('');
+  el('dmBody').innerHTML=`<h3>แก้ไขข้อมูล${tab==='applicant'?'ผู้สมัคร':'นักแข่ง'}</h3>
+    <div style="display:flex;flex-direction:column;gap:14px">${body}</div>
+    <div class="actions" style="margin-top:20px"><button class="btn btn-ghost" id="dmCancel">ยกเลิก</button><div class="spacer"></div><button class="btn btn-primary" id="dmSave">บันทึก</button></div>`;
+  el('dmBack').classList.add('open');
+  el('dmCancel').onclick=closeDashModal;
+  el('dmSave').onclick=()=>{
+    el('dmBody').querySelectorAll('[data-ek]').forEach(inp=>{ r[inp.dataset.ek]=inp.value; });
+    closeDashModal(); renderDashTable(); toast('บันทึกข้อมูลแล้ว');
+  };
+}
+function closeDashModal(){ el('dmBack').classList.remove('open'); }
+function exportDash(tab){
+  const rows=DASH.data[tab]; let head, lines;
+  const q=v=>{v=String(v==null?'':v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+  if(tab==='applicant'){
+    head=['วัน/เดือน/ปี','ชื่อ','นามสกุล','ที่อยู่ตามบัตรฯ','ที่อยู่จัดส่ง','เบอร์โทรศัพท์','อีเมล','Line','WeChat','WhatsApp'];
+    lines=rows.map(r=>[r.date,r.name,r.surname,r.idAddr,r.deliAddr,r.phone,r.email,r.line,r.wechat,r.whatsapp].map(q).join(','));
+  } else {
+    head=['ชื่อนักแข่ง','นามสกุลนักแข่ง','ที่อยู่ตามบัตรฯ','รถยนต์ รุ่น/รหัสเครื่อง','รุ่นการแข่งขัน','ทีมแข่ง/อู่','เบอร์รถแข่ง'];
+    lines=rows.map(r=>[r.rname,r.rsurname,r.idAddr,r.vehicle,r.model,r.team,r.carno].map(q).join(','));
+  }
+  const csv='﻿'+[head.map(q).join(','),...lines].join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob), a=document.createElement('a');
+  a.href=url; a.download=(tab==='applicant'?'applicants':'racers')+'.csv'; document.body.appendChild(a); a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url);a.remove();},100);
+  toast('ส่งออกไฟล์ CSV แล้ว');
+}
+document.getElementById('dmX').onclick=closeDashModal;
+document.getElementById('dmBack').onclick=(e)=>{if(e.target===document.getElementById('dmBack'))closeDashModal();};
+document.addEventListener('keydown',(e)=>{
+  if((e.ctrlKey||e.metaKey)&&e.shiftKey&&(e.key==='z'||e.key==='Z'||e.code==='KeyZ')){ e.preventDefault(); DASH.open?closeDash():openDash(); }
+  else if(e.key==='Escape'){ if(el('dmBack').classList.contains('open'))closeDashModal(); else if(DASH.open)closeDash(); }
+});
+
 setLang('th');
 render();
 </script>
