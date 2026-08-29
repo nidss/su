@@ -358,6 +358,12 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .dm-body h3{margin:0 0 16px;font-size:18px}
 .dm-img{width:100%;border-radius:10px;border:1px solid var(--line);display:block}
 .dm-cap{font-size:12.5px;color:var(--txt-dim);margin-top:10px;text-align:center}
+.edit-img{display:flex;gap:14px;align-items:center;background:var(--bg);border:1px solid var(--line-2);border-radius:9px;padding:10px}
+.ei-thumb{width:96px;height:62px;object-fit:cover;border-radius:6px;border:1px solid var(--line);background:#0d1016}
+.ei-empty{width:96px;height:62px;border-radius:6px;border:1px dashed var(--line-2);display:grid;place-items:center;font-size:11px;color:var(--txt-faint)}
+.ei-actions{display:flex;flex-direction:column;gap:8px}
+.btn-sm{padding:7px 13px;font-size:12.5px}
+.ei-del:disabled{opacity:.4;cursor:not-allowed}
 </style>
 
 
@@ -1483,17 +1489,22 @@ function renderDashTable(){
   el('dashCard').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openDashEdit(tab,+b.dataset.edit));
 }
 function openDashImg(src,cap){
-  el('dmBody').innerHTML=`<h3>${esc(cap)}</h3><img class="dm-img" src="${src}" alt="${esc(cap)}"/><div class="dm-cap">${esc(cap)} · ตัวอย่าง (Demo)</div>`;
+  const inner = src ? `<img class="dm-img" src="${src}" alt="${esc(cap)}"/><div class="dm-cap">${esc(cap)} · ตัวอย่าง (Demo)</div>`
+                    : `<div class="dm-cap" style="padding:40px 10px">ไม่มีรูปภาพ</div>`;
+  el('dmBody').innerHTML=`<h3>${esc(cap)}</h3>${inner}`;
   el('dmBack').classList.add('open');
 }
 function openDashEdit(tab,idx){
   const r=DASH.data[tab][idx];
-  let fields;
+  let fields, imgs;
   if(tab==='applicant'){
     fields=[['date','วัน/เดือน/ปี','date'],['name','ชื่อ'],['surname','นามสกุล'],['idAddr','ที่อยู่ตามบัตรฯ'],['deliAddr','ที่อยู่จัดส่ง'],['phone','เบอร์โทรศัพท์'],['email','อีเมล','email'],['line','Line'],['wechat','WeChat'],['whatsapp','WhatsApp']];
+    imgs=[['idImg','รูปบัตรประชาชนผู้สมัคร']];
   } else {
     fields=[['rname','ชื่อนักแข่ง'],['rsurname','นามสกุลนักแข่ง'],['idAddr','ที่อยู่ตามบัตรฯ'],['vehicle','รถยนต์ รุ่น/รหัสเครื่อง'],['model','รุ่นการแข่งขัน','select'],['team','ทีมแข่ง/อู่'],['carno','เบอร์รถแข่ง','number']];
+    imgs=[['idImg','บัตรประชาชนนักแข่ง'],['photo','รูปนักแข่ง (หน้าตรง)']];
   }
+  const temp={}; imgs.forEach(([k])=>temp[k]=r[k]||'');
   const body=fields.map(([k,lab,type])=>{
     if(type==='select'){
       const opts=MODELS.th.map(m=>`<option ${m===r[k]?'selected':''}>${esc(m)}</option>`).join('');
@@ -1501,13 +1512,31 @@ function openDashEdit(tab,idx){
     }
     return `<div class="field"><label>${esc(lab)}</label><input class="control" data-ek="${k}" type="${type||'text'}" value="${esc(r[k])}"/></div>`;
   }).join('');
+  const imgBody=imgs.map(([k,lab])=>{
+    const has=!!temp[k];
+    return `<div class="field"><label>${esc(lab)} (.jpg .png)</label>
+      <div class="edit-img" data-imgk="${k}">
+        <img class="ei-thumb" src="${temp[k]||''}" style="${has?'':'display:none'}"/>
+        <div class="ei-empty" style="${has?'display:none':''}">ยังไม่มีรูป</div>
+        <div class="ei-actions">
+          <label class="btn btn-ghost btn-sm">อัปโหลดรูป<input type="file" accept=".jpg,.jpeg,.png,image/png,image/jpeg" hidden data-up/></label>
+          <button type="button" class="btn btn-ghost btn-sm ei-del" ${has?'':'disabled'}>ลบรูป</button>
+        </div>
+      </div></div>`;
+  }).join('');
   el('dmBody').innerHTML=`<h3>แก้ไขข้อมูล${tab==='applicant'?'ผู้สมัคร':'นักแข่ง'}</h3>
-    <div style="display:flex;flex-direction:column;gap:14px">${body}</div>
+    <div style="display:flex;flex-direction:column;gap:14px">${body}${imgBody}</div>
     <div class="actions" style="margin-top:20px"><button class="btn btn-ghost" id="dmCancel">ยกเลิก</button><div class="spacer"></div><button class="btn btn-primary" id="dmSave">บันทึก</button></div>`;
+  el('dmBody').querySelectorAll('.edit-img').forEach(box=>{
+    const k=box.dataset.imgk, thumb=box.querySelector('.ei-thumb'), empty=box.querySelector('.ei-empty'), del=box.querySelector('.ei-del'), up=box.querySelector('[data-up]');
+    up.onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=ev=>{temp[k]=ev.target.result;thumb.src=temp[k];thumb.style.display='';empty.style.display='none';del.disabled=false;toast('อัปโหลดรูปแล้ว');};rd.readAsDataURL(f);e.target.value='';};
+    del.onclick=()=>{temp[k]='';thumb.removeAttribute('src');thumb.style.display='none';empty.style.display='';del.disabled=true;};
+  });
   el('dmBack').classList.add('open');
   el('dmCancel').onclick=closeDashModal;
   el('dmSave').onclick=()=>{
     el('dmBody').querySelectorAll('[data-ek]').forEach(inp=>{ r[inp.dataset.ek]=inp.value; });
+    imgs.forEach(([k])=>{ r[k]=temp[k]; });
     closeDashModal(); renderDashTable(); toast('บันทึกข้อมูลแล้ว');
   };
 }
