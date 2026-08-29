@@ -392,6 +392,7 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .rc-imgs{display:flex;gap:8px}
 .prof-empty{color:var(--txt-dim);text-align:center;padding:26px;font-size:14px}
 .badge-paid{background:rgba(37,194,110,.15);color:var(--green);border:1px solid rgba(37,194,110,.4);border-radius:6px;padding:3px 10px;font-size:12px;font-weight:700}
+.admin-login{max-width:460px;margin:9vh auto 0;padding:0 16px}
 </style>
 </head>
 <body>
@@ -1533,8 +1534,33 @@ function buildDashData(){
   }
   return {applicant:applicants, racer:racers};
 }
-const DASH={open:false, tab:'applicant', page:{applicant:1,racer:1}, data:null, PS:20};
-function openDash(){ if(!DASH.data)DASH.data=buildDashData(); DASH.open=true; renderDash(); el('dashRoot').classList.add('open'); document.body.style.overflow='hidden'; }
+const DASH={open:false, authed:false, tab:'applicant', page:{applicant:1,racer:1}, data:null, PS:20};
+function openDash(){
+  if(!DASH.data)DASH.data=buildDashData();
+  DASH.open=true; el('dashRoot').classList.add('open'); document.body.style.overflow='hidden';
+  if(DASH.authed) renderDash(); else renderAdminLogin();
+}
+function renderAdminLogin(){
+  const en=state.lang==='en';
+  el('dashRoot').innerHTML=`
+  <button class="dash-close" id="admClose" style="position:fixed;top:18px;right:20px;z-index:5">${D_ICON.x}</button>
+  <div class="admin-login"><div class="card"><div class="speed-line"></div><div class="card-pad">
+    <p class="eyebrow">ADMIN PANEL</p>
+    <h1 class="page-title">${en?'Admin Sign In':'เข้าสู่ระบบสำหรับแอดมิน'}</h1>
+    <p class="page-sub">${en?'Sign in to access the admin dashboard':'เข้าสู่ระบบเพื่อเข้าถึงแดชบอร์ดผู้ดูแล'}</p>
+    <form id="admForm" novalidate>
+      <div class="field full" data-field="adm_id"><label>${esc(t('f.loginid'))}<span class="req">*</span></label><input class="control" id="adm_id" data-req placeholder="admin"/><div class="err-msg">${esc(t('v.required'))}</div></div>
+      <div class="field full" data-field="adm_pw"><label>${esc(t('f.password'))}<span class="req">*</span></label><input class="control" id="adm_pw" type="password" data-req placeholder="••••••"/><div class="err-msg">${esc(t('v.required'))}</div></div>
+      <div class="row-between"><label class="checkbox"><input type="checkbox" id="adm_rem"/> ${esc(t('f.remember'))}</label><button type="button" class="link" id="admForgot">${esc(t('f.forgot'))}</button></div>
+      <div class="actions"><button type="submit" class="btn btn-primary btn-block btn-lg">${esc(t('btn.login'))}</button></div>
+    </form>
+  </div></div></div>`;
+  el('admClose').onclick=closeDash;
+  el('admForgot').onclick=()=>toast(t('t.forgot'));
+  const f=el('admForm');
+  f.onsubmit=e=>{ e.preventDefault(); if(!validateScreen(f))return; DASH.authed=true; toast(t('t.loginok')); renderDash(); };
+  setTimeout(()=>{const i=el('adm_id');if(i)i.focus();},50);
+}
 function closeDash(){ DASH.open=false; el('dashRoot').classList.remove('open'); el('dashRoot').innerHTML=''; document.body.style.overflow=''; }
 function dashKPIs(){
   const a=DASH.data.applicant.length, r=DASH.data.racer.length, paid=a*17000;
