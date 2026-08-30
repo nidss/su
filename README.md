@@ -1,6 +1,6 @@
 # Souped Up 2026 - ระบบสมัครการแข่งขัน / Competition Registration System
 
-URL: https://nidss.github.io/su/
+🔗 **Live:** https://nidss.github.io/su/
 
 
 ระบบสมัครสมาชิกและลงทะเบียนการแข่งขันรถยนต์ **Souped Up 2026** โทนสีเข้มแนวแข่งรถ (มิ้นต์ `#6FFFE8` · เขียวมะนาว `#D1FF03` · กรมท่า `#0C142A`) รองรับ 2 ภาษา (ไทย/อังกฤษ, ค่าเริ่มต้น: ไทย) ทำงานแบบ **single-file** ไม่ต้อง build - ทุกภาพ/โลโก้/ฟอนต์ fallback ฝังอยู่ในไฟล์เดียว
