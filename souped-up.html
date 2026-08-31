@@ -658,7 +658,7 @@ genTakenPits();
 /* ================= Render root ================= */
 function render(){
   renderStepper();
-  el('stepper').classList.toggle('hidden', state.step==='profile');
+  el('stepper').classList.toggle('hidden', state.step==='profile' || state.step==='auth');
   const s=el("screen");
   s.innerHTML = SCREENS[state.step]();
   window.scrollTo({top:0,behavior:"smooth"});
@@ -793,17 +793,10 @@ SCREEN_INIT.auth = function(){
       toast(t('t.registered'));
       go('terms');
     } else {
-      // demo login: accept if account exists & matches, else accept any (demo) and go to terms
+      // demo login: any username/password is accepted
       const idv=el('l_id').value.trim(), pw=el('l_password').value;
-      if(state.account && (idv===state.account.email||idv===state.account.username) && pw===state.account.password){
-        state.profile=buildProfile(state.account); toast(t('t.loginok')); go('profile');
-      } else if(!state.account){
-        // no registered account yet in this demo session -> allow proceed
-        state.account={username:idv,email:idv.includes('@')?idv:'',phone:'',password:pw};
-        state.profile=buildProfile(state.account); toast(t('t.loginok')); go('profile');
-      } else {
-        toast(t('t.loginfail'));
-      }
+      state.account={username:idv,email:idv.includes('@')?idv:'',phone:(state.account&&state.account.phone)||'',password:pw};
+      state.profile=buildProfile(state.account); toast(t('t.loginok')); go('profile');
     }
   };
 };
