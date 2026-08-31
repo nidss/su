@@ -230,6 +230,9 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .spot:hover:not(.booked){background:var(--mint);color:#06141d}
 .spot.booked{background:#e23b32;color:#fff;cursor:not-allowed}
 .spot.sel{background:var(--mint);color:#06141d;box-shadow:inset 0 0 0 3px #0c142a}
+.booked-tent{cursor:pointer;outline:none}
+.booked-tent .spot.booked{cursor:pointer}
+.booked-tent:hover .tent-spots,.booked-tent:focus-visible .tent-spots{box-shadow:0 0 0 2px var(--mint),0 0 10px rgba(111,255,232,.5)}
 .sponsor{background:#e23b32;color:#fff;text-align:center;font-weight:800;letter-spacing:3px;border-radius:3px;padding:7px 4px;font-size:14px;font-family:'Rajdhani',sans-serif}
 .admin-box{background:#0c2b4a;color:#fff;border-radius:4px;padding:8px 12px;font-size:11px;font-weight:600;display:grid;place-items:center;text-align:center;min-width:118px;line-height:1.35;min-height:36px}
 .recv-box{background:#fff;border:1.6px solid #26331f;border-radius:4px;padding:2px 8px;font-size:10.5px;color:#22371a;font-weight:700;display:grid;place-items:center;text-align:center;width:134px;height:39px;box-sizing:border-box;line-height:1.15}
@@ -357,6 +360,14 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .dm-body{padding:24px}
 .dm-body h3{margin:0 0 16px;font-size:18px}
 .dm-img{width:100%;border-radius:10px;border:1px solid var(--line);display:block}
+.checkbox.disabled{opacity:.5;cursor:not-allowed}
+.checkbox.disabled input{cursor:not-allowed}
+.booker-card{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+.booker-photo{width:180px;max-width:45%;border-radius:12px;border:1px solid var(--line);display:block}
+.booker-rows{flex:1;min-width:200px;display:flex;flex-direction:column;gap:12px}
+.booker-rows .brow{display:flex;flex-direction:column;gap:3px;border-bottom:1px solid var(--line);padding-bottom:10px}
+.booker-rows .bk{font-size:12px;color:var(--txt-dim);letter-spacing:.3px}
+.booker-rows .bv{font-size:15px;font-weight:700;color:var(--txt)}
 .dm-cap{font-size:12.5px;color:var(--txt-dim);margin-top:10px;text-align:center}
 .edit-img{display:flex;gap:14px;align-items:center;background:var(--bg);border:1px solid var(--line-2);border-radius:9px;padding:10px}
 .ei-thumb{width:96px;height:62px;object-fit:cover;border-radius:6px;border:1px solid var(--line);background:#0d1016}
@@ -385,8 +396,6 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .badge-paid{background:rgba(37,194,110,.15);color:var(--green);border:1px solid rgba(37,194,110,.4);border-radius:6px;padding:3px 10px;font-size:12px;font-weight:700}
 .admin-login{max-width:460px;margin:9vh auto 0;padding:0 16px}
 </style>
-
-
 <div class="bg-flag"></div>
 <div class="bg-driver"></div>
 <div class="topbar">
@@ -485,6 +494,7 @@ const I18N = {
     "f.pit":"เลือกช่องจอดรถ (Pit Select)","opt.pit":"— เลือกช่องจอด —",
     "f.privatepit":"จอดพีทถาวร (Private-Owned Pit)","track.label":"PIT LANE",
     "pk.admin":"กองอำนวยการ โต๊ะ 5 / เก้าอี้ 10","pk.recv":"ที่จอดรถกรังปรีซ์","pk.air":"TENT AIR","pk.fence":"หลังรั้ว","pk.bldg":"รถสุขา","pk.tent":"เต็นท์","pk.persold":"จองแล้ว (Sponsor)","pk.spotsel":"เลือกที่จอด #","pk.expand":"ดูผังแบบเต็ม",
+    "pk.booker.title":"ข้อมูลผู้จอง","pk.booker.name":"ชื่อ-นามสกุล","pk.booker.team":"ทีม / อู่","pk.booker.type":"ประเภทการแข่งขัน","pk.booker.photo":"รูปหน้าตรง","pk.privatepit.dis":"เลือกช่องจอดแล้ว จึงไม่สามารถเลือกจอดพีทถาวรได้",
     /* bank */
     "bk.eyebrow":"ขั้นตอนที่ 6","bk.title":"บัญชีคืนเงิน · รับเงิน","bk.sub":"ข้อมูลบัญชีธนาคาร",
     "bk.refund.t":"บัญชีคืนเงินมัดจำผู้สมัคร","bk.refund.s":"Account Name for Applicant's Deposit Refund",
@@ -573,6 +583,7 @@ const I18N = {
     "f.pit":"Pit Select","opt.pit":"— Select a pit —",
     "f.privatepit":"Private-Owned Pit","track.label":"PIT LANE",
     "pk.admin":"Organizer · 5 tables / 10 chairs","pk.recv":"Grand Prix Parking","pk.air":"TENT AIR","pk.fence":"Back Fence","pk.bldg":"Restroom","pk.tent":"Tent","pk.persold":"Booked (Sponsor)","pk.spotsel":"Selected spot #","pk.expand":"View full map",
+    "pk.booker.title":"Booking Details","pk.booker.name":"Full Name","pk.booker.team":"Team / Garage","pk.booker.type":"Race Class","pk.booker.photo":"Front Photo","pk.privatepit.dis":"A spot is selected, so Private-Owned Pit is unavailable",
     "bk.eyebrow":"Step 6","bk.title":"Refund · Prize Accounts","bk.sub":"Bank account details",
     "bk.refund.t":"Applicant's Deposit Refund Account","bk.refund.s":"Account Name for Applicant's Deposit Refund",
     "bk.prize.t":"Winner's Prize Payment Account","bk.prize.s":"Account Name for Winner's Prize Payment (same as registered racer's name)",
@@ -624,6 +635,7 @@ const MODELS = {
   th:["Pro Street 6 (สูงสุด 6 วินาที)","Pro Street 7","Super Max 4WD","Super Street 2WD","Bracket 8.5","Bracket 10.5","Diesel Truck","Bike Drag"],
   en:["Pro Street 6 (max 6 sec)","Pro Street 7","Super Max 4WD","Super Street 2WD","Bracket 8.5","Bracket 10.5","Diesel Truck","Bike Drag"]
 };
+const CAR_GARAGE = ["อู่ Speed Garage","อู่ Turbo Modify","อู่ NOS Racing","อู่ Nitro Works","อู่ Apex Tuning","อู่ Redline Shop","อู่ Boost Lab","อู่ ช.ไก่ Racing","อู่ Torque Team","อู่ Dyno Pro","อู่ ส.มอเตอร์สปอร์ต"];
 const PRICES = {entry:7000, deposit:10000};
 const DISCOUNTS = {"SOUPEDUP":500,"EARLYBIRD":1000,"VIP2026":1500};
 
@@ -688,7 +700,7 @@ function fieldText(opts){
 }
 function fieldSelect(opts){
   const {id,labelKey,req,options,placeholderKey,value="",full}=opts;
-  const opts2=options.map(o=>`<option value="${esc(o.v)}" ${o.v===value?'selected':''}>${esc(o.l)}</option>`).join("");
+  const opts2=options.map(o=>`<option value="${esc(o.v)}" ${o.disabled?'disabled':''} ${o.v===value?'selected':''}>${esc(o.l)}</option>`).join("");
   return `<div class="field ${full?'full':''}" data-field="${id}">
     <label>${esc(t(labelKey))}${req?'<span class="req">*</span>':''}</label>
     <select class="control" id="${id}" ${req?'data-req':''}>
@@ -928,7 +940,7 @@ function saveApplicant(form){collect(form,state.applicant);['line','wechat','wha
 SCREENS.racer = function(){
   const r=state.racer;
   const modelOpts=MODELS[state.lang].map(m=>({v:m,l:m}));
-  const carOpts=[];for(let i=1;i<=120;i++){const taken=(i%17===0);carOpts.push({v:String(i),l:'#'+i+(taken?' ('+t('pk.taken')+')':'')});}
+  const carOpts=[];for(let i=1;i<=120;i++){const taken=(i%17===0);carOpts.push({v:String(i),disabled:taken,l:taken?(i+' — '+CAR_GARAGE[i%CAR_GARAGE.length]+' ('+t('pk.taken')+')'):String(i)});}
   return `
   <p class="eyebrow">${esc(t('rc.eyebrow'))}</p>
   <h1 class="page-title">${esc(t('rc.title'))}</h1>
@@ -983,11 +995,12 @@ function pkRows(){return [
   [ {t:'tents',tents:[pkTent(14,49,52),pkTent(15,53,56),pkTent(16,57,60),pkTent(17,61,64),pkTent(18,65,68),pkTent(19,69,72),pkTent(20,73,76),pkTent(21,77,80),pkTent(22,81,84),pkTent(23,85,88),pkTent(24,89,92),pkTent(25,93,96),pkTent(26,97,100),pkTent(27,101,104),pkTent(28,105,108)]} ],
 ];}
 function pkRenderTent(tn){
+  const tentBooked = tn.c==='red';
   const spots = tn.spots.map(s=>{
     const booked=PARK_BOOKED(s), sel=String(state.parking.pit)===String(s), air=tn.c==='yellow';
-    return `<button type="button" class="spot${air?' air':''}${booked?' booked':''}${sel?' sel':''}" data-spot="${s}" ${booked?'disabled':''}>${s}</button>`;
+    return `<button type="button" class="spot${air?' air':''}${booked?' booked':''}${sel?' sel':''}" data-spot="${s}" ${booked&&!tentBooked?'disabled':''}>${s}</button>`;
   }).join('');
-  return `<div class="tent" data-tent="${tn.n}"><div class="tent-no">${tn.n}</div><div class="tent-spots">${spots}</div></div>`;
+  return `<div class="tent${tentBooked?' booked-tent':''}" data-tent="${tn.n}"${tentBooked?' role="button" tabindex="0" title="'+esc(t('pk.booker.title'))+'"':''}><div class="tent-no">${tn.n}</div><div class="tent-spots">${spots}</div></div>`;
 }
 function pkRenderBlk(b){
   if(b.t==='admin') return `<div class="blk"><div class="tent"><div class="tent-no">${b.n}</div><div class="admin-box">${esc(t('pk.admin'))}</div></div></div>`;
@@ -1069,6 +1082,7 @@ SCREENS.parking = function(){
   <form id="pkForm" novalidate style="margin-top:20px">
     ${fieldSelect({id:'p_pit',labelKey:'f.pit',req:true,options:pitOpts,placeholderKey:'opt.pit',value:state.parking.pit,full:true})}
     <label class="checkbox"><input type="checkbox" id="p_private" ${state.parking.privatePit?'checked':''}/> ${esc(t('f.privatepit'))}</label>
+    <div class="note" id="p_private_note" hidden>${esc(t('pk.privatepit.dis'))}</div>
     <div class="actions">
       <button type="button" class="btn btn-ghost" data-back>${esc(t('btn.back'))}</button>
       <div class="spacer"></div>
@@ -1084,12 +1098,28 @@ SCREEN_INIT.parking = function(){
     if(fromModal){ closeMapModal(); go('parking'); return; }
     el('p_pit').value=String(s);
     pkMarkSel(el('screen'),s);
+    pkLockPrivate();
     toast(t('pk.spotsel')+s);
   }
-  function bindSpots(scope, fromModal){ scope.querySelectorAll('.spot:not(.booked)').forEach(b=>b.onclick=()=>pkSelect(b.dataset.spot, fromModal)); }
+  function bindSpots(scope, fromModal){
+    scope.querySelectorAll('.spot:not(.booked)').forEach(b=>b.onclick=()=>pkSelect(b.dataset.spot, fromModal));
+    scope.querySelectorAll('.tent.booked-tent').forEach(tn=>{
+      tn.onclick=()=>openBookerModal(tn.dataset.tent);
+      tn.onkeydown=(e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openBookerModal(tn.dataset.tent); } };
+    });
+  }
+  function pkLockPrivate(){
+    const pv=el('p_private'); if(!pv) return;
+    const locked=!!state.parking.pit;
+    if(locked){ pv.checked=false; state.parking.privatePit=false; }
+    pv.disabled=locked;
+    const lab=pv.closest('.checkbox'); if(lab) lab.classList.toggle('disabled',locked);
+    const note=el('p_private_note'); if(note) note.hidden=!locked;
+  }
   bindSpots(el('screen'), false);
+  pkLockPrivate();
   requestAnimationFrame(()=>drawLotArrows(el('screen').querySelector('.lot')));
-  el('p_pit').onchange=(e)=>{ state.parking.pit=e.target.value; pkMarkSel(el('screen'),e.target.value); };
+  el('p_pit').onchange=(e)=>{ state.parking.pit=e.target.value; pkMarkSel(el('screen'),e.target.value); pkLockPrivate(); };
   el('mapExpand').onclick=()=>{
     el('mapModalBody').innerHTML=parkingLotHTML();
     el('mapModalBack').classList.add('open');
@@ -1100,7 +1130,23 @@ SCREEN_INIT.parking = function(){
   form.onsubmit=(e)=>{e.preventDefault();if(!validateScreen(form)){toast(t('v.fixerr'));return;}savePark(form);go('bank');};
 };
 function closeMapModal(){ const m=el('mapModalBack'); if(m)m.classList.remove('open'); }
-function savePark(form){state.parking.pit=el('p_pit').value;state.parking.privatePit=el('p_private').checked;}
+function savePark(form){state.parking.pit=el('p_pit').value;state.parking.privatePit=state.parking.pit?false:el('p_private').checked;}
+function pkBooker(tn){
+  const n=parseInt(tn,10)||1;
+  const fn=D_FIRST[(n*3)%D_FIRST.length], ln=D_LAST[(n*7)%D_LAST.length];
+  const name=fn+' '+ln, models=MODELS[state.lang];
+  return {name, team:CAR_GARAGE[n%CAR_GARAGE.length], model:models[(n*2)%models.length], photo:dImg(t('pk.booker.photo'),name,'#6FFFE8')};
+}
+function openBookerModal(tn){
+  const b=pkBooker(tn);
+  const row=(k,v)=>`<div class="brow"><span class="bk">${esc(k)}</span><span class="bv">${esc(v)}</span></div>`;
+  el('dmBody').innerHTML=`<h3>${esc(t('pk.booker.title'))} · ${esc(t('pk.tent'))} ${esc(tn)}</h3>
+    <div class="booker-card">
+      <img class="booker-photo" src="${b.photo}" alt="${esc(b.name)}"/>
+      <div class="booker-rows">${row(t('pk.booker.name'),b.name)}${row(t('pk.booker.team'),b.team)}${row(t('pk.booker.type'),b.model)}</div>
+    </div>`;
+  el('dmBack').classList.add('open');
+}
 
 /* ---- BANK ---- */
 SCREENS.bank = function(){
