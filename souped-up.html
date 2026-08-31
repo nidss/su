@@ -149,6 +149,7 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
   border:0;border-radius:9px;padding:13px 22px;font-weight:700;font-size:15px;letter-spacing:.5px;
   cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:8px;justify-content:center;
 }
+.btn svg{width:18px;height:18px;flex:none}
 .btn-primary{position:relative;overflow:hidden;isolation:isolate;background:var(--mint-grad);color:var(--mint-ink);box-shadow:0 6px 18px var(--mint-glow)}
 .btn-primary::after{
   content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.95;
@@ -415,6 +416,7 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .appdoc .ad-pad{padding:44px 48px 40px}
 .appdoc .ad-top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #0C142A;padding-bottom:16px}
 .appdoc .ad-brand{display:flex;flex-direction:column;gap:2px}
+.appdoc .ad-logo{height:52px;width:auto;max-width:280px;object-fit:contain;object-position:left center;display:block;margin-bottom:6px}
 .appdoc .ad-flag{display:inline-block;width:46px;height:30px;border-radius:3px;background:
   repeating-conic-gradient(#0C142A 0 25%, #fff 0 50%) 0 0/15px 15px;border:1px solid #0C142A;margin-bottom:8px}
 .appdoc .ad-title{font-size:26px;font-weight:800;color:#0C142A;line-height:1}
@@ -504,9 +506,11 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .cls-del{flex:none;width:38px;height:38px;border-radius:9px;border:1px solid var(--line-2);background:transparent;color:var(--txt-faint);cursor:pointer;display:inline-grid;place-items:center}
 .cls-del:hover{border-color:var(--red-2);color:var(--red-2);background:rgba(255,43,28,.1)}
 .cls-del svg{width:16px;height:16px}
-.cls-entry .cls-selfield,.cls-entry .cls-engfield{margin:0}
+.cls-entry .cls-selfield,.cls-entry .cls-engfield,.cls-entry .cls-carfield{margin:0}
+.cls-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.cls-fields{grid-template-columns:1fr}}
 .cls-engfield label b{color:var(--mint);font-weight:700}
-.cls-engfield .control{border-color:var(--mint-soft)}
+.cls-engfield .control,.cls-carfield .control{border-color:var(--mint-soft)}
 .add-class{align-self:flex-start;margin-top:12px;border-style:dashed}
 .add-racer{width:100%;justify-content:center;border-style:dashed;margin-bottom:20px}
 /* ---- Parking: multi-pit booking panel ---- */
@@ -1108,13 +1112,15 @@ function saveApplicant(form){collect(form,state.applicant);['line','wechat','wha
 /* ---- RACER ---- */
 let RACER_SEQ=0;
 const CARET_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
-function newRacer(){return {id:'rc'+(++RACER_SEQ), r_rname:'',r_rsurname:'',r_idaddr:'',r_team:'',r_carno:'',entries:[{cls:'',engine:''}],collapsed:false};}
-function ensureRacers(){ if(!Array.isArray(state.racers)||!state.racers.length){ state.racers=[newRacer()]; } state.racers.forEach(rc=>{ if(!Array.isArray(rc.entries)||!rc.entries.length)rc.entries=[{cls:'',engine:''}]; }); }
+function newRacer(){return {id:'rc'+(++RACER_SEQ), r_rname:'',r_rsurname:'',r_idaddr:'',r_team:'',r_carno:'',entries:[{cls:'',engine:'',carno:''}],collapsed:false};}
+function ensureRacers(){ if(!Array.isArray(state.racers)||!state.racers.length){ state.racers=[newRacer()]; } state.racers.forEach(rc=>{ if(!Array.isArray(rc.entries)||!rc.entries.length)rc.entries=[{cls:'',engine:'',carno:''}]; }); }
 function racerById(id){ return state.racers.find(x=>x.id===id); }
-function carOptionsHTML(sel){
+function carOptionsHTML(sel, used){
+  used=used||new Set();
   let h=`<option value="">${esc(t('opt.carno'))}</option>`;
-  for(let i=1;i<=120;i++){const taken=(i%17===0);
-    h+=`<option value="${i}" ${taken?'disabled':''} ${String(sel)===String(i)?'selected':''}>${esc(taken?(i+' — '+CAR_GARAGE[i%CAR_GARAGE.length]+' ('+t('pk.taken')+')'):String(i))}</option>`;}
+  for(let i=1;i<=120;i++){const booked=(i%17===0), usedElse=used.has(String(i))&&String(sel)!==String(i), dis=booked||usedElse;
+    const label=booked?(i+' — '+CAR_GARAGE[i%CAR_GARAGE.length]+' ('+t('pk.taken')+')'):(usedElse?(i+' ('+t('pk.taken')+')'):String(i));
+    h+=`<option value="${i}" ${dis?'disabled':''} ${String(sel)===String(i)?'selected':''}>${esc(label)}</option>`;}
   return h;
 }
 function classOptionsHTML(sel, taken){
@@ -1124,9 +1130,13 @@ function classOptionsHTML(sel, taken){
 }
 function classSectionInner(rc){
   const rid=rc.id, chosen=new Set(rc.entries.map(e=>e.cls).filter(Boolean));
+  const usedCars=new Set(rc.entries.map(e=>e.carno).filter(Boolean).map(String));
   const rows=rc.entries.map((e,idx)=>{
     const del=rc.entries.length>1?`<button type="button" class="cls-del" data-clsdel="${idx}" title="${esc(t('rc.removeclass'))}">${D_ICON.x}</button>`:'';
-    const eng=e.cls?`<div class="field cls-engfield" data-field="clseng_${rid}_${idx}"><label>${esc(t('rc.engine'))} — <b>${esc(e.cls)}</b><span class="req">*</span></label><input class="control" data-engidx="${idx}" data-req value="${esc(e.engine||'')}"/><div class="err-msg">${esc(t('v.required'))}</div></div>`:'';
+    const fields=e.cls?`<div class="cls-fields">
+        <div class="field cls-engfield" data-field="clseng_${rid}_${idx}"><label>${esc(t('rc.engine'))}<span class="req">*</span></label><input class="control" data-engidx="${idx}" data-req value="${esc(e.engine||'')}"/><div class="err-msg">${esc(t('v.required'))}</div></div>
+        <div class="field cls-carfield" data-field="clscar_${rid}_${idx}"><label>${esc(t('f.carno'))}<span class="req">*</span></label><select class="control cls-car" data-caridx="${idx}" data-req>${carOptionsHTML(e.carno, usedCars)}</select><div class="err-msg">${esc(t('v.required'))}</div></div>
+      </div>`:'';
     return `<div class="cls-entry">
       <div class="field cls-selfield" data-field="clssel_${rid}_${idx}">
         <div class="cls-row">
@@ -1135,7 +1145,7 @@ function classSectionInner(rc){
         </div>
         <div class="err-msg">${esc(t('v.selectclass'))}</div>
       </div>
-      ${eng}
+      ${fields}
     </div>`;
   }).join('');
   const canAdd=rc.entries.length<RACE_CLASSES.length;
@@ -1171,11 +1181,6 @@ function racerCardHTML(rc,i){
         <div class="err-msg">${esc(t('v.required'))}</div>
       </div>
       <div class="class-section" id="cls_${rid}">${classSectionInner(rc)}</div>
-      <div class="field full" data-field="r_carno__${rid}">
-        <label>${esc(t('f.carno'))}<span class="req">*</span></label>
-        <select class="control" id="r_carno__${rid}" data-rk="r_carno" data-req>${carOptionsHTML(rc.r_carno)}</select>
-        <div class="err-msg">${esc(t('v.required'))}</div>
-      </div>
       ${fieldUpload({id:'r_idcard__'+rid,labelKey:'f.idcard.rc',req:true})}
       ${fieldUpload({id:'r_photo__'+rid,labelKey:'f.rphoto',req:true})}
     </div>
@@ -1201,10 +1206,10 @@ SCREENS.racer = function(){
 function collectRacerEntries(card, rc){
   const es=[];
   card.querySelectorAll('.cls-entry').forEach(en=>{
-    const sel=en.querySelector('.cls-sel'), eng=en.querySelector('[data-engidx]');
-    es.push({cls:sel?sel.value:'', engine:eng?eng.value:''});
+    const sel=en.querySelector('.cls-sel'), eng=en.querySelector('[data-engidx]'), car=en.querySelector('.cls-car');
+    es.push({cls:sel?sel.value:'', engine:eng?eng.value:'', carno:car?car.value:''});
   });
-  rc.entries = es.length?es:[{cls:'',engine:''}];
+  rc.entries = es.length?es:[{cls:'',engine:'',carno:''}];
 }
 function collectRacers(){
   const scope=el('rcForm'); if(!scope)return;
@@ -1219,7 +1224,7 @@ function syncPrimaryRacer(){
   const rc=state.racers[0]||{entries:[]}, es=(rc.entries||[]).filter(e=>e.cls);
   state.racer=Object.assign({}, state.racer, {
     r_rname:rc.r_rname||'', r_rsurname:rc.r_rsurname||'', r_idaddr:rc.r_idaddr||'',
-    r_team:rc.r_team||'', r_carno:rc.r_carno||'',
+    r_team:rc.r_team||'', r_carno:es.map(e=>e.carno).filter(Boolean).join(', ')||'',
     r_model: es.map(e=>e.cls).join(', ')||'-',
     r_vehicle: es.map(e=>e.cls+': '+(e.engine||'-')).join(' · ')||'-'
   });
@@ -1234,8 +1239,9 @@ function syncEntries(form, rc){ const card=form.querySelector(`.racer-card2[data
 function bindClassSection(form, rc){
   const sec=el('cls_'+rc.id); if(!sec)return;
   sec.querySelectorAll('.cls-sel').forEach(s=>{ s.onchange=()=>{ syncEntries(form, rc); rebuildClassSection(form, rc); }; });
-  const add=sec.querySelector('[data-addclass]'); if(add)add.onclick=()=>{ syncEntries(form, rc); rc.entries.push({cls:'',engine:''}); rebuildClassSection(form, rc); };
-  sec.querySelectorAll('[data-clsdel]').forEach(b=>{ b.onclick=()=>{ syncEntries(form, rc); rc.entries.splice(+b.dataset.clsdel,1); if(!rc.entries.length)rc.entries=[{cls:'',engine:''}]; rebuildClassSection(form, rc); }; });
+  sec.querySelectorAll('.cls-car').forEach(s=>{ s.onchange=()=>{ syncEntries(form, rc); rebuildClassSection(form, rc); }; });
+  const add=sec.querySelector('[data-addclass]'); if(add)add.onclick=()=>{ syncEntries(form, rc); rc.entries.push({cls:'',engine:'',carno:''}); rebuildClassSection(form, rc); };
+  sec.querySelectorAll('[data-clsdel]').forEach(b=>{ b.onclick=()=>{ syncEntries(form, rc); rc.entries.splice(+b.dataset.clsdel,1); if(!rc.entries.length)rc.entries=[{cls:'',engine:'',carno:''}]; rebuildClassSection(form, rc); }; });
 }
 function bindOneRacer(form, card){
   const rc=racerById(card.dataset.rid); if(!rc)return;
@@ -1357,7 +1363,7 @@ function pkIsAssigned(s){ return pkAssignedPits().includes(String(s)); }
 function pkSlotOf(s){ const a=pkAssignMap(); return Object.keys(a).find(k=>String(a[k])===String(s)); }
 function pkSlots(){
   const slots=[];
-  (state.racers||[]).forEach((rc,ri)=>{ (rc.entries||[]).forEach(e=>{ if(e.cls) slots.push({key:rc.id+'#'+e.cls, ri, name:((rc.r_rname||'')+' '+(rc.r_rsurname||'')).trim(), cls:e.cls, carno:rc.r_carno}); }); });
+  (state.racers||[]).forEach((rc,ri)=>{ (rc.entries||[]).forEach(e=>{ if(e.cls) slots.push({key:rc.id+'#'+e.cls, ri, name:((rc.r_rname||'')+' '+(rc.r_rsurname||'')).trim(), cls:e.cls, carno:e.carno}); }); });
   if(!slots.length) slots.push({key:'single', ri:0, name:'', cls:'', carno:''});
   return slots;
 }
@@ -1686,13 +1692,13 @@ function buildProfileFromReg(){
     const es=(rc.entries||[]).filter(e=>e.cls);
     return {r_rname:rc.r_rname||'',r_rsurname:rc.r_rsurname||'',r_idaddr:rc.r_idaddr||'',
       r_vehicle:es.map(e=>e.cls+': '+(e.engine||'-')).join(' · ')||'-',r_model:es.map(e=>e.cls).join(', ')||'-',
-      r_team:rc.r_team||'',r_carno:rc.r_carno||'',idImg:IMG_IDCARD,photo:IMG_RACER};
+      r_team:rc.r_team||'',r_carno:es.map(e=>e.carno).filter(Boolean).join(', ')||'-',idImg:IMG_IDCARD,photo:IMG_RACER};
   });
   const ref=(state.result&&state.result.ref)||'';
   const today=new Date().toISOString().slice(0,10);
   const history=[];
   (state.racers||[]).forEach(rc=>{ (rc.entries||[]).filter(e=>e.cls).forEach(e=>{
-    history.push({ref:ref||('SU26-'+Math.random().toString(36).slice(2,7).toUpperCase()),racer:((rc.r_rname||'')+' '+(rc.r_rsurname||'')).trim()||'-',model:e.cls,carno:rc.r_carno||'-',date:today,amount:PRICES.entry+PRICES.deposit,status:'paid'}); }); });
+    history.push({ref:ref||('SU26-'+Math.random().toString(36).slice(2,7).toUpperCase()),racer:((rc.r_rname||'')+' '+(rc.r_rsurname||'')).trim()||'-',model:e.cls,carno:e.carno||'-',date:today,amount:PRICES.entry+PRICES.deposit,status:'paid'}); }); });
   return {applicant:ap, racers:racers.length?racers:[], history};
 }
 
@@ -1924,6 +1930,7 @@ document.addEventListener('error',function(e){
   if(t&&t.tagName==='IMG'&&!t.dataset.fb){
     if(/img_racer\.png/.test(t.src)){t.dataset.fb='1';t.src=IMG_RACER_PH;}
     else if(/idcard\.png/.test(t.src)){t.dataset.fb='1';t.src=IMG_IDCARD_PH;}
+    else if(/logo-main-b\.png/.test(t.src)){t.dataset.fb='1';const d=document.createElement('div');d.className='ad-title';d.textContent='SOUPED UP 2026';t.replaceWith(d);}
   }
 },true);
 function buildDashData(){
@@ -2205,7 +2212,7 @@ function receiptPdfHTML(){
   info.push(`<div class="ad-row"><span class="ad-k">วิธีชำระเงิน</span><span class="ad-v">${esc(state.payMethod==='qr'?'QR / โอนเงิน':'บัตรเครดิต')}</span></div>`);
   return `<div class="appdoc"><div class="ad-pad">
     <div class="ad-top">
-      <div class="ad-brand"><span class="ad-flag"></span><div class="ad-title">SOUPED UP 2026</div><div class="ad-sub">ใบเสร็จรับเงิน · OFFICIAL RECEIPT</div></div>
+      <div class="ad-brand"><img class="ad-logo" src="asset/logo-main-b.png" alt="SOUPED UP 2026"/><div class="ad-sub">ใบเสร็จรับเงิน · OFFICIAL RECEIPT</div></div>
       <div class="ad-meta"><div>เลขที่ใบเสร็จ</div><div class="ad-ref">${esc(r.ref||'')}</div><div style="margin-top:8px">วันที่ <b>${esc(today)}</b></div><div>สถานะ <b style="color:#1f9d55">ชำระเงินแล้ว</b></div></div>
     </div>
     <div class="ad-sec"><div class="ad-sec-h">ข้อมูลผู้ชำระเงิน</div><div class="ad-grid">${info.join('')}</div></div>
