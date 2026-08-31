@@ -499,6 +499,31 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .cls-engfield .control{border-color:var(--mint-soft)}
 .add-class{align-self:flex-start;margin-top:12px;border-style:dashed}
 .add-racer{width:100%;justify-content:center;border-style:dashed;margin-bottom:20px}
+/* ---- Parking: multi-pit booking panel ---- */
+.book-panel{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:16px}
+.bk-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;font-size:13.5px}
+.bk-head b{color:var(--txt)}
+.bk-sub{color:var(--txt-faint);font-size:12px}
+.bk-count{background:var(--panel-2);border:1px solid var(--line-2);color:var(--txt-dim);padding:3px 12px;border-radius:999px;font-weight:800;font-size:12.5px;white-space:nowrap;font-family:'Rajdhani',sans-serif;letter-spacing:.5px}
+.bk-count.ok{background:var(--mint-soft);color:var(--mint);border-color:transparent}
+.bk-list{display:flex;flex-direction:column;gap:8px}
+.bk-slot{display:flex;align-items:center;gap:11px;padding:9px 11px;border:1px solid var(--line-2);border-radius:9px;background:var(--panel);cursor:pointer;transition:.12s}
+.bk-slot:hover{border-color:var(--line-2)}
+.bk-slot.active{border-color:var(--mint);box-shadow:0 0 0 2px var(--mint-soft)}
+.bk-slot.done{background:var(--panel-2)}
+.bk-idx{flex:none;width:22px;height:22px;border-radius:50%;background:var(--panel-2);color:var(--txt-dim);font-size:12px;font-weight:800;display:grid;place-items:center;font-family:'Rajdhani',sans-serif}
+.bk-slot.done .bk-idx{background:var(--mint);color:var(--mint-ink)}
+.bk-meta{display:flex;flex-direction:column;gap:1px;min-width:0}
+.bk-who{font-size:11px;color:var(--txt-faint)}
+.bk-cls{font-size:13px;color:var(--txt);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bk-hint{font-size:12px;color:var(--txt-faint)}
+.bk-hint.act{color:var(--mint);font-weight:700}
+.bk-pit{background:var(--mint-soft);color:var(--mint);font-weight:800;font-size:12.5px;padding:3px 11px;border-radius:7px;font-family:'Rajdhani',sans-serif;letter-spacing:.5px;white-space:nowrap}
+.bk-clear{flex:none;width:26px;height:26px;border-radius:7px;border:1px solid var(--line-2);background:transparent;color:var(--txt-faint);cursor:pointer;display:inline-grid;place-items:center;margin-left:8px}
+.bk-clear:hover{border-color:var(--red-2);color:var(--red-2);background:rgba(255,43,28,.1)}
+.bk-clear svg{width:14px;height:14px}
+.book-panel.shake{animation:bkshk .4s}
+@keyframes bkshk{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
 </style>
 </head>
 <body>
@@ -613,7 +638,8 @@ const I18N = {
     "opt.select":"— กรุณาเลือก —","opt.carno":"— เลือกเบอร์รถ —",
     /* parking */
     "pk.eyebrow":"ขั้นตอนที่ 5","pk.title":"เลือกที่จอดรถ","pk.sub":"เลือกช่องจอดจากผังด้านล่าง",
-    "pk.map.hint":"คลิกเลือกช่องจอดจากผังด้านล่าง",
+    "pk.map.hint":"แตะเลือกช่องจอดจากผังด้านล่าง — 1 ช่องต่อ 1 รุ่นการแข่งขัน",
+    "pk.book.title":"จองที่จอด (พีท)","pk.book.per":"1 ช่อง ต่อ 1 รุ่นการแข่งขัน","pk.book.progress":"เลือกแล้ว","pk.book.pick":"แตะที่ผังเพื่อเลือกพีท","pk.book.active":"กำลังเลือก…","pk.book.clear":"ล้าง","pk.book.assigned":"กำหนดพีท","v.pkall":"กรุณาเลือกที่จอดให้ครบทุกรุ่นการแข่งขัน","pk.book.dup":"พีทนี้ถูกเลือกไว้แล้ว","pk.book.done":"เลือกที่จอดครบแล้ว","pk.book.car":"คัน",
     "pk.free":"ว่าง","pk.sel":"ที่เลือก","pk.taken":"ถูกจอง",
     "f.pit":"เลือกช่องจอดรถ (Pit Select)","opt.pit":"— เลือกช่องจอด —",
     "f.privatepit":"จอดพีทถาวร (Private-Owned Pit)","track.label":"PIT LANE",
@@ -706,7 +732,8 @@ const I18N = {
     "f.idcard.rc":"Upload Racer's ID Card (ID Card Racer)","f.rphoto":"Upload Racer Image (front-facing)",
     "opt.select":"— Please select —","opt.carno":"— Select number —",
     "pk.eyebrow":"Step 5","pk.title":"Select Parking / Pit","pk.sub":"Choose a pit from the map below",
-    "pk.map.hint":"Click to select a pit from the map (like seat booking)",
+    "pk.map.hint":"Tap a pit on the map below — one pit per race class",
+    "pk.book.title":"Book Pits","pk.book.per":"one pit per race class","pk.book.progress":"selected","pk.book.pick":"Tap the map to pick a pit","pk.book.active":"choosing…","pk.book.clear":"Clear","pk.book.assigned":"Assigned pit","v.pkall":"Please pick a pit for every race class.","pk.book.dup":"This pit is already selected.","pk.book.done":"All pits selected.","pk.book.car":"car",
     "pk.free":"Available","pk.sel":"Selected","pk.taken":"Taken",
     "f.pit":"Pit Select","opt.pit":"— Select a pit —",
     "f.privatepit":"Private-Owned Pit","track.label":"PIT LANE",
@@ -782,7 +809,7 @@ const state = {
   applicant:{},
   racer:{},
   racers:[],
-  parking:{pit:"",privatePit:false},
+  parking:{pit:"",assign:{},active:"",privatePit:false},
   bank:{},
   discount:{code:"",amount:0},
   payMethod:"card",
@@ -1241,7 +1268,7 @@ function pkRows(){return [
 function pkRenderTent(tn){
   const tentBooked = tn.c==='red';
   const spots = tn.spots.map(s=>{
-    const booked=PARK_BOOKED(s), sel=String(state.parking.pit)===String(s), air=tn.c==='yellow';
+    const booked=PARK_BOOKED(s), sel=pkIsAssigned(s), air=tn.c==='yellow';
     return `<button type="button" class="spot${air?' air':''}${booked?' booked':''}${sel?' sel':''}" data-spot="${s}" ${booked&&!tentBooked?'disabled':''}>${s}</button>`;
   }).join('');
   return `<div class="tent${tentBooked?' booked-tent':''}" data-tent="${tn.n}"${tentBooked?' role="button" tabindex="0" title="'+esc(t('pk.booker.title'))+'"':''}><div class="tent-no">${tn.n}</div><div class="tent-spots">${spots}</div></div>`;
@@ -1308,9 +1335,41 @@ function drawLotArrows(lot){
   lot.appendChild(svg);
 }
 const EXPAND_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 15 6 6"/><path d="m15 9 6-6"/><path d="M21 16v5h-5"/><path d="M21 8V3h-5"/><path d="M3 16v5h5"/><path d="m3 21 6-6"/><path d="M3 8V3h5"/><path d="M9 9 3 3"/></svg>';
+function pkAssignMap(){ if(!state.parking.assign)state.parking.assign={}; return state.parking.assign; }
+function pkAssignedPits(){ const a=pkAssignMap(); return Object.values(a).filter(Boolean).map(String); }
+function pkIsAssigned(s){ return pkAssignedPits().includes(String(s)); }
+function pkSlotOf(s){ const a=pkAssignMap(); return Object.keys(a).find(k=>String(a[k])===String(s)); }
+function pkSlots(){
+  const slots=[];
+  (state.racers||[]).forEach((rc,ri)=>{ (rc.entries||[]).forEach(e=>{ if(e.cls) slots.push({key:rc.id+'#'+e.cls, ri, name:((rc.r_rname||'')+' '+(rc.r_rsurname||'')).trim(), cls:e.cls, carno:rc.r_carno}); }); });
+  if(!slots.length) slots.push({key:'single', ri:0, name:'', cls:'', carno:''});
+  return slots;
+}
+function pkBookingPanel(){
+  const slots=pkSlots(), a=pkAssignMap();
+  const need=slots.length, got=slots.filter(s=>a[s.key]).length;
+  const active=(state.parking.active && !a[state.parking.active])?state.parking.active:((slots.find(s=>!a[s.key])||{}).key||'');
+  const rows=slots.map((s,i)=>{
+    const pit=a[s.key], isActive=s.key===active && !pit;
+    const label=s.cls?esc(s.cls):esc(t('f.pit'));
+    const who=s.name?esc(s.name):(esc(t('prof.racerno'))+' '+(s.ri+1));
+    const right=pit
+      ? `<span class="bk-pit">PIT ${esc(pit)}</span><button type="button" class="bk-clear" data-clrslot="${esc(s.key)}" title="${esc(t('pk.book.clear'))}">${D_ICON.x}</button>`
+      : `<span class="bk-hint ${isActive?'act':''}">${isActive?esc(t('pk.book.active')):esc(t('pk.book.pick'))}</span>`;
+    return `<div class="bk-slot ${pit?'done':''} ${isActive?'active':''}" data-slot="${esc(s.key)}">
+      <span class="bk-idx">${i+1}</span>
+      <div class="bk-meta"><span class="bk-who">${who}</span><span class="bk-cls">${label}</span></div>
+      <div class="spacer"></div>${right}
+    </div>`;
+  }).join('');
+  return `<div class="book-panel" id="bookPanel">
+    <div class="bk-head"><div><b>${esc(t('pk.book.title'))}</b> · ${need} ${esc(t('pk.book.car'))} <span class="bk-sub">(${esc(t('pk.book.per'))})</span></div>
+      <span class="bk-count ${got>=need?'ok':''}">${esc(t('pk.book.progress'))} ${got}/${need}</span></div>
+    <div class="bk-list">${rows}</div>
+  </div>`;
+}
 SCREENS.parking = function(){
   const map = `<div class="map-box"><button type="button" class="map-expand" id="mapExpand" title="${esc(t('pk.expand'))}">${EXPAND_SVG}</button><div class="lot-wrap">${parkingLotHTML()}</div></div>`;
-  const pitOpts=[];for(let s=1;s<=152;s++){if(!PARK_BOOKED(s))pitOpts.push({v:String(s),l:'PIT '+s});}
   return `
   <p class="eyebrow">${esc(t('pk.eyebrow'))}</p>
   <h1 class="page-title">${esc(t('pk.title'))}</h1>
@@ -1324,7 +1383,7 @@ SCREENS.parking = function(){
   </div>
   ${map}
   <form id="pkForm" novalidate style="margin-top:20px">
-    ${fieldSelect({id:'p_pit',labelKey:'f.pit',req:true,options:pitOpts,placeholderKey:'opt.pit',value:state.parking.pit,full:true})}
+    ${pkBookingPanel()}
     <label class="checkbox"><input type="checkbox" id="p_private" ${state.parking.privatePit?'checked':''}/> ${esc(t('f.privatepit'))}</label>
     <div class="note" id="p_private_note" hidden>${esc(t('pk.privatepit.dis'))}</div>
     <div class="actions">
@@ -1334,47 +1393,81 @@ SCREENS.parking = function(){
     </div>
   </form>`;
 };
-function pkMarkSel(scope,s){scope.querySelectorAll('.spot').forEach(x=>x.classList.toggle('sel',x.dataset.spot===String(s) && !x.classList.contains('booked')));}
+function pkMarkSel(scope){
+  if(!scope)return;
+  const set=new Set(pkAssignedPits());
+  scope.querySelectorAll('.spot').forEach(x=>{ x.classList.toggle('sel', set.has(String(x.dataset.spot)) && !x.classList.contains('booked')); });
+}
 SCREEN_INIT.parking = function(){
   const form=el('pkForm');
-  function pkSelect(s, fromModal){
-    state.parking.pit=String(s);
-    if(fromModal){ closeMapModal(); go('parking'); return; }
-    el('p_pit').value=String(s);
-    pkMarkSel(el('screen'),s);
-    pkLockPrivate();
-    toast(t('pk.spotsel')+s);
+  // reconcile assignments to current race-class slots
+  const slots0=pkSlots(), valid=new Set(slots0.map(s=>s.key)), a0=pkAssignMap();
+  Object.keys(a0).forEach(k=>{ if(!valid.has(k)) delete a0[k]; });
+  if(!state.parking.active || a0[state.parking.active]) state.parking.active=(slots0.find(s=>!a0[s.key])||{}).key||'';
+  function activeSlot(){ const s=pkSlots(),a=pkAssignMap(); return (state.parking.active && !a[state.parking.active])?state.parking.active:((s.find(x=>!a[x.key])||{}).key||''); }
+  function refreshPanel(){ const p=el('bookPanel'); if(p){ p.outerHTML=pkBookingPanel(); bindPanel(); } }
+  function pkAssign(s, fromModal){
+    s=String(s); const a=pkAssignMap();
+    if(state.parking.privatePit){ state.parking.privatePit=false; const pv=el('p_private'); if(pv)pv.checked=false; }
+    const existing=pkSlotOf(s);
+    if(existing){ delete a[existing]; state.parking.active=existing; }
+    else{
+      const k=activeSlot(); if(!k){ toast(t('pk.book.done')); return; }
+      a[k]=s; const nxt=pkSlots().find(x=>!a[x.key]); state.parking.active=nxt?nxt.key:'';
+      toast(t('pk.book.assigned')+' '+s);
+    }
+    state.parking.pit=pkAssignedPits()[0]||'';
+    pkMarkSel(el('screen')); if(fromModal)pkMarkSel(el('mapModalBody'));
+    pkLockPrivate(); refreshPanel();
   }
   function bindSpots(scope, fromModal){
-    scope.querySelectorAll('.spot:not(.booked)').forEach(b=>b.onclick=()=>pkSelect(b.dataset.spot, fromModal));
+    scope.querySelectorAll('.spot:not(.booked)').forEach(b=>b.onclick=()=>pkAssign(b.dataset.spot, fromModal));
     scope.querySelectorAll('.tent.booked-tent').forEach(tn=>{
       tn.onclick=()=>openBookerModal(tn.dataset.tent);
       tn.onkeydown=(e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openBookerModal(tn.dataset.tent); } };
     });
   }
+  function bindPanel(){
+    const p=el('bookPanel'); if(!p)return;
+    p.querySelectorAll('.bk-slot').forEach(row=>{ row.onclick=(e)=>{ if(e.target.closest('[data-clrslot]'))return; const k=row.dataset.slot; if(!pkAssignMap()[k]){ state.parking.active=k; refreshPanel(); } }; });
+    p.querySelectorAll('[data-clrslot]').forEach(b=>{ b.onclick=(e)=>{ e.stopPropagation(); const k=b.dataset.clrslot; delete pkAssignMap()[k]; state.parking.active=k; state.parking.pit=pkAssignedPits()[0]||''; pkMarkSel(el('screen')); pkLockPrivate(); refreshPanel(); }; });
+  }
   function pkLockPrivate(){
     const pv=el('p_private'); if(!pv) return;
-    const locked=!!state.parking.pit;
+    const locked=pkAssignedPits().length>0;
     if(locked){ pv.checked=false; state.parking.privatePit=false; }
     pv.disabled=locked;
     const lab=pv.closest('.checkbox'); if(lab) lab.classList.toggle('disabled',locked);
     const note=el('p_private_note'); if(note) note.hidden=!locked;
   }
+  function pkValidate(){
+    if(state.parking.privatePit)return true;
+    const slots=pkSlots(), a=pkAssignMap(), ok=slots.every(s=>a[s.key]);
+    if(!ok){ const p=el('bookPanel'); if(p){ p.classList.remove('shake'); void p.offsetWidth; p.classList.add('shake'); } }
+    return ok;
+  }
   bindSpots(el('screen'), false);
+  bindPanel();
+  pkMarkSel(el('screen'));
   pkLockPrivate();
   requestAnimationFrame(()=>drawLotArrows(el('screen').querySelector('.lot')));
-  el('p_pit').onchange=(e)=>{ state.parking.pit=e.target.value; pkMarkSel(el('screen'),e.target.value); pkLockPrivate(); };
+  el('p_private').onchange=(e)=>{ state.parking.privatePit=e.target.checked; };
   el('mapExpand').onclick=()=>{
     el('mapModalBody').innerHTML=parkingLotHTML();
     el('mapModalBack').classList.add('open');
     bindSpots(el('mapModalBody'), true);
+    pkMarkSel(el('mapModalBody'));
     requestAnimationFrame(()=>drawLotArrows(el('mapModalBody').querySelector('.lot')));
   };
   form.querySelector('[data-back]').onclick=()=>{savePark(form);go('racer');};
-  form.onsubmit=(e)=>{e.preventDefault();if(!validateScreen(form)){toast(t('v.fixerr'));return;}savePark(form);go('bank');};
+  form.onsubmit=(e)=>{e.preventDefault();savePark(form);if(!pkValidate()){toast(t('v.pkall'));return;}go('bank');};
 };
 function closeMapModal(){ const m=el('mapModalBack'); if(m)m.classList.remove('open'); }
-function savePark(form){state.parking.pit=el('p_pit').value;state.parking.privatePit=state.parking.pit?false:el('p_private').checked;}
+function savePark(form){
+  const pv=el('p_private'); state.parking.privatePit=pv?pv.checked:false;
+  if(state.parking.privatePit) state.parking.assign={};
+  state.parking.pit=pkAssignedPits()[0]||'';
+}
 function pkBooker(tn){
   const n=parseInt(tn,10)||1;
   const fn=D_FIRST[(n*3)%D_FIRST.length], ln=D_LAST[(n*7)%D_LAST.length];
@@ -1691,7 +1784,7 @@ SCREEN_INIT.done = function(){
   el('newReg').onclick=()=>{
     state.step='auth';state.authTab='register';
     state.terms={privacy:false,rules:false,guarantee:false};
-    state.applicant={};state.racer={};state.racers=[newRacer()];state.parking={pit:'',privatePit:false};
+    state.applicant={};state.racer={};state.racers=[newRacer()];state.parking={pit:'',assign:{},active:'',privatePit:false};
     state.bank={};state.discount={code:'',amount:0};state.files={};state.tax=false;state.result=null;
     state.addRacerMode=false;genTakenPits();render();
   };
