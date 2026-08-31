@@ -470,6 +470,35 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .prof-empty{color:var(--txt-dim);text-align:center;padding:26px;font-size:14px}
 .badge-paid{background:rgba(37,194,110,.15);color:var(--green);border:1px solid rgba(37,194,110,.4);border-radius:6px;padding:3px 10px;font-size:12px;font-weight:700}
 .admin-login{max-width:460px;margin:9vh auto 0;padding:0 16px}
+/* ---- Multi-racer cards (racer step) ---- */
+.racer-card2{background:var(--bg-2);border:1px solid var(--line);border-radius:14px;margin-bottom:16px;overflow:hidden}
+.racer-card2 .rc2-head{display:flex;align-items:center;gap:10px;padding:13px 16px;cursor:pointer;user-select:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.racer-card2.collapsed .rc2-head{border-bottom-color:transparent}
+.rc2-caret{display:inline-grid;place-items:center;width:24px;height:24px;color:var(--mint);transition:transform .2s;flex:none}
+.rc2-caret svg{width:18px;height:18px}
+.racer-card2.collapsed .rc2-caret{transform:rotate(-90deg)}
+.rc2-badge{background:var(--mint-soft);color:var(--mint);font-weight:800;font-size:12.5px;padding:4px 13px;border-radius:999px;white-space:nowrap;font-family:'Rajdhani',sans-serif;letter-spacing:.5px}
+.rc2-name{color:var(--txt);font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rc2-del{flex:none;width:30px;height:30px;border-radius:8px;border:1px solid var(--line-2);background:transparent;color:var(--txt-faint);cursor:pointer;display:inline-grid;place-items:center}
+.rc2-del:hover{border-color:var(--red-2);color:var(--red-2);background:rgba(255,43,28,.1)}
+.rc2-del svg{width:15px;height:15px}
+.rc2-body{padding:18px 16px;display:flex;flex-direction:column;gap:16px}
+.racer-card2.collapsed .rc2-body{display:none}
+.class-section .class-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:10px}
+@media(max-width:640px){.class-section .class-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:440px){.class-section .class-grid{grid-template-columns:1fr}}
+.class-chk{display:flex;align-items:center;gap:9px;padding:9px 11px;border:1px solid var(--line-2);border-radius:9px;background:var(--panel);cursor:pointer;font-size:12.5px;line-height:1.3;color:var(--txt-dim);transition:.12s}
+.class-chk:hover{border-color:var(--mint)}
+.class-chk.on{border-color:var(--mint);background:var(--mint-soft);color:var(--txt)}
+.class-chk input{width:17px;height:17px;flex:none;accent-color:var(--mint);cursor:pointer}
+.class-section.invalid .class-grid{outline:1.5px solid var(--red-2);outline-offset:4px;border-radius:9px}
+.class-section .err-msg{display:none;color:var(--red-2);font-size:12.5px;margin-top:8px}
+.class-section.invalid .err-msg{display:block}
+.eng-wrap{display:flex;flex-direction:column;gap:16px}
+.eng-wrap:empty{display:none}
+.eng-field label b{color:var(--mint);font-weight:700}
+.eng-field .control{border-color:var(--mint-soft)}
+.add-racer{width:100%;justify-content:center;border-style:dashed;margin-bottom:20px}
 </style>
 </head>
 <body>
@@ -575,7 +604,10 @@ const I18N = {
     "f.vehicle":"ข้อมูลรถยนต์ รุ่น/รหัสเครื่องยนต์ (Model / Engine code)",
     "f.model":"รุ่นการแข่งขัน (Model Competition)","f.team":"ทีมแข่ง/อู่โมดิฟาย (Racing Team Name)",
     "f.carno":"เบอร์รถแข่ง (Race Car Number 1-120)",
-    "rc.team.note":"หมายเหตุ: รถแข่ง 1 คัน สมัครได้เพียง 1 รุ่นการแข่งขันเท่านั้น",
+    "rc.team.note":"หมายเหตุ: กรอกชื่อทีม/อู่โมดิฟายที่ใช้ลงแข่งขัน",
+    "rc.classes":"รุ่นการแข่งขัน (เลือกได้มากกว่า 1 ประเภท)","rc.classes.note":"แต่ละประเภทที่เลือก ต้องกรอกข้อมูลรถยนต์ รุ่น/รหัสเครื่องยนต์ แยกกัน",
+    "rc.engine":"ข้อมูลรถยนต์ รุ่น/รหัสเครื่องยนต์ (Model / Engine code)",
+    "rc.addracer":"เพิ่มนักแข่ง","rc.removeracer":"ลบนักแข่งคนนี้","rc.collapse":"ย่อ/ขยาย","v.selectclass":"กรุณาเลือกรุ่นการแข่งขันอย่างน้อย 1 ประเภท",
     "f.idcard.rc":"อัปโหลดบัตรประชาชนนักแข่ง (ID Card Racer)","f.rphoto":"อัปโหลดรูปนักแข่ง (หน้าตรง) (Racer Image)",
     "opt.select":"— กรุณาเลือก —","opt.carno":"— เลือกเบอร์รถ —",
     /* parking */
@@ -665,7 +697,10 @@ const I18N = {
     "f.vehicle":"Vehicle Information Model / Engine code",
     "f.model":"Model Competition","f.team":"Racing Team Name",
     "f.carno":"Race Car Number (1-120)",
-    "rc.team.note":"Note: One race car may register for only one competition model.",
+    "rc.team.note":"Note: Enter the racing team / modify garage name.",
+    "rc.classes":"Race Classes (select one or more)","rc.classes.note":"Each selected class requires its own Model / Engine code.",
+    "rc.engine":"Vehicle Model / Engine Code",
+    "rc.addracer":"Add Racer","rc.removeracer":"Remove this racer","rc.collapse":"Collapse / Expand","v.selectclass":"Please select at least one race class.",
     "f.idcard.rc":"Upload Racer's ID Card (ID Card Racer)","f.rphoto":"Upload Racer Image (front-facing)",
     "opt.select":"— Please select —","opt.carno":"— Select number —",
     "pk.eyebrow":"Step 5","pk.title":"Select Parking / Pit","pk.sub":"Choose a pit from the map below",
@@ -722,6 +757,11 @@ const BANKS = {
   th:["ธนาคารกสิกรไทย (KBank)","ธนาคารไทยพาณิชย์ (SCB)","ธนาคารกรุงเทพ (BBL)","ธนาคารกรุงไทย (KTB)","ธนาคารกรุงศรีอยุธยา (BAY)","ธนาคารทหารไทยธนชาต (ttb)","ธนาคารออมสิน (GSB)","ธนาคารเกียรตินาคินภัทร (KKP)"],
   en:["Kasikornbank (KBank)","Siam Commercial Bank (SCB)","Bangkok Bank (BBL)","Krungthai Bank (KTB)","Bank of Ayudhya (BAY)","TMBThanachart (ttb)","Government Savings Bank (GSB)","Kiatnakin Phatra (KKP)"]
 };
+const RACE_CLASSES = [
+  "PRO DRAGSTER (Benzine/Diesel)","PRO MAX","PRO 6","PRO 4","PRO 4 FWD","PRO 4 Diesel","PRO OPEN 4 N/A",
+  "PRO 4 N/A","PRO 275 6 CYL (Open Gearbox/H-Pattern)","PRO 275 4 CYL","PRO STREET AWD",
+  "STREET LEGAL AWD 6 CYL","STREET LEGAL AWD 4 CYL","PRO 1500 TURBO"
+];
 const MODELS = {
   th:["Pro Street 6 (สูงสุด 6 วินาที)","Pro Street 7","Super Max 4WD","Super Street 2WD","Bracket 8.5","Bracket 10.5","Diesel Truck","Bike Drag"],
   en:["Pro Street 6 (max 6 sec)","Pro Street 7","Super Max 4WD","Super Street 2WD","Bracket 8.5","Bracket 10.5","Diesel Truck","Bike Drag"]
@@ -739,6 +779,7 @@ const state = {
   terms:{privacy:false,rules:false,guarantee:false},
   applicant:{},
   racer:{},
+  racers:[],
   parking:{pit:"",privatePit:false},
   bank:{},
   discount:{code:"",amount:0},
@@ -1028,31 +1069,83 @@ SCREEN_INIT.applicant = function(){
 function saveApplicant(form){collect(form,state.applicant);['line','wechat','whatsapp'].forEach(k=>{const on=form.querySelector('[data-chan="'+k+'"]');state.applicant['chan_'+k+'_on']=on&&on.checked;const inp=el('chan_'+k);if(inp)state.applicant['chan_'+k]=inp.value;});}
 
 /* ---- RACER ---- */
+let RACER_SEQ=0;
+const CARET_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
+function newRacer(){return {id:'rc'+(++RACER_SEQ), r_rname:'',r_rsurname:'',r_idaddr:'',r_team:'',r_carno:'',classes:{},collapsed:false};}
+function ensureRacers(){ if(!Array.isArray(state.racers)||!state.racers.length){ state.racers=[newRacer()]; } }
+function racerById(id){ return state.racers.find(x=>x.id===id); }
+function carOptionsHTML(sel){
+  let h=`<option value="">${esc(t('opt.carno'))}</option>`;
+  for(let i=1;i<=120;i++){const taken=(i%17===0);
+    h+=`<option value="${i}" ${taken?'disabled':''} ${String(sel)===String(i)?'selected':''}>${esc(taken?(i+' — '+CAR_GARAGE[i%CAR_GARAGE.length]+' ('+t('pk.taken')+')'):String(i))}</option>`;}
+  return h;
+}
+function engineRowHTML(rid,cls,idx,val){
+  const eid='r_eng__'+rid+'__'+idx;
+  return `<div class="field full eng-field" data-field="${eid}">
+    <label>${esc(t('rc.engine'))} — <b>${esc(cls)}</b><span class="req">*</span></label>
+    <input class="control" id="${eid}" data-eng data-rid="${rid}" data-cls="${esc(cls)}" data-req value="${esc(val||'')}"/>
+    <div class="err-msg">${esc(t('v.required'))}</div>
+  </div>`;
+}
+function racerCardHTML(rc,i){
+  const rid=rc.id;
+  const nm=((rc.r_rname||'')+' '+(rc.r_rsurname||'')).trim();
+  const chks=RACE_CLASSES.map((cls,ci)=>{
+    const on=rc.classes[cls]!==undefined;
+    return `<label class="class-chk ${on?'on':''}"><input type="checkbox" data-class="${esc(cls)}" data-rid="${rid}" ${on?'checked':''}/><span>${esc(cls)}</span></label>`;
+  }).join('');
+  const engRows=RACE_CLASSES.map((cls,ci)=> rc.classes[cls]!==undefined?engineRowHTML(rid,cls,ci,rc.classes[cls]):'').join('');
+  const delBtn=state.racers.length>1?`<button type="button" class="rc2-del" data-del="${rid}" title="${esc(t('rc.removeracer'))}">${D_ICON.x}</button>`:'';
+  const fld=(id,labelKey,val)=>`<div class="field" data-field="${id}"><label>${esc(t(labelKey))}<span class="req">*</span></label><input class="control" id="${id}" data-rk="${id.split('__')[0]}" data-req value="${esc(val||'')}"/><div class="err-msg">${esc(t('v.required'))}</div></div>`;
+  return `
+  <div class="racer-card2 ${rc.collapsed?'collapsed':''}" data-rid="${rid}">
+    <div class="rc2-head" data-toggle="${rid}">
+      <span class="rc2-caret" aria-label="${esc(t('rc.collapse'))}">${CARET_SVG}</span>
+      <span class="rc2-badge">${esc(t('prof.racerno'))} ${i+1}</span>
+      ${nm?`<span class="rc2-name">${esc(nm)}</span>`:''}
+      <div class="spacer"></div>
+      ${delBtn}
+    </div>
+    <div class="rc2-body">
+      <div class="grid">
+        ${fld('r_rname__'+rid,'f.rname',rc.r_rname)}
+        ${fld('r_rsurname__'+rid,'f.rsurname',rc.r_rsurname)}
+      </div>
+      <div class="field full" data-field="r_idaddr__${rid}"><label>${esc(t('f.idaddr'))}<span class="req">*</span></label><input class="control" id="r_idaddr__${rid}" data-rk="r_idaddr" data-req value="${esc(rc.r_idaddr||'')}"/><div class="err-msg">${esc(t('v.required'))}</div></div>
+      <div class="field full" data-field="r_team__${rid}">
+        <label>${esc(t('f.team'))}<span class="req">*</span></label>
+        <input class="control" id="r_team__${rid}" data-rk="r_team" data-req value="${esc(rc.r_team||'')}"/>
+        <div class="note">${esc(t('rc.team.note'))}</div>
+        <div class="err-msg">${esc(t('v.required'))}</div>
+      </div>
+      <div class="field full class-section" data-field="classes_${rid}">
+        <label>${esc(t('rc.classes'))}<span class="req">*</span></label>
+        <div class="note">${esc(t('rc.classes.note'))}</div>
+        <div class="class-grid">${chks}</div>
+        <div class="err-msg">${esc(t('v.selectclass'))}</div>
+      </div>
+      <div class="eng-wrap" data-engwrap="${rid}">${engRows}</div>
+      <div class="field full" data-field="r_carno__${rid}">
+        <label>${esc(t('f.carno'))}<span class="req">*</span></label>
+        <select class="control" id="r_carno__${rid}" data-rk="r_carno" data-req>${carOptionsHTML(rc.r_carno)}</select>
+        <div class="err-msg">${esc(t('v.required'))}</div>
+      </div>
+      ${fieldUpload({id:'r_idcard__'+rid,labelKey:'f.idcard.rc',req:true})}
+      ${fieldUpload({id:'r_photo__'+rid,labelKey:'f.rphoto',req:true})}
+    </div>
+  </div>`;
+}
 SCREENS.racer = function(){
-  const r=state.racer;
-  const modelOpts=MODELS[state.lang].map(m=>({v:m,l:m}));
-  const carOpts=[];for(let i=1;i<=120;i++){const taken=(i%17===0);carOpts.push({v:String(i),disabled:taken,l:taken?(i+' — '+CAR_GARAGE[i%CAR_GARAGE.length]+' ('+t('pk.taken')+')'):String(i)});}
+  ensureRacers();
+  const cards=state.racers.map((rc,i)=>racerCardHTML(rc,i)).join('');
   return `
   <p class="eyebrow">${esc(t('rc.eyebrow'))}</p>
   <h1 class="page-title">${esc(t('rc.title'))}</h1>
   <p class="page-sub">${esc(t('rc.sub'))}</p>
   <form id="rcForm" novalidate>
-    <div class="grid">
-      ${fieldText({id:'r_rname',labelKey:'f.rname',req:true,value:r.r_rname||''})}
-      ${fieldText({id:'r_rsurname',labelKey:'f.rsurname',req:true,value:r.r_rsurname||''})}
-    </div>
-    ${fieldText({id:'r_idaddr',labelKey:'f.idaddr',req:true,value:r.r_idaddr||'',full:true})}
-    ${fieldText({id:'r_vehicle',labelKey:'f.vehicle',req:true,value:r.r_vehicle||'',full:true})}
-    ${fieldSelect({id:'r_model',labelKey:'f.model',req:true,options:modelOpts,value:r.r_model||'',full:true})}
-    <div class="field full" data-field="r_team">
-      <label>${esc(t('f.team'))}<span class="req">*</span></label>
-      <input class="control" id="r_team" data-req value="${esc(r.r_team||'')}"/>
-      <div class="note">${esc(t('rc.team.note'))}</div>
-      <div class="err-msg">${esc(t('v.required'))}</div>
-    </div>
-    ${fieldSelect({id:'r_carno',labelKey:'f.carno',req:true,options:carOpts,placeholderKey:'opt.carno',value:r.r_carno||'',full:true})}
-    ${fieldUpload({id:'r_idcard',labelKey:'f.idcard.rc',req:true})}
-    ${fieldUpload({id:'r_photo',labelKey:'f.rphoto',req:true})}
+    <div id="racersWrap">${cards}</div>
+    <button type="button" class="btn btn-ghost add-racer" id="addRacerBtn">${PLUS_SVG} ${esc(t('rc.addracer'))}</button>
     <div class="actions">
       <button type="button" class="btn btn-ghost" data-back>${esc(t('btn.back'))}</button>
       <div class="spacer"></div>
@@ -1060,11 +1153,65 @@ SCREENS.racer = function(){
     </div>
   </form>`;
 };
+function collectRacers(){
+  const scope=el('rcForm'); if(!scope)return;
+  scope.querySelectorAll('.racer-card2').forEach(card=>{
+    const rid=card.dataset.rid, rc=racerById(rid); if(!rc)return;
+    card.querySelectorAll('[data-rk]').forEach(inp=>{ rc[inp.dataset.rk]=inp.value; });
+    const cls={};
+    card.querySelectorAll('input[data-class]').forEach(cb=>{ if(cb.checked) cls[cb.dataset.class]=rc.classes[cb.dataset.class]||''; });
+    card.querySelectorAll('[data-eng]').forEach(inp=>{ if(cls[inp.dataset.cls]!==undefined) cls[inp.dataset.cls]=inp.value; });
+    rc.classes=cls;
+    rc.collapsed=card.classList.contains('collapsed');
+  });
+}
+function syncPrimaryRacer(){
+  const rc=state.racers[0]||{}, cn=Object.keys(rc.classes||{});
+  state.racer=Object.assign({}, state.racer, {
+    r_rname:rc.r_rname||'', r_rsurname:rc.r_rsurname||'', r_idaddr:rc.r_idaddr||'',
+    r_team:rc.r_team||'', r_carno:rc.r_carno||'',
+    r_model: cn.join(', ')||'-',
+    r_vehicle: cn.map(c=>c+': '+(rc.classes[c]||'-')).join(' · ')||'-'
+  });
+}
+function validateRacers(form){
+  state.racers.forEach(rc=>rc.collapsed=false);
+  form.querySelectorAll('.racer-card2').forEach(c=>c.classList.remove('collapsed'));
+  let ok=validateScreen(form);
+  state.racers.forEach(rc=>{
+    const card=form.querySelector(`.racer-card2[data-rid="${rc.id}"]`); if(!card)return;
+    const cs=card.querySelector('.class-section');
+    if(Object.keys(rc.classes).length===0){ ok=false; if(cs){cs.classList.add('invalid'); if(!form.querySelector('.field.invalid')) cs.scrollIntoView({behavior:'smooth',block:'center'});} }
+    else if(cs) cs.classList.remove('invalid');
+  });
+  return ok;
+}
+function bindRacerCards(form){
+  form.querySelectorAll('.rc2-head[data-toggle]').forEach(h=>{
+    h.onclick=(e)=>{ if(e.target.closest('[data-del]'))return; const card=h.closest('.racer-card2'); const rc=racerById(card.dataset.rid); card.classList.toggle('collapsed'); if(rc)rc.collapsed=card.classList.contains('collapsed'); };
+  });
+  form.querySelectorAll('[data-del]').forEach(b=>{
+    b.onclick=()=>{ collectRacers(); state.racers=state.racers.filter(x=>x.id!==b.dataset.del); render(); };
+  });
+  form.querySelectorAll('input[data-class]').forEach(cb=>{
+    cb.onchange=()=>{
+      const rid=cb.dataset.rid, cls=cb.dataset.class, rc=racerById(rid); if(!rc)return;
+      const engwrap=form.querySelector(`[data-engwrap="${rid}"]`);
+      engwrap.querySelectorAll('[data-eng]').forEach(inp=>{ if(rc.classes[inp.dataset.cls]!==undefined) rc.classes[inp.dataset.cls]=inp.value; });
+      if(cb.checked){ if(rc.classes[cls]===undefined)rc.classes[cls]=''; } else { delete rc.classes[cls]; }
+      cb.closest('.class-chk').classList.toggle('on',cb.checked);
+      engwrap.innerHTML=RACE_CLASSES.map((c,ci)=> rc.classes[c]!==undefined?engineRowHTML(rid,c,ci,rc.classes[c]):'').join('');
+      const cs=cb.closest('.class-section'); if(cs)cs.classList.remove('invalid');
+    };
+  });
+}
 SCREEN_INIT.racer = function(){
   const form=el('rcForm');
   bindUploads(form);
-  form.querySelector('[data-back]').onclick=()=>{collect(form,state.racer);go(state.addRacerMode?'profile':'applicant');};
-  form.onsubmit=(e)=>{e.preventDefault();if(!validateScreen(form)){toast(t('v.fixerr'));return;}collect(form,state.racer);go('parking');};
+  bindRacerCards(form);
+  el('addRacerBtn').onclick=()=>{ collectRacers(); state.racers.push(newRacer()); render(); };
+  form.querySelector('[data-back]').onclick=()=>{collectRacers();syncPrimaryRacer();go(state.addRacerMode?'profile':'applicant');};
+  form.onsubmit=(e)=>{e.preventDefault();collectRacers();if(!validateRacers(form)){toast(t('v.fixerr'));return;}syncPrimaryRacer();go('parking');};
 };
 
 /* ---- PARKING ---- */
@@ -1517,7 +1664,7 @@ SCREEN_INIT.profile=function(){
   const ed=el('profEdit'); if(ed)ed.onclick=()=>openProfEditApplicant();
   const pi=sc.querySelector('[data-pimg]'); if(pi)pi.onclick=()=>openDashImg(state.profile.applicant.idImg,t('f.idcard.ap'));
   sc.querySelectorAll('[data-rimg]').forEach(b=>b.onclick=()=>{const r=state.profile.racers[+b.dataset.rimg];openDashImg(b.dataset.kind==='photo'?r.photo:r.idImg,b.dataset.kind==='photo'?'รูปนักแข่ง':'บัตรประชาชนนักแข่ง');});
-  const ar=el('profAddRacer'); if(ar)ar.onclick=()=>{ state.addRacerMode=true; state.racer={}; state.files={}; go('racer'); };
+  const ar=el('profAddRacer'); if(ar)ar.onclick=()=>{ state.addRacerMode=true; state.racer={}; state.racers=[newRacer()]; state.files={}; go('racer'); };
 };
 function openProfEditApplicant(){
   const a=state.profile.applicant;
@@ -1538,7 +1685,7 @@ SCREEN_INIT.done = function(){
   el('newReg').onclick=()=>{
     state.step='auth';state.authTab='register';
     state.terms={privacy:false,rules:false,guarantee:false};
-    state.applicant={};state.racer={};state.parking={pit:'',privatePit:false};
+    state.applicant={};state.racer={};state.racers=[newRacer()];state.parking={pit:'',privatePit:false};
     state.bank={};state.discount={code:'',amount:0};state.files={};state.tax=false;state.result=null;
     state.addRacerMode=false;genTakenPits();render();
   };
@@ -1582,7 +1729,7 @@ function setLang(lang){
 }
 function persistCurrentForm(){
   const form=el('apForm'); if(form)saveApplicant(form);
-  const rf=el('rcForm'); if(rf)collect(rf,state.racer);
+  const rf=el('rcForm'); if(rf)collectRacers();
   const pf=el('pkForm'); if(pf)savePark(pf);
   const bf=el('bkForm'); if(bf)collect(bf,state.bank);
 }
