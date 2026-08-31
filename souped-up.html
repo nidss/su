@@ -270,6 +270,25 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .sum-line.discount .val{color:var(--green)}
 .discount-row{display:flex;gap:10px;margin:16px 0}
 .discount-row .control{flex:1}
+.sum-car{border:1px solid var(--line);border-radius:11px;padding:6px 14px 10px;margin-bottom:14px;background:var(--bg-2)}
+.sum-car-h{display:flex;align-items:center;gap:11px;padding:11px 0 9px;border-bottom:1px dashed var(--line-2)}
+.sum-car .cc-idx{flex:none;width:24px;height:24px;border-radius:50%;background:var(--mint);color:var(--mint-ink);font-size:12.5px;font-weight:800;display:grid;place-items:center;font-family:'Rajdhani',sans-serif}
+.sum-car .cc-meta{min-width:0;flex:1}
+.sum-car .cc-cls{font-size:14px;font-weight:700;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sum-car .cc-who{font-size:11.5px;color:var(--txt-faint);margin-top:1px}
+.sum-car .cc-sub{font-weight:800;color:var(--mint);font-family:'Rajdhani',sans-serif;font-size:15px;white-space:nowrap}
+.sum-car .sum-line.sub{padding:8px 0;border-bottom:0;font-size:13px}
+.sum-car .sum-line.sub .lab{color:var(--txt-faint)}
+.sum-car .sum-line.sub .val{color:var(--txt-dim)}
+/* Receipt table (PDF) */
+.appdoc .rcpt-tbl{width:100%;border-collapse:collapse;margin-top:4px;font-size:13px}
+.appdoc .rcpt-tbl th{background:#f0f2f6;color:#3a4150;font-weight:700;text-align:left;padding:9px 10px;border-bottom:2px solid #0C142A;font-size:12px}
+.appdoc .rcpt-tbl td{padding:10px;border-bottom:1px solid #e2e5ea;color:#15181e;vertical-align:top}
+.appdoc .rcpt-tbl .num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.appdoc .rcpt-tbl .rcpt-sub{font-size:11px;color:#6b7280;margin-top:2px}
+.appdoc .rcpt-tbl tfoot td{border-top:2px solid #0C142A;border-bottom:0;padding-top:12px;font-weight:800}
+.appdoc .rcpt-tbl .tot-l{text-align:right;color:#0C142A}
+.appdoc .rcpt-tbl .tot-v{text-align:right;color:#0C142A;font-size:16px;font-family:'Rajdhani',monospace}
 
 /* pay methods */
 .pay-methods{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px}
@@ -663,7 +682,7 @@ const I18N = {
     /* success */
     "dn.title":"ชำระเงินสำเร็จ!","dn.sub":"เราได้ส่งอีเมลยืนยันการลงทะเบียนให้คุณแล้ว",
     "dn.ref":"หมายเลขอ้างอิง","dn.racer":"ชื่อนักแข่ง","dn.comp":"รายการแข่ง","dn.amount":"ยอดที่ชำระ",
-    "dn.email":"ส่งไปที่","dn.new":"ลงทะเบียนรายการใหม่","dn.print":"พิมพ์ใบเสร็จ",
+    "dn.email":"ส่งไปที่","dn.new":"ลงทะเบียนรายการใหม่","dn.print":"พิมพ์ใบเสร็จ","dn.receipt":"พิมพ์ใบเสร็จ (PDF)","dn.profile":"ไปที่ประวัติของฉัน","sm.car":"รุ่นการแข่งขัน","sm.percar":"ต่อคัน","bk.save":"บันทึกข้อมูลบัญชีนี้เพื่อใช้ในครั้งต่อไป",
     /* buttons */
     "btn.back":"ย้อนกลับ","btn.continue":"ดำเนินการต่อ","btn.next":"ถัดไป","btn.next.racer":"ถัดไป (ข้อมูลนักแข่ง)",
     "btn.next.parking":"ถัดไป (ที่จอดรถ)","btn.next.bank":"ถัดไป (บัญชี)","btn.summary":"สรุปยอดการลงทะเบียน",
@@ -753,7 +772,7 @@ const I18N = {
     "py.confirm":"Confirm Payment",
     "dn.title":"Payment Successful!","dn.sub":"A confirmation email has been sent to you.",
     "dn.ref":"Reference No.","dn.racer":"Racer Name","dn.comp":"Competition","dn.amount":"Amount Paid",
-    "dn.email":"Sent to","dn.new":"Register another entry","dn.print":"Print receipt",
+    "dn.email":"Sent to","dn.new":"Register another entry","dn.print":"Print receipt","dn.receipt":"Print receipt (PDF)","dn.profile":"Go to My Profile","sm.car":"Race class","sm.percar":"per car","bk.save":"Save this account for next time",
     "btn.back":"Back","btn.continue":"Continue","btn.next":"Next","btn.next.racer":"Next (Racer Info)",
     "btn.next.parking":"Next (Parking)","btn.next.bank":"Next (Accounts)","btn.summary":"Registration Summary",
     "btn.pay":"Proceed to Payment",
@@ -1128,7 +1147,7 @@ function classSectionInner(rc){
 function racerCardHTML(rc,i){
   const rid=rc.id;
   const nm=((rc.r_rname||'')+' '+(rc.r_rsurname||'')).trim();
-  const delBtn=state.racers.length>1?`<button type="button" class="rc2-del" data-del="${rid}" title="${esc(t('rc.removeracer'))}">${D_ICON.x}</button>`:'';
+  const delBtn=i>0?`<button type="button" class="rc2-del" data-del="${rid}" title="${esc(t('rc.removeracer'))}">${D_ICON.x}</button>`:'';
   const fld=(id,labelKey,val)=>`<div class="field" data-field="${id}"><label>${esc(t(labelKey))}<span class="req">*</span></label><input class="control" id="${id}" data-rk="${id.split('__')[0]}" data-req value="${esc(val||'')}"/><div class="err-msg">${esc(t('v.required'))}</div></div>`;
   return `
   <div class="racer-card2 ${rc.collapsed?'collapsed':''}" data-rid="${rid}">
@@ -1218,20 +1237,28 @@ function bindClassSection(form, rc){
   const add=sec.querySelector('[data-addclass]'); if(add)add.onclick=()=>{ syncEntries(form, rc); rc.entries.push({cls:'',engine:''}); rebuildClassSection(form, rc); };
   sec.querySelectorAll('[data-clsdel]').forEach(b=>{ b.onclick=()=>{ syncEntries(form, rc); rc.entries.splice(+b.dataset.clsdel,1); if(!rc.entries.length)rc.entries=[{cls:'',engine:''}]; rebuildClassSection(form, rc); }; });
 }
-function bindRacerCards(form){
-  form.querySelectorAll('.rc2-head[data-toggle]').forEach(h=>{
-    h.onclick=(e)=>{ if(e.target.closest('[data-del]'))return; const card=h.closest('.racer-card2'); const rc=racerById(card.dataset.rid); card.classList.toggle('collapsed'); if(rc)rc.collapsed=card.classList.contains('collapsed'); };
-  });
-  form.querySelectorAll('[data-del]').forEach(b=>{
-    b.onclick=()=>{ collectRacers(); state.racers=state.racers.filter(x=>x.id!==b.dataset.del); render(); };
-  });
-  state.racers.forEach(rc=>bindClassSection(form, rc));
+function bindOneRacer(form, card){
+  const rc=racerById(card.dataset.rid); if(!rc)return;
+  const h=card.querySelector('.rc2-head[data-toggle]');
+  if(h)h.onclick=(e)=>{ if(e.target.closest('[data-del]'))return; card.classList.toggle('collapsed'); rc.collapsed=card.classList.contains('collapsed'); };
+  const d=card.querySelector('[data-del]');
+  if(d)d.onclick=()=>{ collectRacers(); state.racers=state.racers.filter(x=>x.id!==d.dataset.del); render(); };
+  bindClassSection(form, rc);
 }
+function bindRacerCards(form){ form.querySelectorAll('.racer-card2').forEach(card=>bindOneRacer(form, card)); }
 SCREEN_INIT.racer = function(){
   const form=el('rcForm');
   bindUploads(form);
   bindRacerCards(form);
-  el('addRacerBtn').onclick=()=>{ collectRacers(); state.racers.push(newRacer()); render(); };
+  el('addRacerBtn').onclick=()=>{
+    collectRacers();
+    const rc=newRacer(); state.racers.push(rc);
+    const wrap=el('racersWrap');
+    wrap.insertAdjacentHTML('beforeend', racerCardHTML(rc, state.racers.length-1));
+    const card=wrap.lastElementChild;
+    bindUploads(card); bindOneRacer(form, card);
+    card.scrollIntoView({behavior:'smooth',block:'center'});
+  };
   form.querySelector('[data-back]').onclick=()=>{collectRacers();syncPrimaryRacer();go(state.addRacerMode?'profile':'applicant');};
   form.onsubmit=(e)=>{e.preventDefault();collectRacers();if(!validateRacers(form)){toast(t('v.fixerr'));return;}syncPrimaryRacer();go('parking');};
 };
@@ -1461,7 +1488,7 @@ function pkBooker(tn){
   const n=parseInt(tn,10)||1;
   const fn=D_FIRST[(n*3)%D_FIRST.length], ln=D_LAST[(n*7)%D_LAST.length];
   const name=fn+' '+ln, models=MODELS[state.lang];
-  return {name, team:CAR_GARAGE[n%CAR_GARAGE.length], model:models[(n*2)%models.length], photo:dImg(t('pk.booker.photo'),name,'#6FFFE8')};
+  return {name, team:CAR_GARAGE[n%CAR_GARAGE.length], model:models[(n*2)%models.length], photo:IMG_RACER};
 }
 function openBookerModal(tn){
   const b=pkBooker(tn);
@@ -1501,10 +1528,12 @@ SCREENS.bank = function(){
     <h3 style="margin:6px 0 2px;font-size:16px">${esc(t('bk.refund.t'))}</h3>
     <p class="page-sub" style="margin-bottom:14px;font-size:12.5px">${esc(t('bk.refund.s'))}</p>
     ${acct('rf')}
+    <label class="checkbox" style="margin-top:14px"><input type="checkbox" id="rf_save" ${b.rf_save?'checked':''}/> ${esc(t('bk.save'))}</label>
     <hr style="border:0;border-top:1px solid var(--line);margin:24px 0"/>
     <h3 style="margin:6px 0 2px;font-size:16px">${esc(t('bk.prize.t'))}</h3>
     <p class="page-sub" style="margin-bottom:14px;font-size:12.5px">${esc(t('bk.prize.s'))}</p>
     ${acct('pz')}
+    <label class="checkbox" style="margin-top:14px"><input type="checkbox" id="pz_save" ${b.pz_save?'checked':''}/> ${esc(t('bk.save'))}</label>
     <div class="actions">
       <button type="button" class="btn btn-ghost" data-back>${esc(t('btn.back'))}</button>
       <div class="spacer"></div>
@@ -1522,30 +1551,34 @@ SCREEN_INIT.bank = function(){
       const inp=el(p+'_bankother'); if(other)inp.setAttribute('data-req','');else{inp.removeAttribute('data-req');wrap.classList.remove('invalid');}
     };
   });
-  form.querySelector('[data-back]').onclick=()=>{collect(form,state.bank);go('parking');};
-  form.onsubmit=(e)=>{e.preventDefault();if(!validateScreen(form)){toast(t('v.fixerr'));return;}collect(form,state.bank);go('summary');};
+  form.querySelector('[data-back]').onclick=()=>{saveBank(form);go('parking');};
+  form.onsubmit=(e)=>{e.preventDefault();if(!validateScreen(form)){toast(t('v.fixerr'));return;}saveBank(form);go('summary');};
 };
+function saveBank(form){ collect(form,state.bank); const rf=el('rf_save'),pz=el('pz_save'); state.bank.rf_save=!!(rf&&rf.checked); state.bank.pz_save=!!(pz&&pz.checked); }
 
 /* ---- SUMMARY ---- */
 function calcTotal(){
-  let sub=PRICES.entry+PRICES.deposit;
-  return {sub, discount:state.discount.amount, total:Math.max(0,sub-state.discount.amount)};
+  const cars=pkSlots().length, perCar=PRICES.entry+PRICES.deposit;
+  return {cars, perCar, total:perCar*cars};
 }
 SCREENS.summary = function(){
-  const c=calcTotal();
+  const c=calcTotal(), slots=pkSlots();
+  const cars=slots.map((s,i)=>`
+    <div class="sum-car">
+      <div class="sum-car-h">
+        <span class="cc-idx">${i+1}</span>
+        <div class="cc-meta"><div class="cc-cls">${esc(s.cls||t('sm.car'))}</div>${s.name?`<div class="cc-who">${esc(s.name)}${s.carno?' · #'+esc(s.carno):''}</div>`:''}</div>
+        <span class="cc-sub">${esc(money(c.perCar))}</span>
+      </div>
+      <div class="sum-line sub"><span class="lab">${esc(t('sm.entry'))}</span><span class="val">${esc(money(PRICES.entry))}</span></div>
+      <div class="sum-line sub"><span class="lab">${esc(t('sm.deposit'))}</span><span class="val">${esc(money(PRICES.deposit))}</span></div>
+    </div>`).join('');
   return `
   <p class="eyebrow">${esc(t('sm.eyebrow'))}</p>
   <h1 class="page-title">${esc(t('sm.title'))}</h1>
   <p class="page-sub">${esc(t('sm.sub'))}</p>
-  <div class="sum-line"><span class="lab">${esc(t('sm.entry'))}</span><span class="val">${esc(money(PRICES.entry))}</span></div>
-  <div class="sum-line"><span class="lab">${esc(t('sm.deposit'))}</span><span class="val">${esc(money(PRICES.deposit))}</span></div>
-  ${c.discount>0?`<div class="sum-line discount"><span class="lab">${esc(t('sm.discount'))} (${esc(state.discount.code)})</span><span class="val">- ${esc(money(c.discount))}</span></div>`:''}
-  <div class="discount-row">
-    <input class="control" id="discCode" placeholder="${esc(t('sm.code.ph'))}" value="${esc(state.discount.code)}"/>
-    <button type="button" class="btn btn-ghost" id="applyCode">${esc(t('sm.code.apply'))}</button>
-  </div>
-  <div class="info-box"><span class="ico">🏷️</span><span>SOUPEDUP · EARLYBIRD · VIP2026</span></div>
-  <div class="sum-line total"><span class="lab">${esc(t('sm.total'))}</span><span class="val">${esc(money(c.total))}</span></div>
+  ${cars}
+  <div class="sum-line total"><span class="lab">${esc(t('sm.total'))} · ${c.cars} ${esc(t('pk.book.car'))}</span><span class="val">${esc(money(c.total))}</span></div>
   <div class="actions">
     <button class="btn btn-ghost" data-back>${esc(t('btn.back'))}</button>
     <div class="spacer"></div>
@@ -1553,11 +1586,6 @@ SCREENS.summary = function(){
   </div>`;
 };
 SCREEN_INIT.summary = function(){
-  el('applyCode').onclick=()=>{
-    const code=el('discCode').value.trim().toUpperCase();
-    if(DISCOUNTS[code]){state.discount={code,amount:DISCOUNTS[code]};toast(t('sm.code.ok'));render();}
-    else{state.discount={code:'',amount:0};toast(t('sm.code.bad'));}
-  };
   el('screen').querySelector('[data-back]').onclick=()=>go('bank');
   el('toPay').onclick=()=>go('pay');
 };
@@ -1641,8 +1669,31 @@ function qrSvg(){
 function finishPayment(){
   const c=calcTotal();
   const ref='SU26-'+Math.random().toString(36).slice(2,7).toUpperCase()+'-'+Math.floor(1000+Math.random()*9000);
-  state.result={ref, racer:(state.racer.r_rname||'')+' '+(state.racer.r_rsurname||''), model:state.racer.r_model||'-', amount:c.total, email:state.applicant.a_email||(state.account&&state.account.email)||''};
+  state.result={ref, racer:(state.racer.r_rname||'')+' '+(state.racer.r_rsurname||''), model:state.racer.r_model||'-', amount:c.total, cars:c.cars, email:state.applicant.a_email||(state.account&&state.account.email)||''};
+  // log the applicant in and build their profile from this registration
+  const a=state.applicant||{};
+  state.account=state.account||{username:((a.a_name||'')+' '+(a.a_surname||'')).trim()||'ผู้ใช้', email:state.result.email, phone:a.a_phone||''};
+  state.profile=buildProfileFromReg();
   go('done');
+}
+function buildProfileFromReg(){
+  const a=state.applicant||{};
+  const ap={a_date:a.a_date||'',a_name:a.a_name||'',a_surname:a.a_surname||'',a_idaddr:a.a_idaddr||'',a_deliaddr:a.a_deliaddr||a.a_idaddr||'',
+    a_phone:a.a_phone||'',a_email:a.a_email||(state.account&&state.account.email)||'',
+    chan_line_on:!!a.chan_line_on,chan_line:a.chan_line||'',chan_wechat_on:!!a.chan_wechat_on,chan_wechat:a.chan_wechat||'',chan_whatsapp_on:!!a.chan_whatsapp_on,chan_whatsapp:a.chan_whatsapp||'',
+    idImg:IMG_IDCARD};
+  const racers=(state.racers||[]).filter(rc=>rc.r_rname||rc.r_rsurname||(rc.entries||[]).some(e=>e.cls)).map(rc=>{
+    const es=(rc.entries||[]).filter(e=>e.cls);
+    return {r_rname:rc.r_rname||'',r_rsurname:rc.r_rsurname||'',r_idaddr:rc.r_idaddr||'',
+      r_vehicle:es.map(e=>e.cls+': '+(e.engine||'-')).join(' · ')||'-',r_model:es.map(e=>e.cls).join(', ')||'-',
+      r_team:rc.r_team||'',r_carno:rc.r_carno||'',idImg:IMG_IDCARD,photo:IMG_RACER};
+  });
+  const ref=(state.result&&state.result.ref)||'';
+  const today=new Date().toISOString().slice(0,10);
+  const history=[];
+  (state.racers||[]).forEach(rc=>{ (rc.entries||[]).filter(e=>e.cls).forEach(e=>{
+    history.push({ref:ref||('SU26-'+Math.random().toString(36).slice(2,7).toUpperCase()),racer:((rc.r_rname||'')+' '+(rc.r_rsurname||'')).trim()||'-',model:e.cls,carno:rc.r_carno||'-',date:today,amount:PRICES.entry+PRICES.deposit,status:'paid'}); }); });
+  return {applicant:ap, racers:racers.length?racers:[], history};
 }
 
 /* ---- DONE ---- */
@@ -1660,9 +1711,9 @@ SCREENS.done = function(){
       <div class="r-row"><span class="rl">${esc(t('dn.comp'))}</span><span class="rv">${esc(r.model||'-')}</span></div>
       <div class="r-row"><span class="rl">${esc(t('dn.amount'))}</span><span class="rv" style="color:var(--amber)">${esc(money(r.amount||0))}</span></div>
     </div>
-    <div class="actions" style="justify-content:center">
-      <button class="btn btn-ghost" onclick="window.print()">${esc(t('dn.print'))}</button>
-      <button class="btn btn-primary" id="newReg">${esc(t('dn.new'))}</button>
+    <div class="actions" style="justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-ghost" id="dnReceipt">${D_ICON.printer} ${esc(t('dn.receipt'))}</button>
+      <button class="btn btn-primary" id="dnProfile">${esc(t('dn.profile'))}</button>
     </div>
   </div>`;
 };
@@ -1672,7 +1723,7 @@ function pfAddr(){return (10+Math.floor(Math.random()*900))+' หมู่ '+(1+
 function genProfRacer(){
   const fn=dRnd(D_FIRST),ln=dRnd(D_LAST),carno=1+Math.floor(Math.random()*120);
   return {r_rname:fn,r_rsurname:ln,r_idaddr:pfAddr(),r_vehicle:dRnd(D_VEH),r_model:dRnd(MODELS.th),r_team:dRnd(D_TEAM),r_carno:String(carno),
-    idImg:dImg('บัตรประชาชนนักแข่ง',fn+' '+ln,'#6FFFE8'),photo:dImg('รูปนักแข่ง',fn+' '+ln,'#D1FF03')};
+    idImg:IMG_IDCARD,photo:IMG_RACER};
 }
 function buildProfile(acct){
   const fn=(acct&&acct.username&&/[ก-๙]/.test(acct.username))?acct.username:dRnd(D_FIRST), ln=dRnd(D_LAST), addr=pfAddr();
@@ -1681,7 +1732,7 @@ function buildProfile(acct){
     a_phone:(acct&&acct.phone)||'08'+(1+Math.floor(Math.random()*8))+'-'+dPad(Math.floor(Math.random()*1000))+'-'+dPad(Math.floor(Math.random()*10000)),
     a_email:(acct&&acct.email)||'you@email.com',
     chan_line_on:true,chan_line:'line_'+fn.slice(0,3),chan_wechat_on:false,chan_wechat:'',chan_whatsapp_on:false,chan_whatsapp:'',
-    idImg:dImg('บัตรประชาชนผู้สมัคร',fn+' '+ln,'#6FFFE8')};
+    idImg:IMG_IDCARD};
   const racers=[genProfRacer(),genProfRacer()];
   const history=racers.map((r,i)=>({ref:'SU26-'+Math.random().toString(36).slice(2,7).toUpperCase()+'-'+(1000+Math.floor(Math.random()*9000)),
     racer:r.r_rname+' '+r.r_rsurname,model:r.r_model,carno:r.r_carno,date:'2026-0'+(2+i)+'-'+dPad(8+i*5),amount:17000,status:'paid'}));
@@ -1770,13 +1821,8 @@ function openProfEditApplicant(){
 }
 
 SCREEN_INIT.done = function(){
-  el('newReg').onclick=()=>{
-    state.step='auth';state.authTab='register';
-    state.terms={privacy:false,rules:false,guarantee:false};
-    state.applicant={};state.racer={};state.racers=[newRacer()];state.parking={pit:'',assign:{},active:'',privatePit:false};
-    state.bank={};state.discount={code:'',amount:0};state.files={};state.tax=false;state.result=null;
-    state.addRacerMode=false;genTakenPits();render();
-  };
+  const rc=el('dnReceipt'); if(rc)rc.onclick=()=>openReceiptPdf();
+  const pf=el('dnProfile'); if(pf)pf.onclick=()=>{ state.profileTab='info'; go('profile'); };
 };
 
 /* ================= Uploads ================= */
@@ -1819,7 +1865,7 @@ function persistCurrentForm(){
   const form=el('apForm'); if(form)saveApplicant(form);
   const rf=el('rcForm'); if(rf)collectRacers();
   const pf=el('pkForm'); if(pf)savePark(pf);
-  const bf=el('bkForm'); if(bf)collect(bf,state.bank);
+  const bf=el('bkForm'); if(bf)saveBank(bf);
 }
 
 /* ================= Boot ================= */
@@ -1868,6 +1914,18 @@ function dImg(title,name,accent){
    +"</svg>";
   return 'data:image/svg+xml,'+encodeURIComponent(svg);
 }
+/* Real image assets (fall back to placeholder if not present, e.g. inside the Artifact sandbox) */
+const IMG_RACER='asset/img_racer.png';
+const IMG_IDCARD='asset/idcard.png';
+const IMG_RACER_PH=dImg('รูปนักแข่ง (หน้าตรง)','SOUPED UP 2026','#D1FF03');
+const IMG_IDCARD_PH=dImg('บัตรประชาชน','SOUPED UP 2026','#6FFFE8');
+document.addEventListener('error',function(e){
+  const t=e.target;
+  if(t&&t.tagName==='IMG'&&!t.dataset.fb){
+    if(/img_racer\.png/.test(t.src)){t.dataset.fb='1';t.src=IMG_RACER_PH;}
+    else if(/idcard\.png/.test(t.src)){t.dataset.fb='1';t.src=IMG_IDCARD_PH;}
+  }
+},true);
 function buildDashData(){
   const N=43, applicants=[], racers=[];
   for(let i=0;i<N;i++){
@@ -1881,14 +1939,14 @@ function buildDashData(){
       deliAddr:Math.random()>.5?addr:(100+i)+' คอนโด จ.'+dRnd(D_PROV),
       phone, email:'user'+(i+1)+'@email.com',
       line:hasL?'line_'+fn.slice(0,3)+i:'-', wechat:hasW?'wc'+i:'-', whatsapp:hasA?phone:'-',
-      idImg:dImg('บัตรประชาชนผู้สมัคร', fn+' '+ln, '#6FFFE8')
+      idImg:IMG_IDCARD
     });
     const carno=1+((i*7+3)%120);
     racers.push({
       rname:rfn, rsurname:rln, idAddr:addr, vehicle:dRnd(D_VEH),
       model:dRnd(MODELS.th), team:dRnd(D_TEAM), carno:String(carno),
-      idImg:dImg('บัตรประชาชนนักแข่ง', rfn+' '+rln, '#6FFFE8'),
-      photo:dImg('รูปนักแข่ง', rfn+' '+rln, '#D1FF03')
+      idImg:IMG_IDCARD,
+      photo:IMG_RACER
     });
   }
   return {applicant:applicants, racer:racers};
@@ -2123,17 +2181,43 @@ function racerPdfHTML(idx){
     </div>
   </div></div>`;
 }
-function openRacerPdf(idx){
-  DASH.pdfIdx=idx;
-  el('pdfBody').innerHTML=racerPdfHTML(idx);
-  el('pdfPrint').innerHTML=D_ICON.printer+' <span>พิมพ์ / บันทึก PDF</span>';
+let PDF_HTML='';
+function openPdfDoc(html, tabLabel){
+  PDF_HTML=html;
+  el('pdfBody').innerHTML=html;
+  el('pdfPrint').innerHTML=D_ICON.printer+' <span>'+esc(t('dn.receipt'))+'</span>';
+  const tt=document.querySelector('.pdf-tt'); if(tt&&tabLabel)tt.textContent=tabLabel;
   el('pdfBack').classList.add('open');
 }
+function openRacerPdf(idx){ openPdfDoc(racerPdfHTML(idx), 'ใบสมัครนักแข่ง · Racer Application'); }
+function openReceiptPdf(){ openPdfDoc(receiptPdfHTML(), 'ใบเสร็จรับเงิน · Receipt'); }
 function closeRacerPdf(){ el('pdfBack').classList.remove('open'); el('pdfBody').innerHTML=''; }
-function printRacerPdf(){
-  if(DASH.pdfIdx==null) return;
-  el('pdfPrintRoot').innerHTML=racerPdfHTML(DASH.pdfIdx);
-  window.print();
+function printRacerPdf(){ if(!PDF_HTML)return; el('pdfPrintRoot').innerHTML=PDF_HTML; window.print(); }
+function receiptPdfHTML(){
+  const r=state.result||{}, c=calcTotal(), slots=pkSlots(), a=state.applicant||{};
+  const today=new Date().toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'});
+  const payer=((a.a_name||'')+' '+(a.a_surname||'')).trim();
+  const lines=slots.map((s,i)=>`<tr><td>${i+1}</td><td>${esc(s.cls||('คันที่ '+(i+1)))}${s.name?`<div class="rcpt-sub">${esc(s.name)}${s.carno?' · #'+esc(s.carno):''}</div>`:''}</td><td class="num">${esc(money(PRICES.entry))}</td><td class="num">${esc(money(PRICES.deposit))}</td><td class="num">${esc(money(c.perCar))}</td></tr>`).join('');
+  const info=[];
+  if(payer)info.push(`<div class="ad-row"><span class="ad-k">ชื่อ-นามสกุล</span><span class="ad-v">${esc(payer)}</span></div>`);
+  if(a.a_email||r.email)info.push(`<div class="ad-row"><span class="ad-k">อีเมล</span><span class="ad-v">${esc(a.a_email||r.email)}</span></div>`);
+  if(a.a_phone)info.push(`<div class="ad-row"><span class="ad-k">โทรศัพท์</span><span class="ad-v">${esc(a.a_phone)}</span></div>`);
+  info.push(`<div class="ad-row"><span class="ad-k">วิธีชำระเงิน</span><span class="ad-v">${esc(state.payMethod==='qr'?'QR / โอนเงิน':'บัตรเครดิต')}</span></div>`);
+  return `<div class="appdoc"><div class="ad-pad">
+    <div class="ad-top">
+      <div class="ad-brand"><span class="ad-flag"></span><div class="ad-title">SOUPED UP 2026</div><div class="ad-sub">ใบเสร็จรับเงิน · OFFICIAL RECEIPT</div></div>
+      <div class="ad-meta"><div>เลขที่ใบเสร็จ</div><div class="ad-ref">${esc(r.ref||'')}</div><div style="margin-top:8px">วันที่ <b>${esc(today)}</b></div><div>สถานะ <b style="color:#1f9d55">ชำระเงินแล้ว</b></div></div>
+    </div>
+    <div class="ad-sec"><div class="ad-sec-h">ข้อมูลผู้ชำระเงิน</div><div class="ad-grid">${info.join('')}</div></div>
+    <div class="ad-sec"><div class="ad-sec-h">รายการชำระเงิน</div>
+      <table class="rcpt-tbl">
+        <thead><tr><th>#</th><th>รุ่นการแข่งขัน</th><th class="num">ค่าสมัคร</th><th class="num">ค่ามัดจำ</th><th class="num">รวม/คัน</th></tr></thead>
+        <tbody>${lines}</tbody>
+        <tfoot><tr><td colspan="4" class="tot-l">ยอดชำระทั้งหมด (${slots.length} คัน)</td><td class="num tot-v">${esc(money(c.total))}</td></tr></tfoot>
+      </table>
+    </div>
+    <div class="ad-foot"><span>Souped Up 2026 · ระบบลงทะเบียนการแข่งขัน · NIDSS</span><span class="ad-demo">เอกสารตัวอย่าง (DEMO)</span></div>
+  </div></div>`;
 }
 function openDashEdit(tab,idx){
   const r=DASH.data[tab][idx];
