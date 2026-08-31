@@ -471,6 +471,9 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .pinfo-row.full{grid-column:1/-1}
 .pinfo-row .l{font-size:12px;color:var(--txt-dim)}
 .pinfo-row .v{font-size:14.5px;margin-top:2px;word-break:break-word}
+.pinfo-row .v.pw-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pinfo-row .pw-mask{letter-spacing:3px;font-size:16px;line-height:1;color:var(--txt);font-family:monospace}
+.pinfo-row .pw-row .btn-sm{padding:5px 11px}
 .pc-img{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
 .pc-img .l{font-size:12px;color:var(--txt-dim);margin-bottom:8px}
 .prof-thumb{width:150px;height:96px;object-fit:cover;border-radius:8px;border:1px solid var(--line-2);cursor:pointer}
@@ -700,6 +703,7 @@ const I18N = {
     "prof.title":"ประวัติของฉัน","prof.info":"ข้อมูลของฉัน","prof.racers":"ข้อมูลนักแข่ง","prof.history":"ประวัติการลงทะเบียน",
     "prof.edit":"แก้ไข","prof.addracer":"เพิ่มนักแข่ง","prof.logout":"ออกจากระบบ","prof.viewid":"ดูรูปบัตรประชาชน","prof.noracer":"ยังไม่มีข้อมูลนักแข่ง","prof.racerno":"นักแข่งคนที่",
     "prof.welcome":"ยินดีต้อนรับกลับ","prof.saved":"บันทึกข้อมูลแล้ว",
+    "prof.account":"บัญชีผู้ใช้","prof.changepw":"เปลี่ยนรหัสผ่าน","prof.pwsaved":"เปลี่ยนรหัสผ่านเรียบร้อยแล้ว","f.curpw":"รหัสผ่านปัจจุบัน","f.newpw":"รหัสผ่านใหม่","f.confirmpw":"ยืนยันรหัสผ่านใหม่","v.curpwwrong":"รหัสผ่านปัจจุบันไม่ถูกต้อง",
     "hist.ref":"หมายเลขอ้างอิง","hist.racer":"นักแข่ง","hist.model":"รุ่นการแข่งขัน","hist.carno":"เบอร์รถ","hist.date":"วันที่","hist.amount":"ยอดชำระ","hist.status":"สถานะ","hist.paid":"ชำระแล้ว","hist.none":"ยังไม่มีประวัติการลงทะเบียน",
     "lang.name":"ภาษาไทย"
   },
@@ -788,6 +792,7 @@ const I18N = {
     "prof.title":"My Profile","prof.info":"My Information","prof.racers":"My Racers","prof.history":"Registration History",
     "prof.edit":"Edit","prof.addracer":"Add Racer","prof.logout":"Log out","prof.viewid":"View ID card","prof.noracer":"No racer data yet","prof.racerno":"Racer #",
     "prof.welcome":"Welcome back","prof.saved":"Saved",
+    "prof.account":"Account","prof.changepw":"Change password","prof.pwsaved":"Password changed successfully","f.curpw":"Current password","f.newpw":"New password","f.confirmpw":"Confirm new password","v.curpwwrong":"Current password is incorrect",
     "hist.ref":"Reference No.","hist.racer":"Racer","hist.model":"Competition","hist.carno":"Car No.","hist.date":"Date","hist.amount":"Amount","hist.status":"Status","hist.paid":"Paid","hist.none":"No registration history yet",
     "lang.name":"English"
   }
@@ -1678,7 +1683,7 @@ function finishPayment(){
   state.result={ref, racer:(state.racer.r_rname||'')+' '+(state.racer.r_rsurname||''), model:state.racer.r_model||'-', amount:c.total, cars:c.cars, email:state.applicant.a_email||(state.account&&state.account.email)||''};
   // log the applicant in and build their profile from this registration
   const a=state.applicant||{};
-  state.account=state.account||{username:((a.a_name||'')+' '+(a.a_surname||'')).trim()||'ผู้ใช้', email:state.result.email, phone:a.a_phone||''};
+  state.account=state.account||{username:((a.a_name||'')+' '+(a.a_surname||'')).trim()||'ผู้ใช้', email:state.result.email, phone:a.a_phone||'', password:'password'};
   state.profile=buildProfileFromReg();
   go('done');
 }
@@ -1746,9 +1751,19 @@ function buildProfile(acct){
 }
 function profInfoHTML(p){
   const a=p.applicant;
+  const acc=state.account||{};
+  const uname=acc.username||((a.a_name||'')+' '+(a.a_surname||'')).trim()||'-';
+  const pwMask='•'.repeat(Math.min(Math.max((acc.password||'').length||8,6),12));
   const chans=[]; if(a.chan_line_on&&a.chan_line)chans.push('Line: '+a.chan_line); if(a.chan_wechat_on&&a.chan_wechat)chans.push('WeChat: '+a.chan_wechat); if(a.chan_whatsapp_on&&a.chan_whatsapp)chans.push('WhatsApp: '+a.chan_whatsapp);
   const row=(lab,val,full)=>`<div class="pinfo-row ${full?'full':''}"><div class="l">${esc(lab)}</div><div class="v">${esc(val||'-')}</div></div>`;
-  return `<div class="prof-card">
+  const accountCard=`<div class="prof-card" style="margin-bottom:16px">
+    <div class="pc-head"><h3>${esc(t('prof.account'))}</h3></div>
+    <div class="pinfo-grid">
+      <div class="pinfo-row"><div class="l">${esc(t('f.username'))}</div><div class="v">${esc(uname)}</div></div>
+      <div class="pinfo-row"><div class="l">${esc(t('f.password'))}</div><div class="v pw-row"><span class="pw-mask">${pwMask}</span><button type="button" class="btn btn-ghost btn-sm" id="profChgPw">${D_ICON.edit} ${esc(t('prof.changepw'))}</button></div></div>
+    </div>
+  </div>`;
+  return accountCard + `<div class="prof-card">
     <div class="pc-head"><h3>${esc(t('prof.info'))}</h3><button class="ico-btn edit" id="profEdit" title="${esc(t('prof.edit'))}">${D_ICON.edit}</button></div>
     <div class="pinfo-grid">
       ${row(t('f.date'),a.a_date)}${row(t('f.phone'),a.a_phone)}
@@ -1807,6 +1822,7 @@ SCREEN_INIT.profile=function(){
   sc.querySelectorAll('[data-ptab]').forEach(b=>b.onclick=()=>{state.profileTab=b.dataset.ptab;render();});
   const lo=el('profLogout'); if(lo)lo.onclick=()=>{state.profileTab='info';state.authTab='login';go('auth');};
   const ed=el('profEdit'); if(ed)ed.onclick=()=>openProfEditApplicant();
+  const cpw=el('profChgPw'); if(cpw)cpw.onclick=()=>openChangePassword();
   const pi=sc.querySelector('[data-pimg]'); if(pi)pi.onclick=()=>openDashImg(state.profile.applicant.idImg,t('f.idcard.ap'));
   sc.querySelectorAll('[data-rimg]').forEach(b=>b.onclick=()=>{const r=state.profile.racers[+b.dataset.rimg];openDashImg(b.dataset.kind==='photo'?r.photo:r.idImg,b.dataset.kind==='photo'?'รูปนักแข่ง':'บัตรประชาชนนักแข่ง');});
   const ar=el('profAddRacer'); if(ar)ar.onclick=()=>{ state.addRacerMode=true; state.racer={}; state.racers=[newRacer()]; state.files={}; go('racer'); };
@@ -1824,6 +1840,29 @@ function openProfEditApplicant(){
   el('dmBack').classList.add('open');
   el('dmCancel').onclick=closeDashModal;
   el('dmSave').onclick=()=>{ el('dmBody').querySelectorAll('[data-ek]').forEach(inp=>{a[inp.dataset.ek]=inp.value;}); a.chan_line_on=!!a.chan_line; a.chan_wechat_on=!!a.chan_wechat; a.chan_whatsapp_on=!!a.chan_whatsapp; a.idImg=tmp; closeDashModal(); render(); toast(t('prof.saved')); };
+}
+function openChangePassword(){
+  const acc=state.account||(state.account={});
+  const field=(id,lab)=>`<div class="field" data-field="${id}"><label>${esc(lab)}<span class="req">*</span></label><input class="control" id="${id}" type="password" autocomplete="off"/><div class="err-msg"></div></div>`;
+  el('dmBody').innerHTML=`<h3>${esc(t('prof.changepw'))}</h3>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      ${field('pw_cur',t('f.curpw'))}
+      ${field('pw_new',t('f.newpw'))}
+      ${field('pw_confirm',t('f.confirmpw'))}
+    </div>
+    <div class="actions" style="margin-top:20px"><button class="btn btn-ghost" id="dmCancel">${esc(t('modal.close'))}</button><div class="spacer"></div><button class="btn btn-primary" id="dmSave">${esc(t('prof.changepw'))}</button></div>`;
+  el('dmBack').classList.add('open');
+  el('dmCancel').onclick=closeDashModal;
+  const bad=(id,msg)=>{ const f=el(id).closest('.field'); f.classList.add('invalid'); const em=f.querySelector('.err-msg'); if(em)em.textContent=msg; el(id).focus(); };
+  const clr=()=>el('dmBody').querySelectorAll('.field').forEach(f=>f.classList.remove('invalid'));
+  el('dmSave').onclick=()=>{
+    clr();
+    const cur=el('pw_cur').value, nw=el('pw_new').value, cf=el('pw_confirm').value;
+    if(acc.password && cur!==acc.password){ bad('pw_cur',t('v.curpwwrong')); return; }
+    if(nw.length<6){ bad('pw_new',t('v.pwshort')); return; }
+    if(nw!==cf){ bad('pw_confirm',t('v.pwmatch')); return; }
+    acc.password=nw; closeDashModal(); render(); toast(t('prof.pwsaved'));
+  };
 }
 
 SCREEN_INIT.done = function(){
