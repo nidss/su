@@ -356,6 +356,8 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .ico-btn svg{width:16px;height:16px}
 .ico-btn.edit{color:var(--amber)}
 .ico-btn.edit:hover{background:rgba(255,180,0,.12);border-color:var(--amber)}
+.ico-btn.pdf{color:var(--lime)}
+.ico-btn.pdf:hover{background:rgba(209,255,3,.12);border-color:var(--lime)}
 .pager{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px;flex-wrap:wrap}
 .pager .pinfo{font-size:12.5px;color:var(--txt-dim)}
 .pager .pbtns{display:flex;gap:4px;flex-wrap:wrap}
@@ -378,6 +380,70 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .booker-rows .bk{font-size:12px;color:var(--txt-dim);letter-spacing:.3px}
 .booker-rows .bv{font-size:15px;font-weight:700;color:var(--txt)}
 .dm-cap{font-size:12.5px;color:var(--txt-dim);margin-top:10px;text-align:center}
+/* ---- Dashboard racer filter bar ---- */
+.dfilter{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.dfilter .df-field{display:flex;flex-direction:column;gap:4px}
+.dfilter label{font-size:11px;color:var(--txt-faint);letter-spacing:.3px}
+.dfilter input,.dfilter select{height:34px;background:var(--bg);border:1px solid var(--line-2);color:var(--txt);border-radius:8px;padding:0 10px;font-size:13px;min-width:150px;font-family:inherit}
+.dfilter input:focus,.dfilter select:focus{outline:none;border-color:var(--mint);box-shadow:0 0 0 2px var(--mint-soft)}
+.dfilter .df-clear{height:34px;padding:0 12px;border:1px solid var(--line-2);background:var(--panel-2);color:var(--txt-dim);border-radius:8px;cursor:pointer;font-size:12.5px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.dfilter .df-clear:hover{border-color:var(--mint);color:var(--txt)}
+.dfilter .df-clear svg{width:15px;height:15px}
+/* ---- PDF preview modal ---- */
+.pdf-back{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(3px);z-index:230;display:none;flex-direction:column;padding:0}
+.pdf-back.open{display:flex}
+.pdf-modal{display:flex;flex-direction:column;width:100%;height:100%}
+.pdf-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,4vw,40px);background:rgba(10,11,13,.94);border-bottom:1px solid var(--line-2)}
+.pdf-tt{font-weight:700;letter-spacing:.5px;color:var(--txt-dim);font-size:14px}
+.pdf-tools{display:flex;align-items:center;gap:10px}
+.pdf-print{height:38px;padding:0 16px;display:inline-flex;align-items:center;gap:8px;font-size:13.5px}
+.pdf-print svg{width:17px;height:17px}
+.pdf-x{width:38px;height:38px;border-radius:9px;background:var(--panel-2);border:1px solid var(--line-2);color:var(--txt-dim);font-size:22px;line-height:1;cursor:pointer}
+.pdf-scroll{flex:1;overflow:auto;padding:24px 16px 60px;display:flex;justify-content:center}
+/* ---- The A4 "paper" document ---- */
+.appdoc{width:794px;max-width:100%;background:#fff;color:#15181e;border-radius:4px;box-shadow:0 18px 60px rgba(0,0,0,.6);font-family:'Noto Sans Thai','Rajdhani',sans-serif;letter-spacing:0}
+.appdoc .ad-pad{padding:44px 48px 40px}
+.appdoc .ad-top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #0C142A;padding-bottom:16px}
+.appdoc .ad-brand{display:flex;flex-direction:column;gap:2px}
+.appdoc .ad-flag{display:inline-block;width:46px;height:30px;border-radius:3px;background:
+  repeating-conic-gradient(#0C142A 0 25%, #fff 0 50%) 0 0/15px 15px;border:1px solid #0C142A;margin-bottom:8px}
+.appdoc .ad-title{font-size:26px;font-weight:800;color:#0C142A;line-height:1}
+.appdoc .ad-sub{font-size:13px;color:#3a4150;font-weight:600;letter-spacing:1px;margin-top:3px}
+.appdoc .ad-meta{text-align:right;font-size:12px;color:#4b515c;line-height:1.7}
+.appdoc .ad-meta b{color:#0C142A}
+.appdoc .ad-ref{display:inline-block;background:#0C142A;color:#6FFFE8;font-weight:800;letter-spacing:1px;padding:5px 12px;border-radius:5px;font-size:14px;font-family:'Rajdhani',monospace}
+.appdoc .ad-sec{margin-top:26px}
+.appdoc .ad-sec-h{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:800;color:#0C142A;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.appdoc .ad-sec-h::before{content:"";width:6px;height:18px;background:linear-gradient(#6FFFE8,#D1FF03);border-radius:2px}
+.appdoc .ad-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 34px}
+.appdoc .ad-row{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px dashed #d5d9e0;font-size:13.5px}
+.appdoc .ad-row.full{grid-column:1 / -1}
+.appdoc .ad-k{color:#6b7280;font-weight:600;white-space:nowrap}
+.appdoc .ad-v{color:#15181e;font-weight:700;text-align:right}
+.appdoc .ad-body{display:flex;gap:26px;align-items:flex-start}
+.appdoc .ad-main{flex:1;min-width:0}
+.appdoc .ad-photo{width:150px;flex:none;text-align:center}
+.appdoc .ad-photo img{width:150px;height:190px;object-fit:cover;border:1px solid #cfd4dc;border-radius:6px;background:#eef0f4}
+.appdoc .ad-photo .cap{font-size:11px;color:#6b7280;margin-top:6px}
+.appdoc .ad-carno{display:inline-flex;align-items:baseline;gap:8px;background:#0C142A;color:#fff;padding:8px 16px;border-radius:8px;margin-top:4px}
+.appdoc .ad-carno .n{font-size:26px;font-weight:800;font-family:'Rajdhani',sans-serif;color:#D1FF03;line-height:1}
+.appdoc .ad-carno .l{font-size:11px;letter-spacing:1px;color:#9aa1ad}
+.appdoc .ad-sign{display:flex;justify-content:space-between;gap:40px;margin-top:40px}
+.appdoc .ad-sign .s{flex:1;text-align:center}
+.appdoc .ad-sign .line{border-top:1.5px solid #15181e;margin-bottom:7px}
+.appdoc .ad-sign .lab{font-size:12px;color:#4b515c}
+.appdoc .ad-foot{margin-top:28px;padding-top:14px;border-top:1px solid #e2e5ea;display:flex;justify-content:space-between;font-size:11px;color:#9aa1ad}
+.appdoc .ad-demo{background:#fff6da;border:1px solid #f0d98a;color:#8a6d00;padding:3px 9px;border-radius:5px;font-weight:700}
+@media(max-width:640px){.appdoc .ad-grid{grid-template-columns:1fr}.appdoc .ad-body{flex-direction:column-reverse}.appdoc .ad-photo{align-self:center}.appdoc .ad-pad{padding:28px 22px}}
+#pdfPrintRoot{display:none}
+@media print{
+  body{background:#fff!important}
+  body>*{display:none!important}
+  #pdfPrintRoot{display:block!important}
+  #pdfPrintRoot .appdoc{box-shadow:none;width:100%;border-radius:0}
+  #pdfPrintRoot .appdoc .ad-pad{padding:0}
+  @page{size:A4;margin:14mm}
+}
 .edit-img{display:flex;gap:14px;align-items:center;background:var(--bg);border:1px solid var(--line-2);border-radius:9px;padding:10px}
 .ei-thumb{width:96px;height:62px;object-fit:cover;border-radius:6px;border:1px solid var(--line);background:#0d1016}
 .ei-empty{width:96px;height:62px;border-radius:6px;border:1px dashed var(--line-2);display:grid;place-items:center;font-size:11px;color:var(--txt-faint)}
@@ -451,6 +517,20 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 
 <div class="dash-back" id="dashRoot"></div>
 <div class="dm-back" id="dmBack"><div class="dm"><button class="dm-x" id="dmX">×</button><div class="dm-body" id="dmBody"></div></div></div>
+
+<div class="pdf-back" id="pdfBack">
+  <div class="pdf-modal">
+    <div class="pdf-toolbar">
+      <span class="pdf-tt">ใบสมัครนักแข่ง · Racer Application</span>
+      <div class="pdf-tools">
+        <button class="btn btn-primary pdf-print" id="pdfPrint" type="button"></button>
+        <button class="pdf-x" id="pdfX" type="button">×</button>
+      </div>
+    </div>
+    <div class="pdf-scroll" id="pdfBody"></div>
+  </div>
+</div>
+<div id="pdfPrintRoot" aria-hidden="true"></div>
 
 <div class="toast" id="toast"></div>
 
@@ -1527,7 +1607,10 @@ const D_ICON = {
   x:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
   users:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
   flag:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>',
-  cash:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>'
+  cash:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>',
+  file:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>',
+  printer:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V2h12v7"/><rect width="12" height="8" x="6" y="14"/></svg>',
+  search:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>'
 };
 const D_FIRST=['สมชาย','สมหญิง','ณัฐพงษ์','ปิยะ','กิตติ','อนุชา','วิชัย','ธนกร','ศักดิ์ชัย','พรทิพย์','จิราภรณ์','สุริยา','เอกชัย','ภูริ','ชนาธิป','ธีรศักดิ์','อภิสิทธิ์','ณัฐวุฒิ','ปกรณ์','วีระ'];
 const D_LAST=['ใจดี','รักษ์ไทย','ศรีสุข','ทองคำ','บุญมี','แสงทอง','วงศ์ไทย','พรหมมา','จันทร์เพ็ญ','มั่งมี','เกียรติศักดิ์','ไชยวงศ์','สุขสันต์','ผ่องใส','ยอดรัก','เจริญสุข','ธนาคาร','กล้าหาญ','รุ่งเรือง','พิทักษ์'];
@@ -1575,7 +1658,7 @@ function buildDashData(){
   }
   return {applicant:applicants, racer:racers};
 }
-const DASH={open:false, authed:false, tab:'applicant', page:{applicant:1,racer:1}, data:null, PS:20};
+const DASH={open:false, authed:false, tab:'applicant', page:{applicant:1,racer:1}, data:null, PS:20, rfilter:{name:'',vehicle:'',model:'',team:'',carno:''}};
 function openDash(){
   if(!DASH.data)DASH.data=buildDashData();
   DASH.open=true; el('dashRoot').classList.add('open'); document.body.style.overflow='hidden';
@@ -1630,11 +1713,54 @@ function renderDash(){
   el('dashRoot').querySelectorAll('[data-dtab]').forEach(b=>b.onclick=()=>{DASH.tab=b.dataset.dtab;renderDash();});
   renderDashTable();
 }
+function racerFilterActive(){const f=DASH.rfilter;return !!(f.name||f.vehicle||f.model||f.team||f.carno);}
+function getDashRows(tab){
+  const all=DASH.data[tab];
+  if(tab!=='racer'||!racerFilterActive()) return all.map((r,i)=>({r,idx:i}));
+  const f=DASH.rfilter, nl=s=>String(s==null?'':s).toLowerCase().trim();
+  return all.map((r,i)=>({r,idx:i})).filter(({r})=>
+    (!f.name || nl(r.rname+' '+r.rsurname).includes(nl(f.name))) &&
+    (!f.vehicle || nl(r.vehicle).includes(nl(f.vehicle))) &&
+    (!f.model || r.model===f.model) &&
+    (!f.team || nl(r.team).includes(nl(f.team))) &&
+    (!f.carno || nl(r.carno).includes(nl(f.carno)))
+  );
+}
 function renderDashTable(){
-  const tab=DASH.tab, rows=DASH.data[tab], PS=DASH.PS;
-  const totalPages=Math.max(1,Math.ceil(rows.length/PS));
+  const tab=DASH.tab;
+  let filterBar='';
+  if(tab==='racer'){
+    const f=DASH.rfilter;
+    const modelOpt='<option value="">ทั้งหมด</option>'+MODELS.th.map(m=>`<option value="${esc(m)}" ${f.model===m?'selected':''}>${esc(m)}</option>`).join('');
+    filterBar=`<div class="dfilter">
+      <div class="df-field"><label>ชื่อ-นามสกุล</label><input id="rf_name" value="${esc(f.name)}" placeholder="ค้นหาชื่อ/นามสกุล"/></div>
+      <div class="df-field"><label>รถยนต์ รุ่น/รหัสเครื่อง</label><input id="rf_vehicle" value="${esc(f.vehicle)}" placeholder="เช่น Supra 2JZ"/></div>
+      <div class="df-field"><label>รุ่นการแข่งขัน</label><select id="rf_model">${modelOpt}</select></div>
+      <div class="df-field"><label>ทีมแข่ง/อู่</label><input id="rf_team" value="${esc(f.team)}" placeholder="ค้นหาทีม/อู่"/></div>
+      <div class="df-field"><label>เบอร์รถแข่ง</label><input id="rf_carno" value="${esc(f.carno)}" placeholder="เช่น 88"/></div>
+      <button class="df-clear" id="rf_clear" type="button">${D_ICON.x} ล้างตัวกรอง</button>
+    </div>`;
+  }
+  el('dashCard').innerHTML=`
+    <div class="table-tools">
+      ${filterBar||'<span></span>'}
+      <button class="btn-export" id="dashExport">${D_ICON.download} Export CSV</button>
+    </div>
+    <div id="dashTableWrap"></div>`;
+  el('dashExport').onclick=()=>exportDash(tab);
+  if(tab==='racer'){
+    const commit=(k)=>(e)=>{ DASH.rfilter[k]=e.target.value; DASH.page.racer=1; paintDashTable(); };
+    ['name','vehicle','team','carno'].forEach(k=>{const inp=el('rf_'+k); inp.oninput=commit(k);});
+    el('rf_model').onchange=commit('model');
+    el('rf_clear').onclick=()=>{ DASH.rfilter={name:'',vehicle:'',model:'',team:'',carno:''}; DASH.page.racer=1; renderDashTable(); };
+  }
+  paintDashTable();
+}
+function paintDashTable(){
+  const tab=DASH.tab, PS=DASH.PS, view=getDashRows(tab), n=view.length;
+  const totalPages=Math.max(1,Math.ceil(n/PS));
   if(DASH.page[tab]>totalPages)DASH.page[tab]=totalPages;
-  const pg=DASH.page[tab], start=(pg-1)*PS, pageRows=rows.slice(start,start+PS);
+  const pg=DASH.page[tab], start=(pg-1)*PS, pageRows=view.slice(start,start+PS);
   let thead, tbody;
   if(tab==='applicant'){
     thead=`<thead>
@@ -1646,7 +1772,7 @@ function renderDashTable(){
       </tr>
       <tr><th class="sub-th">Line</th><th class="sub-th">WeChat</th><th class="sub-th">WhatsApp</th></tr>
     </thead>`;
-    tbody=pageRows.map((r,i)=>{const idx=start+i;return `<tr>
+    tbody=pageRows.map(({r,idx})=>`<tr>
       <td>${esc(r.date)}</td><td>${esc(r.name)}</td><td>${esc(r.surname)}</td>
       <td class="trunc" title="${esc(r.idAddr)}">${esc(r.idAddr)}</td>
       <td class="trunc" title="${esc(r.deliAddr)}">${esc(r.deliAddr)}</td>
@@ -1654,52 +1780,125 @@ function renderDashTable(){
       <td>${esc(r.line)}</td><td>${esc(r.wechat)}</td><td>${esc(r.whatsapp)}</td>
       <td><button class="ico-btn" data-img="${idx}" title="ดูรูปบัตรประชาชน">${D_ICON.image}</button></td>
       <td><button class="ico-btn edit" data-edit="${idx}" title="แก้ไขข้อมูล">${D_ICON.edit}</button></td>
-    </tr>`;}).join('');
+    </tr>`).join('');
   } else {
     thead=`<thead><tr>
       <th>ชื่อนักแข่ง</th><th>นามสกุลนักแข่ง</th><th>ที่อยู่ตามบัตรฯ</th><th>รถยนต์ รุ่น/รหัสเครื่อง</th>
-      <th>รุ่นการแข่งขัน</th><th>ทีมแข่ง/อู่</th><th>เบอร์รถแข่ง</th><th>บัตรฯ นักแข่ง</th><th>รูปนักแข่ง</th><th>แก้ไข</th>
+      <th>รุ่นการแข่งขัน</th><th>ทีมแข่ง/อู่</th><th>เบอร์รถแข่ง</th><th>บัตรฯ นักแข่ง</th><th>รูปนักแข่ง</th><th>ใบสมัครนักแข่ง</th><th>แก้ไข</th>
     </tr></thead>`;
-    tbody=pageRows.map((r,i)=>{const idx=start+i;return `<tr>
+    tbody=pageRows.map(({r,idx})=>`<tr>
       <td>${esc(r.rname)}</td><td>${esc(r.rsurname)}</td>
       <td class="trunc" title="${esc(r.idAddr)}">${esc(r.idAddr)}</td>
       <td class="trunc" title="${esc(r.vehicle)}">${esc(r.vehicle)}</td>
       <td>${esc(r.model)}</td><td>${esc(r.team)}</td><td>#${esc(r.carno)}</td>
       <td><button class="ico-btn" data-img="${idx}" data-kind="id" title="ดูบัตรประชาชน">${D_ICON.image}</button></td>
       <td><button class="ico-btn" data-img="${idx}" data-kind="photo" title="ดูรูปนักแข่ง">${D_ICON.image}</button></td>
+      <td><button class="ico-btn pdf" data-pdf="${idx}" title="ดูใบสมัครนักแข่ง (PDF)">${D_ICON.file}</button></td>
       <td><button class="ico-btn edit" data-edit="${idx}" title="แก้ไขข้อมูล">${D_ICON.edit}</button></td>
-    </tr>`;}).join('');
+    </tr>`).join('');
   }
-  const from=rows.length?start+1:0, to=Math.min(start+PS,rows.length);
-  el('dashCard').innerHTML=`
-    <div class="table-tools">
-      <span class="tt-count">แสดง ${from}–${to} จาก ${rows.length} รายการ</span>
-      <button class="btn-export" id="dashExport">${D_ICON.download} Export CSV</button>
-    </div>
-    <div class="table-scroll"><table class="dtable">${thead}<tbody>${tbody||'<tr><td>ไม่มีข้อมูล</td></tr>'}</tbody></table></div>
+  const colspan = tab==='applicant'?12:11;
+  const from=n?start+1:0, to=Math.min(start+PS,n);
+  const empty = tab==='racer'&&racerFilterActive()?'ไม่พบรายการที่ตรงกับตัวกรอง':'ไม่มีข้อมูล';
+  el('dashTableWrap').innerHTML=`
+    <div class="tt-count" style="padding:4px 2px 10px">แสดง ${from}–${to} จาก ${n} รายการ${tab==='racer'&&racerFilterActive()?' (กรองแล้ว)':''}</div>
+    <div class="table-scroll"><table class="dtable">${thead}<tbody>${tbody||`<tr><td colspan="${colspan}" style="text-align:center;color:var(--txt-faint);padding:26px">${empty}</td></tr>`}</tbody></table></div>
     <div class="pager">
       <span class="pinfo">หน้า ${pg} / ${totalPages}</span>
       <div class="pbtns" id="dashPager"></div>
     </div>`;
-  // pager buttons
   const pb=el('dashPager'); let html=`<button ${pg<=1?'disabled':''} data-pg="${pg-1}">‹</button>`;
   for(let p=1;p<=totalPages;p++) html+=`<button class="${p===pg?'active':''}" data-pg="${p}">${p}</button>`;
   html+=`<button ${pg>=totalPages?'disabled':''} data-pg="${pg+1}">›</button>`;
   pb.innerHTML=html;
-  pb.querySelectorAll('[data-pg]').forEach(b=>b.onclick=()=>{const p=+b.dataset.pg;if(p>=1&&p<=totalPages){DASH.page[tab]=p;renderDashTable();}});
-  el('dashExport').onclick=()=>exportDash(tab);
-  el('dashCard').querySelectorAll('[data-img]').forEach(b=>b.onclick=()=>{
+  pb.querySelectorAll('[data-pg]').forEach(b=>b.onclick=()=>{const p=+b.dataset.pg;if(p>=1&&p<=totalPages){DASH.page[tab]=p;paintDashTable();}});
+  el('dashTableWrap').querySelectorAll('[data-img]').forEach(b=>b.onclick=()=>{
     const r=DASH.data[tab][+b.dataset.img];
     const kind=b.dataset.kind;
     openDashImg(kind==='photo'?r.photo:r.idImg, kind==='photo'?'รูปนักแข่ง':'รูปบัตรประชาชน');
   });
-  el('dashCard').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openDashEdit(tab,+b.dataset.edit));
+  el('dashTableWrap').querySelectorAll('[data-pdf]').forEach(b=>b.onclick=()=>openRacerPdf(+b.dataset.pdf));
+  el('dashTableWrap').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openDashEdit(tab,+b.dataset.edit));
 }
 function openDashImg(src,cap){
   const inner = src ? `<img class="dm-img" src="${src}" alt="${esc(cap)}"/><div class="dm-cap">${esc(cap)} · ตัวอย่าง (Demo)</div>`
                     : `<div class="dm-cap" style="padding:40px 10px">ไม่มีรูปภาพ</div>`;
   el('dmBody').innerHTML=`<h3>${esc(cap)}</h3>${inner}`;
   el('dmBack').classList.add('open');
+}
+function racerPdfHTML(idx){
+  const r=DASH.data.racer[idx]||{}, a=DASH.data.applicant[idx]||{};
+  const ref='SU26-R'+dPad(idx+1)+'-'+String(1000+((idx*37)%9000));
+  const today=new Date().toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'});
+  const row=(k,v)=>`<div class="ad-row"><span class="ad-k">${esc(k)}</span><span class="ad-v">${esc(v||'-')}</span></div>`;
+  const rowFull=(k,v)=>`<div class="ad-row full"><span class="ad-k">${esc(k)}</span><span class="ad-v">${esc(v||'-')}</span></div>`;
+  const chans=[a.line&&a.line!=='-'?'Line: '+a.line:'',a.wechat&&a.wechat!=='-'?'WeChat: '+a.wechat:'',a.whatsapp&&a.whatsapp!=='-'?'WhatsApp: '+a.whatsapp:''].filter(Boolean).join('   ·   ');
+  return `<div class="appdoc"><div class="ad-pad">
+    <div class="ad-top">
+      <div class="ad-brand">
+        <span class="ad-flag"></span>
+        <div class="ad-title">SOUPED UP 2026</div>
+        <div class="ad-sub">ใบสมัครนักแข่ง · RACER APPLICATION FORM</div>
+      </div>
+      <div class="ad-meta">
+        <div>เลขที่ใบสมัคร</div>
+        <div class="ad-ref">${esc(ref)}</div>
+        <div style="margin-top:8px">วันที่ยื่น <b>${esc(today)}</b></div>
+        <div>สถานะ <b>ชำระเงินแล้ว</b></div>
+      </div>
+    </div>
+    <div class="ad-sec">
+      <div class="ad-sec-h">ข้อมูลผู้สมัคร</div>
+      <div class="ad-grid">
+        ${row('ชื่อ-นามสกุล',(a.name||'')+' '+(a.surname||''))}
+        ${row('วัน/เดือน/ปีเกิด',a.date)}
+        ${rowFull('ที่อยู่ตามบัตรฯ',a.idAddr)}
+        ${row('เบอร์โทรศัพท์',a.phone)}
+        ${row('อีเมล',a.email)}
+        ${rowFull('ช่องทางติดต่อเพิ่มเติม',chans||'-')}
+      </div>
+    </div>
+    <div class="ad-sec">
+      <div class="ad-sec-h">ข้อมูลนักแข่ง & รถแข่ง</div>
+      <div class="ad-body">
+        <div class="ad-main">
+          <div class="ad-grid">
+            ${row('ชื่อ-นามสกุลนักแข่ง',(r.rname||'')+' '+(r.rsurname||''))}
+            ${row('รุ่นการแข่งขัน',r.model)}
+            ${rowFull('ที่อยู่ตามบัตรฯ',r.idAddr)}
+            ${rowFull('รถยนต์ รุ่น / รหัสเครื่อง',r.vehicle)}
+            ${row('ทีมแข่ง / อู่',r.team)}
+            ${row('ประเภท','รถแข่งทางเรียบ')}
+          </div>
+          <div class="ad-carno"><span class="l">เบอร์รถแข่ง</span><span class="n">#${esc(r.carno)}</span></div>
+        </div>
+        <div class="ad-photo">
+          <img src="${r.photo||''}" alt="รูปนักแข่ง"/>
+          <div class="cap">รูปนักแข่ง (หน้าตรง)</div>
+        </div>
+      </div>
+    </div>
+    <div class="ad-sign">
+      <div class="s"><div class="line"></div><div class="lab">ลายมือชื่อผู้สมัคร / นักแข่ง</div></div>
+      <div class="s"><div class="line"></div><div class="lab">ลายมือชื่อเจ้าหน้าที่รับสมัคร</div></div>
+    </div>
+    <div class="ad-foot">
+      <span>Souped Up 2026 · ระบบลงทะเบียนการแข่งขัน · NIDSS</span>
+      <span class="ad-demo">เอกสารตัวอย่าง (DEMO)</span>
+    </div>
+  </div></div>`;
+}
+function openRacerPdf(idx){
+  DASH.pdfIdx=idx;
+  el('pdfBody').innerHTML=racerPdfHTML(idx);
+  el('pdfPrint').innerHTML=D_ICON.printer+' <span>พิมพ์ / บันทึก PDF</span>';
+  el('pdfBack').classList.add('open');
+}
+function closeRacerPdf(){ el('pdfBack').classList.remove('open'); el('pdfBody').innerHTML=''; }
+function printRacerPdf(){
+  if(DASH.pdfIdx==null) return;
+  el('pdfPrintRoot').innerHTML=racerPdfHTML(DASH.pdfIdx);
+  window.print();
 }
 function openDashEdit(tab,idx){
   const r=DASH.data[tab][idx];
@@ -1767,9 +1966,11 @@ function exportDash(tab){
 }
 document.getElementById('dmX').onclick=closeDashModal;
 document.getElementById('dmBack').onclick=(e)=>{if(e.target===document.getElementById('dmBack'))closeDashModal();};
+el('pdfX').onclick=closeRacerPdf;
+el('pdfPrint').onclick=printRacerPdf;
 document.addEventListener('keydown',(e)=>{
   if((e.ctrlKey||e.metaKey)&&e.shiftKey&&(e.key==='z'||e.key==='Z'||e.code==='KeyZ')){ e.preventDefault(); DASH.open?closeDash():openDash(); }
-  else if(e.key==='Escape'){ if(el('dmBack').classList.contains('open'))closeDashModal(); else if(DASH.open)closeDash(); }
+  else if(e.key==='Escape'){ if(el('pdfBack').classList.contains('open'))closeRacerPdf(); else if(el('dmBack').classList.contains('open'))closeDashModal(); else if(DASH.open)closeDash(); }
 });
 
 setLang('th');
