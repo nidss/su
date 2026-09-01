@@ -111,6 +111,7 @@ h1.page-title{font-size:clamp(22px,4vw,30px);margin:0 0 4px;font-weight:700;lett
 }
 .control::placeholder{color:#7b8494}
 .control:focus{border-color:var(--mint);box-shadow:0 0 0 3px var(--mint-soft)}
+.control[readonly]{background:var(--panel);color:var(--txt-dim);cursor:not-allowed}
 select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' stroke='%239aa1ad' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px}
 .field.invalid .control{border-color:var(--red);box-shadow:0 0 0 3px rgba(225,6,0,.15)}
 .err-msg{color:var(--red-2);font-size:11px;display:none}
@@ -494,20 +495,9 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .choose-card .cc-desc{font-size:13.5px;color:var(--txt-dim);max-width:230px;line-height:1.5}
 .badge-paid{background:rgba(37,194,110,.15);color:var(--green);border:1px solid rgba(37,194,110,.4);border-radius:6px;padding:3px 10px;font-size:12px;font-weight:700}
 .admin-login{max-width:460px;margin:9vh auto 0;padding:0 16px}
-/* ---- Multi-racer cards (racer step) ---- */
-.racer-card2{background:var(--bg-2);border:1px solid var(--line);border-radius:14px;margin-bottom:16px;overflow:hidden}
-.racer-card2 .rc2-head{display:flex;align-items:center;gap:10px;padding:13px 16px;cursor:pointer;user-select:none;background:var(--panel);border-bottom:1px solid var(--line)}
-.racer-card2.collapsed .rc2-head{border-bottom-color:transparent}
-.rc2-caret{display:inline-grid;place-items:center;width:24px;height:24px;color:var(--mint);transition:transform .2s;flex:none}
-.rc2-caret svg{width:18px;height:18px}
-.racer-card2.collapsed .rc2-caret{transform:rotate(-90deg)}
-.rc2-badge{background:var(--mint-soft);color:var(--mint);font-weight:800;font-size:12.5px;padding:4px 13px;border-radius:999px;white-space:nowrap;font-family:'Rajdhani',sans-serif;letter-spacing:.5px}
-.rc2-name{color:var(--txt);font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rc2-del{flex:none;width:30px;height:30px;border-radius:8px;border:1px solid var(--line-2);background:transparent;color:var(--txt-faint);cursor:pointer;display:inline-grid;place-items:center}
-.rc2-del:hover{border-color:var(--red-2);color:var(--red-2);background:rgba(255,43,28,.1)}
-.rc2-del svg{width:15px;height:15px}
-.rc2-body{padding:18px 16px;display:flex;flex-direction:column;gap:16px}
-.racer-card2.collapsed .rc2-body{display:none}
+/* ---- Single-racer form ---- */
+.racer-card2{margin-bottom:16px}
+.rc2-body{display:flex;flex-direction:column;gap:16px}
 .class-section{display:flex;flex-direction:column;gap:0}
 .class-section .cls-title{font-size:13px;color:var(--txt);font-weight:600;margin-bottom:6px;display:block}
 .class-section .cls-title .req{color:var(--red-2);margin-left:3px}
@@ -663,7 +653,7 @@ const I18N = {
     "f.model":"รุ่นการแข่งขัน (Model Competition)","f.team":"ทีมแข่ง/อู่โมดิฟาย (Racing Team Name)",
     "f.carno":"เบอร์รถแข่ง (Race Car Number 1-120)",
     "rc.team.note":"หมายเหตุ: กรอกชื่อทีม/อู่โมดิฟายที่ใช้ลงแข่งขัน",
-    "rc.classes":"รุ่นการแข่งขัน (เพิ่มได้หลายรุ่น)","rc.classes.note":"แต่ละรุ่นที่เลือก ต้องกรอกข้อมูลรถยนต์ รุ่น/รหัสเครื่องยนต์ แยกกัน",
+    "rc.classes":"รุ่นการแข่งขัน",
     "rc.engine":"ข้อมูลรถยนต์ รุ่น/รหัสเครื่องยนต์ (Model / Engine code)",
     "rc.addracer":"เพิ่มนักแข่ง","rc.removeracer":"ลบนักแข่งคนนี้","rc.collapse":"ย่อ/ขยาย",
     "rc.applicant.type":"ประเภทผู้สมัคร","rc.applicant.select":"— เลือกประเภทผู้สมัคร —",
@@ -780,7 +770,7 @@ const I18N = {
     "f.model":"Model Competition","f.team":"Racing Team Name",
     "f.carno":"Race Car Number (1-120)",
     "rc.team.note":"Note: Enter the racing team / modify garage name.",
-    "rc.classes":"Race Classes (select one or more)","rc.classes.note":"Each selected class requires its own Model / Engine code.",
+    "rc.classes":"Race Class",
     "rc.engine":"Vehicle Model / Engine Code",
     "rc.addracer":"Add Racer","rc.removeracer":"Remove this racer","rc.collapse":"Collapse / Expand",
     "rc.applicant.type":"Applicant Type","rc.applicant.select":"— Select applicant type —",
@@ -919,10 +909,10 @@ function renderStepper(){
 
 /* ================= Field builder ================= */
 function fieldText(opts){
-  const {id,labelKey,ph,req,type="text",value="",hintKey,full}=opts;
+  const {id,labelKey,ph,req,type="text",value="",hintKey,full,readonly=false}=opts;
   return `<div class="field ${full?'full':''}" data-field="${id}">
     <label>${esc(t(labelKey))}${req?'<span class="req">*</span>':''}</label>
-    <input class="control" id="${id}" type="${type}" placeholder="${ph?esc(t(ph)):''}" value="${esc(value)}" ${req?'data-req':''} ${type==='email'?'data-email':''}/>
+    <input class="control" id="${id}" type="${type}" placeholder="${ph?esc(t(ph)):''}" value="${esc(value)}" ${req?'data-req':''} ${type==='email'?'data-email':''} ${readonly?'readonly':''}/>
     ${hintKey?`<div class="hint">${esc(t(hintKey))}</div>`:''}
     <div class="err-msg">${esc(t('v.required'))}</div>
   </div>`;
@@ -1244,7 +1234,8 @@ function bankAccountFields(prefix){
   const b=state.bank;
   const bankOpts=BANKS[state.lang].map(x=>({v:x,l:x})).concat([{v:'__other__',l:t('bank.other')}]);
   const other=b[prefix+'_bank']==='__other__';
-  const surnameField=fieldText({id:prefix+'_accsur',labelKey:'f.accsur',req:true,value:b[prefix+'_accsur']||''});
+  const prize=prefix==='pz';
+  const surnameField=fieldText({id:prefix+'_accsur',labelKey:'f.accsur',req:true,value:b[prefix+'_accsur']||'',readonly:prize});
   const adaptiveSurname=prefix==='rf';
   const hideSurname=adaptiveSurname&&state.applicant.a_type==='company';
   return `
@@ -1256,7 +1247,7 @@ function bankAccountFields(prefix){
     </div>
     ${fieldText({id:prefix+'_accno',labelKey:'f.accno',req:true,value:b[prefix+'_accno']||'',full:true})}
     <div class="grid">
-      ${fieldText({id:prefix+'_accname',labelKey:'f.accname',req:true,value:b[prefix+'_accname']||''})}
+      ${fieldText({id:prefix+'_accname',labelKey:'f.accname',req:true,value:b[prefix+'_accname']||'',readonly:prize})}
       ${adaptiveSurname?`<div data-refund-surname class="${hideSurname?'hidden':''}">${surnameField}</div>`:surnameField}
     </div>`;
 }
@@ -1431,9 +1422,15 @@ function restoreApplicantUpload(){
 
 /* ---- RACER ---- */
 let RACER_SEQ=0;
-const CARET_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
 function newRacer(){return {id:'rc'+(++RACER_SEQ), applicantType:'',r_rname:'',r_rsurname:'',r_idaddr:'',r_team:'',r_carno:'',entries:[{cls:'',engine:'',carno:''}],collapsed:false};}
-function ensureRacers(){ if(!Array.isArray(state.racers)||!state.racers.length){ state.racers=[newRacer()]; } state.racers.forEach(rc=>{ if(!Array.isArray(rc.entries)||!rc.entries.length)rc.entries=[{cls:'',engine:'',carno:''}]; }); }
+function ensureRacers(){
+  if(!Array.isArray(state.racers)||!state.racers.length)state.racers=[newRacer()];
+  state.racers=state.racers.slice(0,1);
+  const rc=state.racers[0];
+  if(!Array.isArray(rc.entries)||!rc.entries.length)rc.entries=[{cls:'',engine:'',carno:''}];
+  else rc.entries=rc.entries.slice(0,1);
+  rc.collapsed=false;
+}
 function racerById(id){ return state.racers.find(x=>x.id===id); }
 function carOptionsHTML(sel, used){
   used=used||new Set();
@@ -1469,13 +1466,10 @@ function classSectionInner(rc){
     </div>`;
   }).join('');
   return `<label class="cls-title">${esc(t('rc.classes'))}<span class="req">*</span></label>
-    <div class="note">${esc(t('rc.classes.note'))}</div>
     <div class="cls-list">${rows}</div>`;
 }
-function racerCardHTML(rc,i){
+function racerCardHTML(rc){
   const rid=rc.id;
-  const nm=((rc.r_rname||'')+' '+(rc.r_rsurname||'')).trim();
-  const delBtn=i>0?`<button type="button" class="rc2-del" data-del="${rid}" title="${esc(t('rc.removeracer'))}">${D_ICON.x}</button>`:'';
   const fld=(id,labelKey,val)=>`<div class="field" data-field="${id}"><label>${esc(t(labelKey))}<span class="req">*</span></label><input class="control" id="${id}" data-rk="${id.split('__')[0]}" data-req value="${esc(val||'')}"/><div class="err-msg">${esc(t('v.required'))}</div></div>`;
   const applicantTypeField=state.account&&state.account.demoKind==='existing'?`<div class="field full" data-field="r_applicant_type__${rid}">
     <label>${esc(t('rc.applicant.type'))}<span class="req">*</span></label>
@@ -1487,14 +1481,7 @@ function racerCardHTML(rc,i){
     <div class="err-msg">${esc(t('v.required'))}</div>
   </div>`:'';
   return `
-  <div class="racer-card2 ${rc.collapsed?'collapsed':''}" data-rid="${rid}">
-    <div class="rc2-head" data-toggle="${rid}">
-      <span class="rc2-caret" aria-label="${esc(t('rc.collapse'))}">${CARET_SVG}</span>
-      <span class="rc2-badge">${esc(t('prof.racerno'))} ${i+1}</span>
-      ${nm?`<span class="rc2-name">${esc(nm)}</span>`:''}
-      <div class="spacer"></div>
-      ${delBtn}
-    </div>
+  <div class="racer-card2" data-rid="${rid}">
     <div class="rc2-body">
       ${applicantTypeField}
       <div class="grid">
@@ -1516,7 +1503,7 @@ function racerCardHTML(rc,i){
 }
 SCREENS.racer = function(){
   ensureRacers();
-  const cards=state.racers.map((rc,i)=>racerCardHTML(rc,i)).join('');
+  const cards=state.racers.slice(0,1).map(rc=>racerCardHTML(rc)).join('');
   return `
   <h1 class="page-title">${esc(t('rc.title'))}</h1>
   <p class="page-sub">${esc(t('rc.sub'))}</p>
@@ -1543,7 +1530,7 @@ function collectRacers(){
     const rid=card.dataset.rid, rc=racerById(rid); if(!rc)return;
     card.querySelectorAll('[data-rk]').forEach(inp=>{ rc[inp.dataset.rk]=inp.value; });
     collectRacerEntries(card, rc);
-    rc.collapsed=card.classList.contains('collapsed');
+    rc.collapsed=false;
   });
 }
 function syncPrimaryRacer(){
@@ -1557,8 +1544,6 @@ function syncPrimaryRacer(){
   });
 }
 function validateRacers(form){
-  state.racers.forEach(rc=>rc.collapsed=false);
-  form.querySelectorAll('.racer-card2').forEach(c=>c.classList.remove('collapsed'));
   return validateScreen(form);
 }
 function rebuildClassSection(form, rc){ const sec=el('cls_'+rc.id); if(!sec)return; sec.innerHTML=classSectionInner(rc); bindClassSection(form, rc); }
@@ -1572,10 +1557,6 @@ function bindClassSection(form, rc){
 }
 function bindOneRacer(form, card){
   const rc=racerById(card.dataset.rid); if(!rc)return;
-  const h=card.querySelector('.rc2-head[data-toggle]');
-  if(h)h.onclick=(e)=>{ if(e.target.closest('[data-del]'))return; card.classList.toggle('collapsed'); rc.collapsed=card.classList.contains('collapsed'); };
-  const d=card.querySelector('[data-del]');
-  if(d)d.onclick=()=>{ collectRacers(); state.racers=state.racers.filter(x=>x.id!==d.dataset.del); render(); };
   bindClassSection(form, rc);
 }
 function bindRacerCards(form){ form.querySelectorAll('.racer-card2').forEach(card=>bindOneRacer(form, card)); }
@@ -1814,6 +1795,9 @@ function openBookerModal(tn){
 /* ---- BANK ---- */
 SCREENS.bank = function(){
   const b=state.bank;
+  const rc=state.racers[0]||state.racer||{};
+  b.pz_accname=rc.r_rname||'';
+  b.pz_accsur=rc.r_rsurname||'';
   return `
   <h1 class="page-title">${esc(t('bk.title'))}</h1>
   <p class="page-sub">${esc(t('bk.sub'))}</p>
