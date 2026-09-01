@@ -906,8 +906,8 @@ function renderParking(){
   box.innerHTML = days.map(d=>{
     const val = state.plates[d.id] ? ' value="'+state.plates[d.id].replace(/"/g,'&quot;')+'"' : '';
     return '<div class="field">'+
-      '<label>'+t('park.plate')+' — <b style="color:var(--mint)">'+d[state.lang]+'</b></label>'+
-      '<input class="control" data-plate="'+d.id+'" placeholder="'+t('park.plate.ph')+'"'+val+'>'+
+      '<label>'+t('park.plate')+' — <b style="color:var(--mint)">'+d[state.lang]+'</b><span class="req">*</span></label>'+
+      '<input class="control" data-plate="'+d.id+'" placeholder="'+t('park.plate.ph')+'" required aria-required="true"'+val+'>'+
     '</div>';
   }).join('');
   box.querySelectorAll('input[data-plate]').forEach(i=>{
@@ -936,6 +936,7 @@ function showView(v){
   el('payView').hidden  = v!=='pay';
   el('doneView').hidden = v!=='done';
   window.scrollTo(0,0);
+  if(window.parent!==window) window.parent.postMessage({type:'suvip:scroll-top'},'*');
 }
 
 /* ================= Payment ================= */
@@ -959,8 +960,8 @@ function renderPay(){
    '<label class="checkbox" style="margin:18px 0 4px"><input type="checkbox" id="taxCb"'+(state.tax?' checked':'')+'> <span>'+t('py.tax')+'</span></label>'+
    '<div id="taxFields" class="'+(state.tax?'':'hidden')+'">'+
      '<div class="field full"><label>'+t('py.tax.name')+'</label><input class="control" id="tax_name"></div>'+
-     '<div class="grid"><div class="field"><label>'+t('py.tax.taxid')+'</label><input class="control" id="tax_id"></div>'+
-     '<div class="field"><label>'+t('py.tax.addr')+'</label><input class="control" id="tax_addr"></div></div>'+
+     '<div class="grid"><div class="field"><label>'+t('py.tax.taxid')+'</label><input class="control" id="tax_id"></div></div>'+
+     '<div class="field full"><label>'+t('py.tax.addr')+'</label><input class="control" id="tax_addr"></div>'+
    '</div>'+
    '<div class="card" style="margin:18px 0;background:var(--panel-2)"><div class="card-pad" style="padding:16px 18px">'+
      '<h4 style="margin:0 0 10px;font-size:14px">'+t('py.terms.t')+'</h4>'+
@@ -1147,6 +1148,12 @@ document.getElementById('regForm').addEventListener('submit', e=>{
   if(!state.pkg){ toast(t('toast.pkg')); return; }
   const days = selectedDays();
   if(days.length !== PKG_DAYS[state.pkg]){ toast(t('toast.days')); return; }
+  const missingPlate=days.find(d=>!String(state.plates[d.id]||'').trim());
+  if(missingPlate){
+    const input=form.querySelector('[data-plate="'+missingPlate.id+'"]');
+    if(input){ input.closest('.field').classList.add('invalid'); input.focus(); input.scrollIntoView({behavior:'smooth',block:'center'}); }
+    toast(t('toast.fill')); return;
+  }
   if(!form.querySelector('input[name="consent"]:checked')){ toast(t('toast.consent')); return; }
 
   const chans = [];

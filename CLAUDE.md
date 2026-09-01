@@ -46,7 +46,7 @@ A vanilla-JS screen router drives a 7-step racer-registration wizard. Account si
 
 ### Hidden entry points
 
-- **Admin dashboard**: `Ctrl+Shift+Z` → admin login → top-level registration/VIP switch. Registration retains the KPI cards + 2-tab paginated table (`DASH` object, `renderDash`/`paintDashTable`), while VIP embeds the original `suvip` dashboard from `vip-dashboard.html`, backed by the shared `suvip_regs` localStorage data.
+- **Admin dashboard**: `Ctrl+Shift+Z` → admin login → shared Dashboard header with a real logout action, followed by a full-width registration/VIP switch. Registration retains the KPI cards + 2-tab paginated table (`DASH` object, `renderDash`/`paintDashTable`), while VIP embeds only the KPI/table portion of the original `suvip` dashboard from `vip-dashboard.html`, backed by the shared `suvip_regs` localStorage data.
 - **My Profile**: reached by logging in or finishing a registration; tabs for account info (+ change password), racers, and history.
 
 ### Images & PDFs

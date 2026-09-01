@@ -348,6 +348,9 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .dash-close{background:var(--panel-2);border:1px solid var(--line-2);color:var(--txt-dim);width:42px;height:42px;border-radius:11px;cursor:pointer;display:grid;place-items:center;flex:0 0 auto}
 .dash-close:hover{color:#fff;border-color:var(--mint)}
 .dash-close svg{width:20px;height:20px}
+.dash-logout{background:var(--panel-2);border:1px solid var(--line-2);color:var(--txt-dim);height:42px;padding:0 14px;border-radius:11px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:13px;flex:0 0 auto}
+.dash-logout:hover{color:#fff;border-color:var(--red-2)}
+.dash-logout svg{width:18px;height:18px}
 .kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:26px}
 @media(max-width:760px){.kpi-row{grid-template-columns:1fr}}
 .kpi-card{background:linear-gradient(180deg,var(--panel),var(--bg-2));border:1px solid var(--line);border-radius:14px;padding:20px 22px;position:relative;overflow:hidden}
@@ -359,7 +362,7 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .dash-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line)}
 .dash-tabs button{background:transparent;border:0;border-bottom:2px solid transparent;color:var(--txt-dim);padding:12px 20px;font-weight:700;font-size:14px;cursor:pointer;transition:.15s;margin-bottom:-1px}
 .dash-tabs button.active{color:#fff;border-bottom-color:var(--mint)}
-.dash-source-tabs{display:flex;background:var(--bg);border-radius:12px;padding:5px;gap:5px;margin:0 auto 22px;border:1px solid var(--line);max-width:960px}
+.dash-source-tabs{display:flex;width:100%;background:var(--bg);border-radius:12px;padding:5px;gap:5px;margin:0 0 22px;border:1px solid var(--line)}
 .dash-source-tabs button{flex:1;background:transparent;border:0;color:var(--txt-dim);padding:14px 10px;border-radius:8px;font-weight:700;font-size:clamp(14px,2.6vw,16px);letter-spacing:.5px;cursor:pointer;transition:.15s}
 .dash-source-tabs button.active{background:var(--mint-grad);color:var(--mint-ink);box-shadow:0 4px 14px var(--mint-glow)}
 .vip-dash-frame{display:block;width:100%;height:calc(100vh - 94px);min-height:620px;border:0;background:var(--bg)}
@@ -2162,6 +2165,7 @@ window.addEventListener('message',e=>{
   if(e.data.type==='suvip:resize')frame.style.height=Math.max(720,Number(e.data.height)||0)+'px';
   else if(e.data.type==='suvip:complete')saveEmbeddedVipPurchase(e.data.record);
   else if(e.data.type==='suvip:profile'){state.profileTab='vip';go('profile');}
+  else if(e.data.type==='suvip:scroll-top')window.scrollTo({top:Math.max(0,frame.getBoundingClientRect().top+window.scrollY-84),behavior:'smooth'});
 });
 
 /* ---- DONE ---- */
@@ -2428,6 +2432,7 @@ const D_ICON = {
   edit:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg>',
   download:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>',
   x:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
+  logout:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>',
   users:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
   flag:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>',
   cash:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>',
@@ -2522,6 +2527,7 @@ function renderAdminLogin(){
   setTimeout(()=>{const i=el('adm_id');if(i)i.focus();},50);
 }
 function closeDash(){ DASH.open=false; el('dashRoot').classList.remove('open'); el('dashRoot').innerHTML=''; document.body.style.overflow=''; }
+function logoutDash(){ DASH.authed=false; closeDash(); }
 function dashKPIs(){
   const a=DASH.data.applicant.length, r=DASH.data.racer.length, paid=a*17000;
   return [
@@ -2535,15 +2541,15 @@ function renderDash(){
   const registration=DASH.group==='registration';
   el('dashRoot').innerHTML=`
   <div class="dash-wrap">
+    <div class="dash-head">
+      <div class="dash-title">Dashboard<small>SOUPED UP 2026 · ADMIN</small></div>
+      <button class="dash-logout" id="dashLogout" title="ออกจากระบบ">${D_ICON.logout}<span>ออกจากระบบ</span></button>
+    </div>
     <div class="dash-source-tabs">
       <button data-dgroup="registration" class="${registration?'active':''}">ข้อมูลผู้สมัคร, นักแข่ง</button>
       <button data-dgroup="vip" class="${!registration?'active':''}">ข้อมูลผู้ซื้อบัตร VIP Village</button>
     </div>
-    ${registration?`<div class="dash-head">
-        <div class="dash-title">Dashboard<small>SOUPED UP 2026 · ADMIN</small></div>
-        <button class="dash-close" id="dashClose" title="ปิด (Ctrl+Shift+Z)">${D_ICON.x}</button>
-      </div>
-      <div class="kpi-row">${kpi}</div>
+    ${registration?`<div class="kpi-row">${kpi}</div>
       <div class="dash-tabs">
         <button data-dtab="applicant" class="${DASH.tab==='applicant'?'active':''}">ข้อมูลผู้สมัคร</button>
         <button data-dtab="racer" class="${DASH.tab==='racer'?'active':''}">ข้อมูลนักแข่ง</button>
@@ -2552,9 +2558,9 @@ function renderDash(){
       `<iframe class="vip-dash-frame" id="vipDashFrame" src="vip-dashboard.html" title="ข้อมูลผู้ซื้อบัตร VIP Village"></iframe>`}
   </div>`;
   el('dashRoot').scrollTop=0;
+  el('dashLogout').onclick=logoutDash;
   el('dashRoot').querySelectorAll('[data-dgroup]').forEach(b=>b.onclick=()=>{DASH.group=b.dataset.dgroup;renderDash();});
   if(registration){
-    el('dashClose').onclick=closeDash;
     el('dashRoot').querySelectorAll('[data-dtab]').forEach(b=>b.onclick=()=>{DASH.tab=b.dataset.dtab;renderDash();});
     renderDashTable();
   }else{
