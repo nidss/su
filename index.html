@@ -2551,6 +2551,7 @@ function renderDash(){
       <div class="table-card" id="dashCard"></div>`:
       `<iframe class="vip-dash-frame" id="vipDashFrame" src="vip-dashboard.html" title="ข้อมูลผู้ซื้อบัตร VIP Village"></iframe>`}
   </div>`;
+  el('dashRoot').scrollTop=0;
   el('dashRoot').querySelectorAll('[data-dgroup]').forEach(b=>b.onclick=()=>{DASH.group=b.dataset.dgroup;renderDash();});
   if(registration){
     el('dashClose').onclick=closeDash;
