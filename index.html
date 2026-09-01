@@ -365,7 +365,7 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .dash-source-tabs{display:flex;width:100%;background:var(--bg);border-radius:12px;padding:5px;gap:5px;margin:0 0 22px;border:1px solid var(--line)}
 .dash-source-tabs button{flex:1;background:transparent;border:0;color:var(--txt-dim);padding:14px 10px;border-radius:8px;font-weight:700;font-size:clamp(14px,2.6vw,16px);letter-spacing:.5px;cursor:pointer;transition:.15s}
 .dash-source-tabs button.active{background:var(--mint-grad);color:var(--mint-ink);box-shadow:0 4px 14px var(--mint-glow)}
-.vip-dash-frame{display:block;width:100%;height:calc(100vh - 94px);min-height:620px;border:0;background:var(--bg)}
+.vip-dash-frame{display:block;width:100%;height:620px;border:0;background:var(--bg);overflow:hidden}
 .table-card{background:var(--panel);border:1px solid var(--line);border-top:0;border-radius:0 0 14px 14px;overflow:hidden}
 .table-tools{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
 .table-tools .tt-count{font-size:12.5px;color:var(--txt-faint)}
@@ -2555,7 +2555,7 @@ function renderDash(){
         <button data-dtab="racer" class="${DASH.tab==='racer'?'active':''}">ข้อมูลนักแข่ง</button>
       </div>
       <div class="table-card" id="dashCard"></div>`:
-      `<iframe class="vip-dash-frame" id="vipDashFrame" src="vip-dashboard.html" title="ข้อมูลผู้ซื้อบัตร VIP Village"></iframe>`}
+      `<iframe class="vip-dash-frame" id="vipDashFrame" src="vip-dashboard.html" title="ข้อมูลผู้ซื้อบัตร VIP Village" scrolling="no"></iframe>`}
   </div>`;
   el('dashRoot').scrollTop=0;
   el('dashLogout').onclick=logoutDash;
@@ -2570,8 +2570,12 @@ function renderDash(){
 }
 window.addEventListener('message',e=>{
   const frame=el('vipDashFrame');
-  if(frame&&e.source===frame.contentWindow&&e.data&&e.data.type==='suvip-dashboard:main'){
-    DASH.group='registration'; renderDash();
+  if(frame&&e.source===frame.contentWindow&&e.data){
+    if(e.data.type==='suvip-dashboard:main'){
+      DASH.group='registration'; renderDash();
+    }else if(e.data.type==='suvip-dashboard:resize'){
+      frame.style.height=Math.max(420,Math.ceil(Number(e.data.height)||0))+'px';
+    }
   }
 });
 function racerFilterActive(){const f=DASH.rfilter;return !!(f.name||f.vehicle||f.model||f.team||f.carno);}

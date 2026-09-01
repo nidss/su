@@ -417,7 +417,9 @@ h2.sec-title{font-size:clamp(19px,3.4vw,25px);margin:0 0 4px;font-weight:700;let
 .dm-body{padding:24px}
 .dm-body h3{margin:0 0 16px;font-size:18px}
 .topbar,.wrap,.site-foot,.member-back,.login-back{display:none!important}
-body{overflow:hidden}
+html,body{height:auto;min-height:0;overflow:visible}
+.dash-back{position:static;inset:auto;min-height:0;overflow:visible}
+.dash-wrap{padding-bottom:12px}
 </style>
 </head>
 <body>
@@ -1715,6 +1717,9 @@ function logout(){ setAuthed(false); closeDashboard(); }
 function returnToSharedDashboard(){
   window.parent.postMessage({type:'suvip-dashboard:main'}, '*');
 }
+function reportSharedDashboardHeight(){
+  window.parent.postMessage({type:'suvip-dashboard:resize',height:Math.max(document.body.scrollHeight,document.documentElement.scrollHeight)},'*');
+}
 
 el('dashClose').onclick = returnToSharedDashboard;
 el('dashExport').onclick = exportCSV;
@@ -1739,6 +1744,7 @@ window.addEventListener('message', e=>{
   state.lang=e.data.lang==='en'?'en':'th';
   applyLang();
   renderDashboard();
+  requestAnimationFrame(reportSharedDashboardHeight);
 });
 
 /* ================= Member auth (login / register / profile) ================= */
@@ -1958,7 +1964,12 @@ seedMockIfEmpty();
 applyLang();
 renderDashboard();
 el('dashBack').classList.add('open');
-document.body.style.overflow='hidden';
+document.body.style.overflow='visible';
+if(window.ResizeObserver){
+  const dashboardResizeObserver=new ResizeObserver(reportSharedDashboardHeight);
+  dashboardResizeObserver.observe(el('dashBack'));
+}
+requestAnimationFrame(reportSharedDashboardHeight);
 </script>
 </body>
 </html>
