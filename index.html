@@ -492,6 +492,14 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .rc-badge{background:var(--mint-soft);color:var(--mint);font-weight:700;font-size:12.5px;padding:4px 13px;border-radius:999px}
 .rc-imgs{display:flex;gap:8px}
 .prof-empty{color:var(--txt-dim);text-align:center;padding:26px;font-size:14px}
+.choose-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:26px}
+@media(max-width:640px){.choose-grid{grid-template-columns:1fr}}
+.choose-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;background:var(--panel-2);border:1px solid var(--line);border-radius:18px;padding:40px 26px;cursor:pointer;transition:transform .16s,border-color .16s,box-shadow .16s;color:var(--txt);font-family:inherit}
+.choose-card:hover{transform:translateY(-4px);border-color:var(--mint);box-shadow:0 12px 30px -14px var(--mint-soft)}
+.choose-card.vip:hover{border-color:var(--lime);box-shadow:0 12px 30px -14px rgba(209,255,3,.28)}
+.choose-card .cc-ico{font-size:46px;line-height:1}
+.choose-card .cc-title{font-size:19px;font-weight:800;letter-spacing:.3px}
+.choose-card .cc-desc{font-size:13.5px;color:var(--txt-dim);max-width:230px;line-height:1.5}
 .badge-paid{background:rgba(37,194,110,.15);color:var(--green);border:1px solid rgba(37,194,110,.4);border-radius:6px;padding:3px 10px;font-size:12px;font-weight:700}
 .admin-login{max-width:460px;margin:9vh auto 0;padding:0 16px}
 /* ---- Multi-racer cards (racer step) ---- */
@@ -711,7 +719,15 @@ const I18N = {
     "t.registered":"สมัครสมาชิกสำเร็จ!","t.loginok":"เข้าสู่ระบบสำเร็จ","t.loginfail":"อีเมล/รหัสผ่านไม่ถูกต้อง",
     "t.forgot":"ระบบจะส่งลิงก์รีเซ็ตรหัสผ่านไปยังอีเมลของคุณ (เดโม)",
     "t.acceptall":"กรุณาอ่านและยอมรับเอกสารทั้งหมดก่อน","t.pit":"เลือกช่องจอด ","t.uploaded":"อัปโหลดไฟล์แล้ว",
-    "prof.title":"ประวัติของฉัน","prof.info":"ข้อมูลของฉัน","prof.racers":"ข้อมูลนักแข่ง","prof.history":"ประวัติการลงทะเบียน",
+    "prof.title":"ประวัติของฉัน","prof.info":"ข้อมูลส่วนตัว","prof.racers":"ข้อมูลนักแข่ง","prof.history":"ประวัติการลงทะเบียน",
+    "prof.hello":"สวัสดี คุณ","prof.save":"บันทึก","prof.curid":"รูปบัตรประชาชนปัจจุบัน",
+    "prof.vip":"Vip Village","prof.vip.card":"บัตร Vip Village","prof.buyvip":"ซื้อบัตร Vip Village","prof.novip":"ยังไม่มีบัตร Vip Village",
+    "ch.eyebrow":"เลือกรายการ","ch.title":"คุณต้องการทำอะไร?","ch.sub":"เลือกลงทะเบียนนักแข่ง หรือซื้อบัตร VIP Village",
+    "ch.racer.title":"ลงทะเบียนนักแข่ง","ch.racer.desc":"สมัครและลงทะเบียนนักแข่งเข้าร่วมการแข่งขัน",
+    "ch.vip.title":"ซื้อบัตร VIP Village","ch.vip.desc":"จองบัตรเข้าชมพื้นที่ VIP Village",
+    "ch.needinfo":"กรุณากรอกข้อมูลส่วนตัวก่อน",
+    "vip.holder":"ชื่อผู้ถือบัตร","vip.type":"ประเภทบัตร","vip.zone":"โซน","vip.qty":"จำนวน","vip.buy.title":"ซื้อบัตร Vip Village","vip.bought":"ซื้อบัตร Vip Village เรียบร้อยแล้ว",
+    "vip.type.grand":"Grandstand VIP","vip.type.pit":"Pit VIP","vip.type.village":"Village Pass",
     "prof.edit":"แก้ไข","prof.addracer":"เพิ่มนักแข่ง","prof.logout":"ออกจากระบบ","prof.viewid":"ดูรูปบัตรประชาชน","prof.noracer":"ยังไม่มีข้อมูลนักแข่ง","prof.racerno":"นักแข่งคนที่",
     "prof.welcome":"ยินดีต้อนรับกลับ","prof.saved":"บันทึกข้อมูลแล้ว",
     "prof.account":"บัญชีผู้ใช้","prof.changepw":"เปลี่ยนรหัสผ่าน","prof.pwsaved":"เปลี่ยนรหัสผ่านเรียบร้อยแล้ว","f.curpw":"รหัสผ่านปัจจุบัน","f.newpw":"รหัสผ่านใหม่","f.confirmpw":"ยืนยันรหัสผ่านใหม่","v.curpwwrong":"รหัสผ่านปัจจุบันไม่ถูกต้อง",
@@ -800,7 +816,15 @@ const I18N = {
     "t.registered":"Registration successful!","t.loginok":"Signed in successfully","t.loginfail":"Invalid email/password",
     "t.forgot":"A password reset link will be sent to your email (demo)",
     "t.acceptall":"Please read and accept all documents first","t.pit":"Selected pit ","t.uploaded":"File uploaded",
-    "prof.title":"My Profile","prof.info":"My Information","prof.racers":"My Racers","prof.history":"Registration History",
+    "prof.title":"My Profile","prof.info":"Personal Info","prof.racers":"My Racers","prof.history":"Registration History",
+    "prof.hello":"Hello,","prof.save":"Save","prof.curid":"Current ID card",
+    "prof.vip":"Vip Village","prof.vip.card":"Vip Village Ticket","prof.buyvip":"Buy Vip Village Ticket","prof.novip":"No Vip Village tickets yet",
+    "ch.eyebrow":"Choose an option","ch.title":"What would you like to do?","ch.sub":"Register a racer, or buy a VIP Village ticket",
+    "ch.racer.title":"Register Racer","ch.racer.desc":"Sign up and register racers for the competition",
+    "ch.vip.title":"Buy VIP Village Ticket","ch.vip.desc":"Reserve access to the VIP Village area",
+    "ch.needinfo":"Please fill in your personal info first",
+    "vip.holder":"Ticket holder","vip.type":"Ticket type","vip.zone":"Zone","vip.qty":"Quantity","vip.buy.title":"Buy Vip Village Ticket","vip.bought":"Vip Village ticket purchased",
+    "vip.type.grand":"Grandstand VIP","vip.type.pit":"Pit VIP","vip.type.village":"Village Pass",
     "prof.edit":"Edit","prof.addracer":"Add Racer","prof.logout":"Log out","prof.viewid":"View ID card","prof.noracer":"No racer data yet","prof.racerno":"Racer #",
     "prof.welcome":"Welcome back","prof.saved":"Saved",
     "prof.account":"Account","prof.changepw":"Change password","prof.pwsaved":"Password changed successfully","f.curpw":"Current password","f.newpw":"New password","f.confirmpw":"Confirm new password","v.curpwwrong":"Current password is incorrect",
@@ -859,7 +883,7 @@ genTakenPits();
 /* ================= Render root ================= */
 function render(){
   renderStepper();
-  el('stepper').classList.toggle('hidden', state.step==='profile' || state.step==='auth');
+  el('stepper').classList.toggle('hidden', state.step==='profile' || state.step==='auth' || state.step==='choose');
   const s=el("screen");
   s.innerHTML = SCREENS[state.step]();
   window.scrollTo({top:0,behavior:"smooth"});
@@ -992,16 +1016,48 @@ SCREEN_INIT.auth = function(){
       state.applicant.a_email=state.account.email;
       state.applicant.a_phone=state.account.phone;
       toast(t('t.registered'));
-      go('terms');
+      go('choose');
     } else {
       // demo login: any username/password is accepted
       const idv=el('l_id').value.trim(), pw=el('l_password').value;
       state.account={username:idv,email:idv.includes('@')?idv:'',phone:(state.account&&state.account.phone)||'',password:pw};
-      state.profile=buildProfile(state.account); toast(t('t.loginok')); go('profile');
+      state.profile=buildProfile(state.account); state.applicant=Object.assign({}, state.profile.applicant); toast(t('t.loginok')); go('profile');
     }
   };
 };
 function markField(id,msg){const f=el(id).closest('.field');f.classList.add('invalid');const em=f.querySelector('.err-msg');if(em)em.textContent=msg;f.scrollIntoView({behavior:'smooth',block:'center'});}
+
+/* ---- CHOOSE (post-register hub entry) ---- */
+function hasPersonalInfo(){
+  const a=state.applicant||{};
+  return !!(a.a_name && a.a_surname && a.a_phone && a.a_email && a.a_idaddr);
+}
+SCREENS.choose = function(){
+  return `
+  <p class="eyebrow">${esc(t('ch.eyebrow'))}</p>
+  <h1 class="page-title">${esc(t('ch.title'))}</h1>
+  <p class="page-sub">${esc(t('ch.sub'))}</p>
+  <div class="choose-grid">
+    <button type="button" class="choose-card" data-choose="racer">
+      <div class="cc-ico">🏁</div>
+      <div class="cc-title">${esc(t('ch.racer.title'))}</div>
+      <div class="cc-desc">${esc(t('ch.racer.desc'))}</div>
+    </button>
+    <button type="button" class="choose-card vip" data-choose="vip">
+      <div class="cc-ico">🎟️</div>
+      <div class="cc-title">${esc(t('ch.vip.title'))}</div>
+      <div class="cc-desc">${esc(t('ch.vip.desc'))}</div>
+    </button>
+  </div>`;
+};
+SCREEN_INIT.choose = function(){
+  el('screen').querySelectorAll('[data-choose]').forEach(b=>b.onclick=()=>{
+    const target=b.dataset.choose;
+    if(!hasPersonalInfo()){ toast(t('ch.needinfo')); state.pendingChoice=target; state.profileTab='info'; go('profile'); return; }
+    state.profileTab = target==='vip'?'vip':'racers';
+    go('profile');
+  });
+};
 
 /* ---- TERMS ---- */
 const DOC_KEYS=[["privacy","doc.privacy","doc.privacy.d",true],["rules","doc.rules","doc.rules.d",true],["guarantee","doc.guarantee","doc.guarantee.d",true]];
@@ -1066,7 +1122,7 @@ const DOC_BODY={
 };
 
 /* ---- APPLICANT ---- */
-SCREENS.applicant = function(){
+function applicantFormInner(){
   const a=state.applicant;
   const chans=[["line","Line"],["wechat","WeChat"],["whatsapp","WhatsApp"]];
   const chanHtml = chans.map(([k,lbl])=>{
@@ -1077,10 +1133,6 @@ SCREENS.applicant = function(){
     </div>`;
   }).join("");
   return `
-  <p class="eyebrow">${esc(t('ap.eyebrow'))}</p>
-  <h1 class="page-title">${esc(t('ap.title'))}</h1>
-  <p class="page-sub">${esc(t('ap.sub'))}</p>
-  <form id="apForm" novalidate>
     ${fieldText({id:'a_date',labelKey:'f.date',req:true,type:'date',value:a.a_date||'',full:true})}
     <div class="grid">
       ${fieldText({id:'a_name',labelKey:'f.name',req:true,value:a.a_name||''})}
@@ -1102,7 +1154,25 @@ SCREENS.applicant = function(){
       <label>${esc(t('f.chan'))}</label>
       <div class="grid">${chanHtml}</div>
     </div>
-    ${fieldUpload({id:'a_idcard',labelKey:'f.idcard.ap',req:true})}
+    ${fieldUpload({id:'a_idcard',labelKey:'f.idcard.ap',req:true})}`;
+}
+function bindApplicantForm(form){
+  bindUploads(form);
+  const dateEl=el('a_date');
+  if(dateEl){ const openPicker=()=>{ try{ if(typeof dateEl.showPicker==='function') dateEl.showPicker(); }catch(e){} }; dateEl.addEventListener('click',openPicker); dateEl.addEventListener('focus',openPicker); }
+  const useid=el('a_useid'); if(useid)useid.onchange=(e)=>{ if(e.target.checked){ el('a_deliaddr').value=el('a_idaddr').value; } };
+  form.querySelectorAll('[data-chan]').forEach(cb=>cb.onchange=()=>{
+    const k=cb.dataset.chan; el('chan_'+k).classList.toggle('hidden',!cb.checked);
+    state.applicant['chan_'+k+'_on']=cb.checked;
+  });
+}
+SCREENS.applicant = function(){
+  return `
+  <p class="eyebrow">${esc(t('ap.eyebrow'))}</p>
+  <h1 class="page-title">${esc(t('ap.title'))}</h1>
+  <p class="page-sub">${esc(t('ap.sub'))}</p>
+  <form id="apForm" novalidate>
+    ${applicantFormInner()}
     <div class="actions">
       <button type="button" class="btn btn-ghost" data-back>${esc(t('btn.back'))}</button>
       <div class="spacer"></div>
@@ -1112,14 +1182,7 @@ SCREENS.applicant = function(){
 };
 SCREEN_INIT.applicant = function(){
   const form=el('apForm');
-  bindUploads(form);
-  const dateEl=el('a_date');
-  if(dateEl){ const openPicker=()=>{ try{ if(typeof dateEl.showPicker==='function') dateEl.showPicker(); }catch(e){} }; dateEl.addEventListener('click',openPicker); dateEl.addEventListener('focus',openPicker); }
-  el('a_useid').onchange=(e)=>{ if(e.target.checked){ el('a_deliaddr').value=el('a_idaddr').value; } };
-  form.querySelectorAll('[data-chan]').forEach(cb=>cb.onchange=()=>{
-    const k=cb.dataset.chan; el('chan_'+k).classList.toggle('hidden',!cb.checked);
-    state.applicant['chan_'+k+'_on']=cb.checked;
-  });
+  bindApplicantForm(form);
   form.querySelector('[data-back]').onclick=()=>{saveApplicant(form);go('terms');};
   form.onsubmit=(e)=>{e.preventDefault();if(!validateScreen(form)){toast(t('v.fixerr'));return;}saveApplicant(form);go('racer');};
 };
@@ -1715,7 +1778,7 @@ function buildProfileFromReg(){
   const history=[];
   (state.racers||[]).forEach(rc=>{ (rc.entries||[]).filter(e=>e.cls).forEach(e=>{
     history.push({ref:ref||('SU26-'+Math.random().toString(36).slice(2,7).toUpperCase()),racer:((rc.r_rname||'')+' '+(rc.r_rsurname||'')).trim()||'-',model:e.cls,carno:e.carno||'-',date:today,amount:PRICES.entry+PRICES.deposit,status:'paid'}); }); });
-  return {applicant:ap, racers:racers.length?racers:[], history};
+  return {applicant:ap, racers:racers.length?racers:[], history, vips:(state.profile&&state.profile.vips)||[]};
 }
 
 /* ---- DONE ---- */
@@ -1758,15 +1821,13 @@ function buildProfile(acct){
   const racers=[genProfRacer(),genProfRacer()];
   const history=racers.map((r,i)=>({ref:'SU26-'+Math.random().toString(36).slice(2,7).toUpperCase()+'-'+(1000+Math.floor(Math.random()*9000)),
     racer:r.r_rname+' '+r.r_rsurname,model:r.r_model,carno:r.r_carno,date:'2026-0'+(2+i)+'-'+dPad(8+i*5),amount:17000,status:'paid'}));
-  return {applicant:ap,racers,history};
+  return {applicant:ap,racers,history,vips:[genVip(0)]};
 }
+function genVip(i){return {holder:dRnd(D_FIRST)+' '+dRnd(D_LAST),type:dRnd(['Grandstand VIP','Pit VIP','Village Pass']),zone:dRnd(['Zone A','Zone B','Zone C','Pit Lane']),qty:1+Math.floor(Math.random()*3),date:'2026-0'+(3+i)+'-'+dPad(10+i*4)};}
 function profInfoHTML(p){
-  const a=p.applicant;
   const acc=state.account||{};
-  const uname=acc.username||((a.a_name||'')+' '+(a.a_surname||'')).trim()||'-';
+  const uname=acc.username||((state.applicant.a_name||'')+' '+(state.applicant.a_surname||'')).trim()||'-';
   const pwMask='•'.repeat(Math.min(Math.max((acc.password||'').length||8,6),12));
-  const chans=[]; if(a.chan_line_on&&a.chan_line)chans.push('Line: '+a.chan_line); if(a.chan_wechat_on&&a.chan_wechat)chans.push('WeChat: '+a.chan_wechat); if(a.chan_whatsapp_on&&a.chan_whatsapp)chans.push('WhatsApp: '+a.chan_whatsapp);
-  const row=(lab,val,full)=>`<div class="pinfo-row ${full?'full':''}"><div class="l">${esc(lab)}</div><div class="v">${esc(val||'-')}</div></div>`;
   const accountCard=`<div class="prof-card" style="margin-bottom:16px">
     <div class="pc-head"><h3>${esc(t('prof.account'))}</h3></div>
     <div class="pinfo-grid">
@@ -1775,17 +1836,28 @@ function profInfoHTML(p){
     </div>
   </div>`;
   return accountCard + `<div class="prof-card">
-    <div class="pc-head"><h3>${esc(t('prof.info'))}</h3><button class="ico-btn edit" id="profEdit" title="${esc(t('prof.edit'))}">${D_ICON.edit}</button></div>
-    <div class="pinfo-grid">
-      ${row(t('f.date'),a.a_date)}${row(t('f.phone'),a.a_phone)}
-      ${row(t('f.name'),a.a_name)}${row(t('f.surname'),a.a_surname)}
-      ${row(t('f.idaddr'),a.a_idaddr,true)}
-      ${row(t('f.deliaddr'),a.a_deliaddr,true)}
-      ${row(t('f.email'),a.a_email)}${row(t('f.chan'),chans.length?chans.join('  ·  '):'-')}
-    </div>
-    <div class="pc-img"><div class="l">${esc(t('f.idcard.ap'))}</div>
-      ${a.idImg?`<img class="prof-thumb" src="${a.idImg}" data-pimg="id" title="${esc(t('prof.viewid'))}"/>`:`<div class="ei-empty" style="width:150px;height:96px">ไม่มีรูป</div>`}
-    </div>
+    <div class="pc-head"><h3>${esc(t('prof.info'))}</h3></div>
+    <form id="apInfoForm" novalidate>
+      ${applicantFormInner()}
+      <div class="actions"><div class="spacer"></div><button type="submit" class="btn btn-primary">${esc(t('prof.save'))}</button></div>
+    </form>
+  </div>`;
+}
+function profVipHTML(p){
+  const vips=p.vips||[];
+  const row=(lab,val)=>`<div class="pinfo-row"><div class="l">${esc(lab)}</div><div class="v">${esc(val||'-')}</div></div>`;
+  const cards=vips.length?vips.map((v,i)=>`
+    <div class="racer-card">
+      <div class="rc-head"><span class="rc-badge">${esc(t('prof.vip.card'))} ${i+1}</span></div>
+      <div class="pinfo-grid">
+        ${row(t('vip.holder'),v.holder)}${row(t('vip.type'),v.type)}
+        ${row(t('vip.zone'),v.zone)}${row(t('vip.qty'),String(v.qty))}
+        ${row(t('hist.date'),v.date)}
+      </div>
+    </div>`).join(''):`<div class="prof-empty">${esc(t('prof.novip'))}</div>`;
+  return `<div class="prof-card">
+    <div class="pc-head"><h3>${esc(t('prof.vip.card'))}</h3><button class="btn btn-primary btn-sm" id="profBuyVip">${PLUS_SVG} ${esc(t('prof.buyvip'))}</button></div>
+    ${cards}
   </div>`;
 }
 function profRacersHTML(p){
@@ -1816,13 +1888,16 @@ function profHistoryHTML(p){
 }
 SCREENS.profile=function(){
   if(!state.profile)state.profile=buildProfile(state.account);
+  if(!state.profile.vips)state.profile.vips=[];
   if(!state.profileTab)state.profileTab='info';
   const p=state.profile, tab=state.profileTab;
-  const menu=[['info','prof.info'],['racers','prof.racers'],['history','prof.history']].map(([k,tk])=>`<button data-ptab="${k}" class="${tab===k?'active':''}">${esc(t(tk))}</button>`).join('');
-  const content = tab==='info'?profInfoHTML(p):(tab==='racers'?profRacersHTML(p):profHistoryHTML(p));
+  const acc=state.account||{};
+  const uname=acc.username||((state.applicant.a_name||'')+' '+(state.applicant.a_surname||'')).trim()||'';
+  const menu=[['info','prof.info'],['racers','prof.racers'],['vip','prof.vip'],['history','prof.history']].map(([k,tk])=>`<button data-ptab="${k}" class="${tab===k?'active':''}">${esc(t(tk))}</button>`).join('');
+  const content = tab==='info'?profInfoHTML(p):(tab==='racers'?profRacersHTML(p):(tab==='vip'?profVipHTML(p):profHistoryHTML(p)));
   return `
   <div class="prof-top">
-    <div><p class="eyebrow">${esc(t('prof.welcome'))}</p><h1 class="page-title" style="margin:0">${esc(t('prof.title'))}</h1></div>
+    <div><p class="eyebrow">${esc(t('prof.welcome'))}</p><h1 class="page-title" style="margin:0">${esc(t('prof.hello'))} ${esc(uname||'-')}</h1></div>
     <button class="btn btn-ghost" id="profLogout">${esc(t('prof.logout'))}</button>
   </div>
   <div class="dash-tabs" style="margin:18px 0 20px">${menu}</div>
@@ -1832,12 +1907,51 @@ SCREEN_INIT.profile=function(){
   const sc=el('screen');
   sc.querySelectorAll('[data-ptab]').forEach(b=>b.onclick=()=>{state.profileTab=b.dataset.ptab;render();});
   const lo=el('profLogout'); if(lo)lo.onclick=()=>{state.profileTab='info';state.authTab='login';go('auth');};
-  const ed=el('profEdit'); if(ed)ed.onclick=()=>openProfEditApplicant();
   const cpw=el('profChgPw'); if(cpw)cpw.onclick=()=>openChangePassword();
-  const pi=sc.querySelector('[data-pimg]'); if(pi)pi.onclick=()=>openDashImg(state.profile.applicant.idImg,t('f.idcard.ap'));
-  sc.querySelectorAll('[data-rimg]').forEach(b=>b.onclick=()=>{const r=state.profile.racers[+b.dataset.rimg];openDashImg(b.dataset.kind==='photo'?r.photo:r.idImg,b.dataset.kind==='photo'?'รูปนักแข่ง':'บัตรประชาชนนักแข่ง');});
+  // info tab: editable personal-info form
+  const apf=el('apInfoForm');
+  if(apf){
+    bindApplicantForm(apf);
+    if(state.applicant.idImg && !(state.files.a_idcard&&state.files.a_idcard.thumb)){ state.files.a_idcard={name:'idcard.png',thumb:state.applicant.idImg}; refreshUpload('a_idcard'); }
+    apf.onsubmit=(e)=>{
+      e.preventDefault();
+      if(!validateScreen(apf)){toast(t('v.fixerr'));return;}
+      saveApplicant(apf);
+      const f=state.files.a_idcard; if(f&&f.thumb)state.applicant.idImg=f.thumb;
+      if(state.profile)state.profile.applicant=state.applicant;
+      toast(t('prof.saved'));
+      const pc=state.pendingChoice; state.pendingChoice=null;
+      if(pc)state.profileTab=pc==='vip'?'vip':'racers';
+      render();
+    };
+  }
+  // racers tab
   const ar=el('profAddRacer'); if(ar)ar.onclick=()=>{ state.addRacerMode=true; state.racer={}; state.racers=[newRacer()]; state.files={}; go('racer'); };
+  sc.querySelectorAll('[data-rimg]').forEach(b=>b.onclick=()=>{const r=state.profile.racers[+b.dataset.rimg];openDashImg(b.dataset.kind==='photo'?r.photo:r.idImg,b.dataset.kind==='photo'?'รูปนักแข่ง':'บัตรประชาชนนักแข่ง');});
+  // vip tab
+  const bv=el('profBuyVip'); if(bv)bv.onclick=()=>openBuyVip();
 };
+function openBuyVip(){
+  const types=[t('vip.type.grand'),t('vip.type.pit'),t('vip.type.village')];
+  const zones=['Zone A','Zone B','Zone C','Pit Lane'];
+  el('dmBody').innerHTML=`<h3>${esc(t('vip.buy.title'))}</h3>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="field" data-field="vip_holder"><label>${esc(t('vip.holder'))}<span class="req">*</span></label><input class="control" id="vip_holder"/><div class="err-msg">${esc(t('v.required'))}</div></div>
+      <div class="field"><label>${esc(t('vip.type'))}</label><select class="control" id="vip_type">${types.map(x=>`<option>${esc(x)}</option>`).join('')}</select></div>
+      <div class="field"><label>${esc(t('vip.zone'))}</label><select class="control" id="vip_zone">${zones.map(x=>`<option>${esc(x)}</option>`).join('')}</select></div>
+      <div class="field"><label>${esc(t('vip.qty'))}</label><input class="control" id="vip_qty" type="number" min="1" value="1"/></div>
+    </div>
+    <div class="actions" style="margin-top:20px"><button class="btn btn-ghost" id="dmCancel">${esc(t('modal.close'))}</button><div class="spacer"></div><button class="btn btn-primary" id="dmSave">${esc(t('prof.buyvip'))}</button></div>`;
+  el('dmBack').classList.add('open');
+  el('dmCancel').onclick=closeDashModal;
+  el('dmSave').onclick=()=>{
+    const holder=el('vip_holder').value.trim();
+    if(!holder){ const f=el('vip_holder').closest('.field'); f.classList.add('invalid'); el('vip_holder').focus(); return; }
+    if(!state.profile.vips)state.profile.vips=[];
+    state.profile.vips.push({holder, type:el('vip_type').value, zone:el('vip_zone').value, qty:Math.max(1,parseInt(el('vip_qty').value)||1), date:new Date().toISOString().slice(0,10)});
+    closeDashModal(); render(); toast(t('vip.bought'));
+  };
+}
 function openProfEditApplicant(){
   const a=state.profile.applicant;
   const fields=[['a_date','f.date','date'],['a_name','f.name'],['a_surname','f.surname'],['a_idaddr','f.idaddr'],['a_deliaddr','f.deliaddr'],['a_phone','f.phone'],['a_email','f.email','email'],['chan_line','Line'],['chan_wechat','WeChat'],['chan_whatsapp','WhatsApp']];
