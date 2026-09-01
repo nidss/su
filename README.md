@@ -33,12 +33,14 @@ A dark, racing-themed registration system for **Souped Up 2026**. Bilingual (TH/
 
 ## Dashboard ผู้ดูแล / Admin dashboard
 - เปิดด้วยคีย์ลัด **`Ctrl + Shift + Z`** → หน้า **เข้าสู่ระบบแอดมิน** ก่อน แล้วจึงเข้า Dashboard
+- ด้านบนสุดแบ่งเป็น **ข้อมูลผู้สมัคร, นักแข่ง** และ **ข้อมูลผู้ซื้อบัตร VIP Village** โดยแท็บ VIP ใช้ Dashboard UI เดิมจาก `suvip`
 - **KPI**: จำนวนคนลงทะเบียน · จำนวนนักแข่ง · ยอดเงินที่ชำระแล้ว
 - **ตาราง 2 แท็บ** (ผู้สมัคร / นักแข่ง) - 20 แถว/หน้า + paging + **Export CSV**
 - ดูรูปบัตร/รูปนักแข่งใน modal, แก้ไขข้อมูลแต่ละแถวได้ (รวมลบ/อัปโหลดรูป)
 
 ## โครงสร้างไฟล์ / Files
 - `index.html` - แอปหลัก (สำหรับ GitHub Pages)
+- `vip-dashboard.html` - Dashboard ผู้ซื้อบัตรจาก `suvip` ซึ่งใช้ข้อมูลการซื้อใน `suvip_regs`
 - `souped-up.html` - เวอร์ชันสำหรับ Artifact (เนื้อหาเดียวกัน ไม่มี document skeleton)
 - `asset/` - สื่อต้นฉบับ: `logo-main.png`, `bg-2.png` (พื้นหลังนักแข่ง), `souped-bg_1.png` (พื้นหลังธง), `flag-white-transparent.svg` (ธงในปุ่ม), `favicon-16x16.png`
 

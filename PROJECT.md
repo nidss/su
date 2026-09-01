@@ -82,6 +82,7 @@
 ## Dashboard ผู้ดูแล / Admin Dashboard
 
 - เปิดด้วยคีย์ลัด **`Ctrl + Shift + Z`** → หน้าเข้าสู่ระบบแอดมิน → Dashboard
+- มีแท็บกลุ่มด้านบนสุดสำหรับ **ข้อมูลผู้สมัคร, นักแข่ง** และ **ข้อมูลผู้ซื้อบัตร VIP Village**; กลุ่ม VIP ฝัง Dashboard UI เดิมจาก `suvip` ผ่าน `vip-dashboard.html`
 - **KPI**: จำนวนผู้ลงทะเบียน · จำนวนนักแข่ง · ยอดเงินที่ชำระแล้ว
 - **ตาราง 2 แท็บ** (ผู้สมัคร / นักแข่ง) — 20 แถว/หน้า + paging + **Export CSV**
 - แท็บนักแข่งมี **filter ค้นหา** (ชื่อ, รถ/เครื่องยนต์, รุ่นการแข่งขัน [dropdown], ทีม/อู่, เบอร์รถ)
@@ -102,6 +103,7 @@
 | ไฟล์ | หน้าที่ |
 |------|--------|
 | `index.html` | แอปหลัก (สำหรับ GitHub Pages) — เป็น source of truth |
+| `vip-dashboard.html` | Dashboard ผู้ซื้อบัตร VIP Village จาก `suvip`; อ่านรายการซื้อจาก `suvip_regs` |
 | `souped-up.html` | เวอร์ชันสำหรับ Artifact — **สร้างจาก `index.html`** (ตัด document skeleton ออก) อย่าแก้มือ |
 | `asset/` | สื่อต้นฉบับ: `logo-main.png`, `logo-main-b.png` (โลโก้เข้มบนใบเสร็จ), `img_racer.png` (รูปนักแข่ง), `idcard.png` (รูปบัตร), `bg-2.png`, `souped-bg_1.png`, `favicon-16x16.png` |
 | `README.md` | สรุปย่อโปรเจกต์ (TH/EN) |

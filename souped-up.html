@@ -1,12 +1,3 @@
-<!DOCTYPE html>
-<html lang="th" data-lang="th">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Souped Up 2026</title>
-<meta name="description" content="ระบบสมัครสมาชิกและลงทะเบียนการแข่งขัน Souped Up / Souped Up Competition Registration System" />
-<link rel="icon" type="image/png" sizes="16x16" href="asset/favicon-16x16.png" />
-<link rel="shortcut icon" href="asset/favicon-16x16.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -359,6 +350,10 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .dash-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line)}
 .dash-tabs button{background:transparent;border:0;border-bottom:2px solid transparent;color:var(--txt-dim);padding:12px 20px;font-weight:700;font-size:14px;cursor:pointer;transition:.15s;margin-bottom:-1px}
 .dash-tabs button.active{color:#fff;border-bottom-color:var(--mint)}
+.dash-source-tabs{display:flex;background:var(--bg);border-radius:12px;padding:5px;gap:5px;margin:0 auto 22px;border:1px solid var(--line);max-width:960px}
+.dash-source-tabs button{flex:1;background:transparent;border:0;color:var(--txt-dim);padding:14px 10px;border-radius:8px;font-weight:700;font-size:clamp(14px,2.6vw,16px);letter-spacing:.5px;cursor:pointer;transition:.15s}
+.dash-source-tabs button.active{background:var(--mint-grad);color:var(--mint-ink);box-shadow:0 4px 14px var(--mint-glow)}
+.vip-dash-frame{display:block;width:100%;height:calc(100vh - 94px);min-height:620px;border:0;background:var(--bg)}
 .table-card{background:var(--panel);border:1px solid var(--line);border-top:0;border-radius:0 0 14px 14px;overflow:hidden}
 .table-tools{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
 .table-tools .tt-count{font-size:12.5px;color:var(--txt-faint)}
@@ -595,8 +590,6 @@ body.vip-frame-mode>.wrap>.foot{display:none}
 .book-panel.shake{animation:bkshk .4s}
 @keyframes bkshk{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
 </style>
-</head>
-<body>
 <div class="bg-flag"></div>
 <div class="bg-driver"></div>
 <div class="topbar">
@@ -2490,7 +2483,7 @@ function buildDashData(){
   }
   return {applicant:applicants, racer:racers};
 }
-const DASH={open:false, authed:false, tab:'applicant', page:{applicant:1,racer:1}, data:null, PS:20, rfilter:{name:'',vehicle:'',model:'',team:'',carno:''}};
+const DASH={open:false, authed:false, group:'registration', tab:'applicant', page:{applicant:1,racer:1}, data:null, PS:20, rfilter:{name:'',vehicle:'',model:'',team:'',carno:''}};
 function openDash(){
   if(!DASH.data)DASH.data=buildDashData();
   DASH.open=true; el('dashRoot').classList.add('open'); document.body.style.overflow='hidden';
@@ -2528,23 +2521,41 @@ function dashKPIs(){
 }
 function renderDash(){
   const kpi=dashKPIs().map(k=>`<div class="kpi-card"><div class="k-ico">${k.ico}</div><div class="k-val">${esc(k.val)}</div><div class="k-lab">${esc(k.lab)}</div></div>`).join('');
+  const registration=DASH.group==='registration';
   el('dashRoot').innerHTML=`
   <div class="dash-wrap">
-    <div class="dash-head">
-      <div class="dash-title">Dashboard<small>SOUPED UP 2026 · ADMIN</small></div>
-      <button class="dash-close" id="dashClose" title="ปิด (Ctrl+Shift+Z)">${D_ICON.x}</button>
+    <div class="dash-source-tabs">
+      <button data-dgroup="registration" class="${registration?'active':''}">ข้อมูลผู้สมัคร, นักแข่ง</button>
+      <button data-dgroup="vip" class="${!registration?'active':''}">ข้อมูลผู้ซื้อบัตร VIP Village</button>
     </div>
-    <div class="kpi-row">${kpi}</div>
-    <div class="dash-tabs">
-      <button data-dtab="applicant" class="${DASH.tab==='applicant'?'active':''}">ข้อมูลผู้สมัคร</button>
-      <button data-dtab="racer" class="${DASH.tab==='racer'?'active':''}">ข้อมูลนักแข่ง</button>
-    </div>
-    <div class="table-card" id="dashCard"></div>
+    ${registration?`<div class="dash-head">
+        <div class="dash-title">Dashboard<small>SOUPED UP 2026 · ADMIN</small></div>
+        <button class="dash-close" id="dashClose" title="ปิด (Ctrl+Shift+Z)">${D_ICON.x}</button>
+      </div>
+      <div class="kpi-row">${kpi}</div>
+      <div class="dash-tabs">
+        <button data-dtab="applicant" class="${DASH.tab==='applicant'?'active':''}">ข้อมูลผู้สมัคร</button>
+        <button data-dtab="racer" class="${DASH.tab==='racer'?'active':''}">ข้อมูลนักแข่ง</button>
+      </div>
+      <div class="table-card" id="dashCard"></div>`:
+      `<iframe class="vip-dash-frame" id="vipDashFrame" src="vip-dashboard.html" title="ข้อมูลผู้ซื้อบัตร VIP Village"></iframe>`}
   </div>`;
-  el('dashClose').onclick=closeDash;
-  el('dashRoot').querySelectorAll('[data-dtab]').forEach(b=>b.onclick=()=>{DASH.tab=b.dataset.dtab;renderDash();});
-  renderDashTable();
+  el('dashRoot').querySelectorAll('[data-dgroup]').forEach(b=>b.onclick=()=>{DASH.group=b.dataset.dgroup;renderDash();});
+  if(registration){
+    el('dashClose').onclick=closeDash;
+    el('dashRoot').querySelectorAll('[data-dtab]').forEach(b=>b.onclick=()=>{DASH.tab=b.dataset.dtab;renderDash();});
+    renderDashTable();
+  }else{
+    const frame=el('vipDashFrame');
+    frame.onload=()=>frame.contentWindow.postMessage({type:'su-dashboard:refresh',lang:state.lang},'*');
+  }
 }
+window.addEventListener('message',e=>{
+  const frame=el('vipDashFrame');
+  if(frame&&e.source===frame.contentWindow&&e.data&&e.data.type==='suvip-dashboard:main'){
+    DASH.group='registration'; renderDash();
+  }
+});
 function racerFilterActive(){const f=DASH.rfilter;return !!(f.name||f.vehicle||f.model||f.team||f.carno);}
 function getDashRows(tab){
   const all=DASH.data[tab];
@@ -2834,5 +2845,3 @@ document.addEventListener('keydown',(e)=>{
 setLang('th');
 render();
 </script>
-</body>
-</html>

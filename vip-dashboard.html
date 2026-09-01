@@ -1,0 +1,1963 @@
+<!DOCTYPE html>
+<html lang="th" data-lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Souped Up VIP Village 2026</title>
+<meta name="description" content="ซื้อบัตร Souped Up Grand Prix VIP Village / Buy Souped Up Grand Prix VIP Village tickets" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#0a0b0d;
+  --bg-2:#111318;
+  --panel:#15181e;
+  --panel-2:#1b1f27;
+  --line:#2a2f3a;
+  --line-2:#363c49;
+  --txt:#f4f6f9;
+  --txt-dim:#f4f6f9;
+  --txt-faint:#98a0ae;
+  --red:#e10600;
+  --red-2:#ff2b1c;
+  --mint:#6FFFE8;
+  --lime:#D1FF03;
+  --navy-deep:#0C142A;
+  --mint-grad:linear-gradient(115deg,#6FFFE8 0%,#9dffb0 48%,#D1FF03 100%);
+  --mint-ink:#0C142A;
+  --mint-glow:rgba(141,255,150,.34);
+  --mint-soft:rgba(111,255,232,.16);
+  --amber:#ffb400;
+  --green:#25c26e;
+  --gold:#d8bd7f;
+  --gold-2:#c8a24a;
+  --carbon:repeating-linear-gradient(45deg,#0e0f12 0 2px,#121317 2px 4px);
+  --radius:12px;
+  --shadow:0 12px 40px rgba(0,0,0,.55);
+  --font:'Rajdhani','Noto Sans Thai',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:
+    radial-gradient(1200px 600px at 50% -200px,rgba(225,6,0,.10),transparent 60%),
+    radial-gradient(900px 520px at 0% 100%,rgba(111,255,232,.07),transparent 60%),
+    radial-gradient(900px 520px at 100% 100%,rgba(209,255,3,.06),transparent 60%),
+    var(--bg);
+  color:var(--txt);
+  font-family:var(--font);
+  min-height:100vh;
+  letter-spacing:.2px;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%}
+button{font-family:inherit}
+input,select,textarea{font-family:inherit}
+
+/* ---------- Top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:40;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px clamp(16px,4vw,48px);
+  background:rgba(10,11,13,.82);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;cursor:pointer}
+.brand-logo{height:40px;width:auto;max-width:min(62vw,340px);object-fit:contain;display:block}
+@media(max-width:640px){.brand-logo{height:32px}}
+.lang-switch{display:flex;border:1px solid var(--line-2);border-radius:999px;overflow:hidden;flex:0 0 auto}
+.lang-switch button{
+  background:transparent;color:var(--txt-dim);border:0;padding:7px 15px;
+  font-weight:700;font-size:13px;letter-spacing:1px;cursor:pointer;transition:.15s;
+}
+.lang-switch button.active{background:var(--mint);color:var(--navy-deep)}
+
+/* ---------- Layout ---------- */
+.wrap{max-width:960px;margin:0 auto;padding:clamp(16px,4vw,32px) clamp(14px,4vw,20px) 80px}
+.card{
+  background:linear-gradient(180deg,var(--panel),var(--bg-2));
+  border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);overflow:hidden;margin-bottom:22px;
+}
+.card-pad{padding:clamp(20px,4vw,34px)}
+.speed-line{height:4px;background:linear-gradient(90deg,var(--mint),var(--lime),transparent)}
+
+h2.sec-title{font-size:clamp(19px,3.4vw,25px);margin:0 0 4px;font-weight:700;letter-spacing:.4px}
+.sec-sub{color:var(--txt-dim);margin:0 0 20px;font-size:14px}
+.eyebrow{color:var(--lime);font-weight:700;letter-spacing:3px;font-size:12px;text-transform:uppercase;margin:0 0 8px}
+
+/* ---------- Top tabs (Early Bird / Normal) ---------- */
+.pkg-tabs{display:flex;background:var(--bg);border-radius:12px;padding:5px;gap:5px;margin:0 auto 22px;border:1px solid var(--line);max-width:960px}
+.pkg-tabs button{flex:1;background:transparent;border:0;color:var(--txt-dim);padding:14px 10px;border-radius:8px;font-weight:700;font-size:clamp(14px,2.6vw,16px);letter-spacing:.5px;cursor:pointer;transition:.15s}
+.pkg-tabs button.active{background:var(--mint-grad);color:var(--mint-ink);box-shadow:0 4px 14px var(--mint-glow)}
+
+/* ---------- Banner ---------- */
+.banner{border-radius:var(--radius);overflow:hidden;margin-bottom:22px;box-shadow:var(--shadow);background:#000;line-height:0}
+.banner img{display:block;width:100%;height:auto}
+
+/* ---------- Forms ---------- */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid .full{grid-column:1/-1}
+@media(max-width:640px){.grid{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:2px}
+.field label{font-size:13px;color:#f4f6f9;font-weight:600;letter-spacing:.3px}
+.field label .req{color:var(--red-2);margin-left:3px}
+.field .hint{font-size:11px;color:var(--txt-faint);line-height:1.5}
+.control{
+  background:var(--bg);border:1px solid var(--line-2);color:var(--txt);
+  border-radius:9px;padding:12px 13px;font-size:15px;width:100%;transition:.15s;outline:none;
+}
+.control::placeholder{color:#5a616e}
+.control:focus{border-color:var(--mint);box-shadow:0 0 0 3px var(--mint-soft)}
+.control:disabled{background:#101217;border-color:#242933;color:#727b89;cursor:not-allowed;opacity:.78;box-shadow:none}
+.field.invalid .control{border-color:var(--red);box-shadow:0 0 0 3px rgba(225,6,0,.15)}
+.err-msg{color:var(--red-2);font-size:11px;display:none}
+.field.invalid .err-msg{display:block}
+
+.checkbox{display:flex;align-items:flex-start;gap:10px;cursor:pointer;user-select:none;font-size:14px;color:var(--txt-dim);line-height:1.5}
+.checkbox input{margin-top:2px;width:17px;height:17px;accent-color:var(--mint);flex:0 0 auto}
+.chan-input{margin-top:8px}
+
+.info-box{
+  display:flex;gap:10px;background:rgba(255,180,0,.08);border:1px solid rgba(255,180,0,.28);
+  border-radius:9px;padding:11px 13px;font-size:12.5px;color:#e9d9b3;line-height:1.6;margin:6px 0;
+}
+.info-box .ico{color:var(--amber);flex:0 0 auto}
+.note{font-size:12.5px;color:var(--amber);background:rgba(255,180,0,.06);border-left:3px solid var(--amber);padding:8px 12px;border-radius:0 6px 6px 0;line-height:1.55;margin:4px 0}
+
+/* ---------- Content (price cards) ---------- */
+.price-intro{font-size:15px;color:var(--txt);line-height:1.7;margin:0 0 18px}
+.price-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:600px){.price-cards{grid-template-columns:1fr}}
+.price-card{background:var(--panel-2);border:1px solid var(--line-2);border-radius:12px;padding:20px;position:relative;overflow:hidden}
+.price-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--mint-grad)}
+.price-card .pc-name{font-size:14px;color:var(--txt-dim);font-weight:600;letter-spacing:.4px}
+.price-card .pc-price{font-size:clamp(26px,5vw,34px);font-weight:800;color:var(--gold);margin:6px 0 2px;font-variant-numeric:tabular-nums}
+.price-card .pc-unit{font-size:13px;color:var(--txt-faint)}
+.cond-list{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.cond-list li{display:flex;gap:9px;font-size:13px;color:#e9d9b3;line-height:1.55}
+.cond-list li::before{content:"★";color:var(--amber);flex:0 0 auto}
+
+/* ---------- Venue ---------- */
+.venue-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:stretch}
+@media(max-width:720px){.venue-grid{grid-template-columns:1fr}}
+.venue-info .v-name{font-size:19px;font-weight:700;margin:6px 0 4px}
+.venue-info .v-en{font-size:14px;color:var(--txt-dim);margin:0 0 16px}
+.map-link{display:inline-flex;align-items:center;gap:8px;background:var(--panel-2);border:1px solid var(--line-2);color:var(--mint);text-decoration:none;padding:11px 16px;border-radius:9px;font-weight:700;font-size:14px;transition:.15s}
+.map-link:hover{border-color:var(--mint);background:var(--mint-soft)}
+.map-link svg{width:18px;height:18px;flex:0 0 auto}
+.venue-map{display:block;border-radius:12px;overflow:hidden;border:1px solid var(--line-2);line-height:0;transition:.15s}
+.venue-map:hover{border-color:var(--mint);box-shadow:0 0 0 3px var(--mint-soft)}
+.venue-map img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* ---------- Package selection ---------- */
+.pkg-list{display:flex;flex-direction:column;gap:12px}
+.opt{display:block;border:1.5px solid var(--line-2);border-radius:11px;padding:16px 18px;cursor:pointer;transition:.15s;background:var(--bg)}
+.opt:hover{border-color:var(--txt-dim)}
+.opt.sel{border-color:var(--mint);background:var(--mint-soft);box-shadow:0 0 0 3px rgba(111,255,232,.14)}
+.opt .opt-top{display:flex;align-items:center;gap:12px}
+.opt input[type=radio]{width:18px;height:18px;accent-color:var(--mint);flex:0 0 auto}
+.opt .opt-name{font-weight:700;font-size:15.5px;flex:1}
+.opt .opt-price{font-weight:800;font-size:18px;color:var(--gold);font-variant-numeric:tabular-nums}
+.opt .opt-price small{font-size:12px;color:var(--txt-faint);font-weight:600}
+.day-pick{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line-2);display:none}
+.opt.sel .day-pick{display:block}
+.day-pick .dp-label{font-size:12.5px;color:var(--txt-dim);font-weight:600;margin-bottom:10px}
+.day-grid{display:flex;flex-wrap:wrap;gap:10px}
+.day-chip{display:flex;align-items:center;gap:8px;border:1px solid var(--line-2);border-radius:8px;padding:9px 13px;cursor:pointer;font-size:13.5px;color:var(--txt);background:var(--panel-2);transition:.15s;user-select:none}
+.day-chip:hover{border-color:var(--mint)}
+.day-chip.on{border-color:var(--mint);background:var(--mint-soft)}
+.day-chip input{width:16px;height:16px;accent-color:var(--mint)}
+.day-chip.disabled{opacity:.5;cursor:not-allowed;background:rgba(225,6,0,.06);border-color:rgba(225,6,0,.3)}
+.day-chip.disabled:hover{border-color:rgba(225,6,0,.3)}
+.day-chip .d-full{font-style:normal;color:var(--red-2);font-weight:700;font-size:12px}
+.day-chip .d-near{font-style:normal;color:var(--amber);font-weight:700;font-size:12px}
+.dp-note{font-size:12.5px;color:var(--txt-dim);background:var(--mint-soft);border:1px solid rgba(111,255,232,.25);border-radius:8px;padding:9px 12px}
+.pkg-badge-full{display:inline-block;margin-left:8px;font-size:11px;font-weight:800;letter-spacing:.5px;color:#fff;background:var(--red);border-radius:6px;padding:2px 8px;vertical-align:middle}
+.opt.opt-disabled{opacity:.55;cursor:not-allowed}
+.opt.opt-disabled:hover{border-color:var(--line-2)}
+.opt.opt-disabled .day-pick{display:none}
+.opt.opt-disabled .opt-price{color:var(--txt-faint)}
+
+/* ---------- Radio group (tshirt / consent) ---------- */
+.radio-row{display:flex;flex-wrap:wrap;gap:12px}
+.radio-opt{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line-2);border-radius:10px;padding:13px 16px;cursor:pointer;background:var(--bg);transition:.15s;font-size:14.5px}
+.radio-opt:hover{border-color:var(--txt-dim)}
+.radio-opt.sel{border-color:var(--mint);background:var(--mint-soft);box-shadow:0 0 0 3px rgba(111,255,232,.14)}
+.radio-opt input{width:18px;height:18px;accent-color:var(--mint);flex:0 0 auto}
+
+/* ---------- Parking ---------- */
+#parkFields{display:flex;flex-direction:column;gap:14px}
+.park-empty{font-size:13px;color:var(--txt-faint);font-style:italic}
+
+/* ---------- Buffet ---------- */
+.buffet-img{border-radius:12px;overflow:hidden;border:1px solid var(--line-2);margin-bottom:18px;background:var(--panel-2)}
+.buffet-img img{display:block;width:100%;height:auto}
+.buffet-ph{aspect-ratio:16/7;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--txt-faint);background:var(--carbon)}
+.buffet-ph svg{width:48px;height:48px;color:var(--mint)}
+.buffet-ph span{font-size:13px;letter-spacing:1px}
+
+/* ---------- Consent ---------- */
+.consent-text{font-size:13px;color:var(--txt-dim);line-height:1.75;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+.consent-text p{margin:0 0 10px}
+.consent-text p:last-child{margin-bottom:0}
+.consent-text a{color:var(--mint);font-weight:600}
+
+/* ---------- Buttons ---------- */
+.btn{
+  border:0;border-radius:9px;padding:13px 22px;font-weight:700;font-size:15px;letter-spacing:.5px;
+  cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:8px;justify-content:center;
+}
+.btn-primary{background:var(--mint-grad);color:var(--mint-ink);box-shadow:0 6px 18px var(--mint-glow)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 26px var(--mint-glow),0 0 0 1px rgba(111,255,232,.4)}
+.btn-block{width:100%}
+.btn-lg{padding:16px 26px;font-size:17px}
+
+/* ---------- Footer ---------- */
+.site-foot{border-top:1px solid var(--line);background:rgba(10,11,13,.6);margin-top:10px}
+.foot-inner{max-width:960px;margin:0 auto;padding:26px clamp(16px,4vw,20px);display:flex;flex-direction:column;gap:6px;color:var(--txt-dim);font-size:13.5px;line-height:1.7}
+.foot-inner .f-title{color:var(--lime);font-weight:700;letter-spacing:2px;font-size:12px;text-transform:uppercase;margin-bottom:4px}
+.foot-inner a{color:var(--mint);text-decoration:none;font-weight:600}
+.foot-copy{text-align:center;color:var(--txt-faint);font-size:11px;padding:16px;letter-spacing:1px;border-top:1px solid var(--line)}
+
+/* ---------- Payment / Summary / Success (su theme) ---------- */
+.page-title{font-size:clamp(22px,4vw,30px);margin:0 0 4px;font-weight:700;letter-spacing:.5px}
+.page-sub{color:var(--txt-dim);margin:0 0 22px;font-size:14px}
+.actions{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+.actions .spacer{flex:1}
+.btn-ghost{background:transparent;border:1px solid var(--line-2);color:var(--txt-dim)}
+.btn-ghost:hover{border-color:var(--txt-dim);color:var(--txt)}
+.hidden{display:none!important}
+.sum-line{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.sum-line .lab{color:var(--txt-dim)}
+.sum-line.total{border-bottom:0;font-size:20px;font-weight:700;padding-top:16px}
+.sum-line.total .val{color:var(--amber)}
+.sum-line.discount .val{color:var(--green)}
+.discount-row{display:flex;gap:10px;margin:16px 0}
+.discount-row .control{flex:1}
+.pay-methods{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px}
+@media(max-width:560px){.pay-methods{grid-template-columns:1fr}}
+.pay-opt{border:1.5px solid var(--line-2);border-radius:11px;padding:18px;cursor:pointer;transition:.15s;background:var(--bg)}
+.pay-opt:hover{border-color:var(--txt-dim)}
+.pay-opt.sel{border-color:var(--mint);background:var(--mint-soft);box-shadow:0 0 0 3px rgba(111,255,232,.14)}
+.pay-opt .p-ico{font-size:26px}
+.pay-opt .p-name{font-weight:700;margin-top:6px}
+.pay-opt .p-desc{font-size:12px;color:var(--txt-dim)}
+.qr-box{text-align:center;padding:18px;border:1px dashed var(--line-2);border-radius:10px;margin-top:14px;background:var(--bg)}
+.qr-img{width:170px;height:170px;background:#fff;border-radius:10px;display:inline-block;padding:10px}
+#taxFields{display:flex;flex-direction:column;gap:16px;margin-top:12px}#taxFields .field{margin-bottom:0}
+.success-wrap{text-align:center;padding:20px 0}
+.success-ico{width:88px;height:88px;border-radius:50%;background:radial-gradient(circle,rgba(37,194,110,.25),transparent 70%);display:grid;place-items:center;margin:0 auto 18px;border:2px solid var(--green);font-size:44px;color:var(--green)}
+.receipt{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;text-align:left;margin:22px auto 0;max-width:460px;overflow:hidden}
+.receipt .r-head{background:var(--carbon);padding:12px 18px;font-weight:700;letter-spacing:2px;font-size:12px;color:var(--txt-dim);border-bottom:1px dashed var(--line-2)}
+.receipt .r-row{display:flex;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--line);font-size:14px}
+.receipt .r-row:last-child{border-bottom:0}
+.receipt .r-row .rl{color:var(--txt-dim)}
+.receipt .r-row .rv{font-weight:700}
+.ref-num{font-family:'Rajdhani',monospace;letter-spacing:2px;color:var(--amber)}
+.done-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.done-actions .btn{min-width:180px;flex:0 1 220px}
+.done-actions .btn svg{width:17px;height:17px}
+@media(max-width:420px){.done-actions .btn{flex:1 1 100%}}
+
+/* ---------- Printable receipt (su-style card) ---------- */
+#printReceipt{display:none}
+@media print{
+  @page{margin:14mm}
+  html,body{background:#fff!important}
+  body>*{display:none!important}
+  #printReceipt{display:block!important;font-family:'Rajdhani','Noto Sans Thai',sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #printReceipt .pr-card{max-width:460px;margin:0 auto;border:1px solid #cfd3da;border-radius:12px;overflow:hidden}
+  #printReceipt .pr-head{background:#0a0b0d;padding:16px 18px 14px;border-bottom:1px dashed #3a3f4a}
+  #printReceipt .pr-logo{height:34px;width:auto;display:block;margin-bottom:8px}
+  #printReceipt .pr-sub{font-size:11px;letter-spacing:2px;color:#c4cad4;font-weight:700}
+  #printReceipt .pr-title{font-size:16px;font-weight:700;color:#111;margin:0;padding:14px 18px 4px}
+  #printReceipt .pr-rows{padding:4px 18px 8px}
+  #printReceipt .pr-row{display:flex;justify-content:space-between;gap:20px;padding:11px 0;border-bottom:1px solid #e4e7ec;font-size:14px;color:#111}
+  #printReceipt .pr-row:last-child{border-bottom:0}
+  #printReceipt .pr-row .prl{color:#666}
+  #printReceipt .pr-row .prv{font-weight:700;text-align:right;white-space:pre-line}
+  #printReceipt .pr-row.total .prv{color:#b8860b}
+  #printReceipt .pr-foot{padding:12px 18px 16px;font-size:10.5px;color:#888;letter-spacing:.5px;text-align:center;border-top:1px dashed #cfd3da}
+}
+
+/* ---------- Toast ---------- */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--panel-2);border:1px solid var(--line-2);color:var(--txt);padding:13px 22px;border-radius:10px;box-shadow:var(--shadow);opacity:0;transition:.25s;z-index:300;font-size:14px;pointer-events:none;max-width:90vw}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{border-color:var(--green)}
+
+/* ---------- Admin login (Ctrl+Shift+Z) ---------- */
+.login-back{position:fixed;inset:0;z-index:255;display:none;place-items:center;padding:20px;overflow:auto;
+  background:
+    radial-gradient(1200px 600px at 50% -200px,rgba(225,6,0,.10),transparent 60%),
+    radial-gradient(900px 520px at 0% 100%,rgba(111,255,232,.07),transparent 60%),
+    var(--bg);}
+.login-back.open{display:grid}
+.login-card{max-width:440px;width:100%}
+.login-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:22px}
+.login-hint{font-size:12px;color:var(--txt-faint);text-align:center;margin:16px 0 0}
+.dash-logout{background:var(--panel-2);border:1px solid var(--line-2);color:var(--txt-dim);height:42px;padding:0 14px;border-radius:11px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:13px;flex:0 0 auto}
+.dash-logout:hover{color:#fff;border-color:var(--red-2)}
+.dash-logout svg{width:17px;height:17px}
+
+/* ---------- Member auth (login / register / profile) ---------- */
+.member-back{position:fixed;inset:0;z-index:245;display:none;flex-direction:column;overflow:auto;
+  background:
+    radial-gradient(1200px 600px at 50% -200px,rgba(225,6,0,.10),transparent 60%),
+    radial-gradient(900px 520px at 0% 100%,rgba(111,255,232,.07),transparent 60%),
+    var(--bg);}
+.member-back.open{display:flex}
+.member-nav{position:sticky;top:0;z-index:3;flex:0 0 auto;width:100%}
+.member-stage{width:100%;min-height:calc(100vh - 69px);display:grid;place-items:center;padding:20px}
+.member-card{max-width:640px;width:100%;margin:auto}
+@media(max-width:640px){.member-stage{min-height:calc(100vh - 61px);padding:14px}}
+.member-close{position:absolute;top:14px;right:16px;background:var(--panel-2);border:1px solid var(--line-2);color:var(--txt-dim);width:34px;height:34px;border-radius:9px;font-size:20px;line-height:1;cursor:pointer;z-index:2}
+.member-close:hover{color:#fff;border-color:var(--mint)}
+.tabs{display:flex;background:var(--bg);border-radius:10px;padding:5px;gap:5px;margin-bottom:24px;border:1px solid var(--line)}
+.tabs button{flex:1;background:transparent;border:0;color:var(--txt-dim);padding:12px;border-radius:7px;font-weight:700;font-size:15px;letter-spacing:.5px;cursor:pointer;transition:.15s}
+.tabs button.active{background:var(--mint-grad);color:var(--mint-ink);box-shadow:0 4px 14px var(--mint-glow)}
+.row-between{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin:4px 0 20px}
+.link{color:var(--mint);text-decoration:none;font-size:13px;font-weight:600;cursor:pointer;background:none;border:0;padding:0}
+.link:hover{text-decoration:underline}
+.password-toggle{width:100%;display:flex;align-items:center;gap:10px;background:var(--panel-2);border:1px solid var(--line-2);color:var(--txt);border-radius:10px;padding:13px 15px;font-weight:700;font-size:14px;cursor:pointer;transition:.15s;text-align:left}
+.password-toggle:hover{border-color:var(--mint);background:var(--mint-soft)}
+.password-toggle .lock-ico{width:18px;height:18px;color:var(--mint);flex:0 0 auto}
+.password-toggle .toggle-label{flex:1}
+.password-toggle .chevron{width:18px;height:18px;color:var(--txt-dim);transition:transform .18s}
+.password-toggle.open .chevron{transform:rotate(180deg)}
+.password-fields{display:flex;flex-direction:column;gap:14px;padding-top:2px}
+.password-fields[hidden]{display:none}
+.upload{border:1.5px dashed var(--line-2);border-radius:10px;padding:16px;text-align:center;cursor:pointer;transition:.15s;background:var(--bg);display:block}
+.upload:hover{border-color:var(--mint);background:var(--mint-soft)}
+.upload input{display:none}
+.upload .u-ico{font-size:24px;line-height:0;color:var(--mint)}
+.upload .u-ico svg{width:30px;height:30px;display:inline-block;vertical-align:middle}
+.upload .u-txt{font-size:13px;color:var(--txt-dim);margin-top:4px}
+.upload .u-file{font-size:12px;color:var(--green);margin-top:6px;word-break:break-all}
+.upload.has-file{border-color:var(--green);border-style:solid}
+.thumb{margin-top:10px;max-height:120px;border-radius:8px;border:1px solid var(--line)}
+.hist-list{display:flex;flex-direction:column;gap:12px}
+.hist-card{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:16px 18px;position:relative;overflow:hidden}
+.hist-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--mint-grad)}
+.hist-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.hist-pkg{font-weight:700;font-size:15.5px}
+.hist-amt{font-weight:800;font-size:17px;color:var(--gold);font-variant-numeric:tabular-nums}
+.hist-days{font-size:13px;color:var(--txt-dim);margin-top:4px}
+.hist-plates{display:flex;align-items:flex-start;gap:8px;margin-top:10px;padding:9px 11px;background:var(--bg);border:1px solid var(--line);border-radius:8px;font-size:12.5px;color:var(--txt-dim);line-height:1.5}
+.hist-plates svg{width:17px;height:17px;color:var(--mint);flex:0 0 auto;margin-top:1px}
+.hist-plates strong{color:var(--txt);font-weight:700}
+.hist-plate-lines{display:flex;flex-direction:column;gap:3px;margin-top:3px}
+.hist-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.hist-ref{font-family:'Rajdhani',monospace;letter-spacing:1px;font-size:12px;color:var(--amber)}
+.hist-date{font-size:12px;color:var(--txt-faint);margin-left:auto}
+.hist-receipt-btn{width:100%;margin-top:12px;background:transparent;border:1px solid var(--line-2);color:var(--mint);border-radius:8px;padding:9px 12px;display:flex;align-items:center;justify-content:center;gap:7px;font-family:inherit;font-weight:700;font-size:12.5px;cursor:pointer;transition:.15s}
+.hist-receipt-btn:hover{border-color:var(--mint);background:var(--mint-soft)}
+.hist-receipt-btn svg{width:16px;height:16px}
+.hist-empty{text-align:center;color:var(--txt-faint);font-size:14px;padding:30px 10px}
+.member-btn{background:var(--panel-2);border:1px solid var(--line-2);color:var(--txt);height:38px;padding:0 14px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:13px;flex:0 0 auto;transition:.15s}
+.member-btn:hover{border-color:var(--mint);color:#fff}
+.member-btn svg{width:16px;height:16px}
+.member-btn[hidden]{display:none}
+@media(max-width:520px){.member-btn .mb-txt{display:none}.member-btn{padding:0;width:38px;justify-content:center}}
+
+/* ---------- Dashboard (Ctrl+Shift+Z) ---------- */
+.dash-back{position:fixed;inset:0;background:var(--bg);z-index:250;display:none;overflow:auto}
+.dash-back.open{display:block}
+.dash-wrap{max-width:1440px;margin:0 auto;padding:22px clamp(14px,3vw,32px) 70px}
+.dash-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.dash-title{font-size:clamp(22px,3vw,28px);font-weight:700;letter-spacing:.5px}
+.dash-title small{display:block;font-size:11px;color:var(--txt-dim);letter-spacing:2px;font-weight:600;margin-top:2px}
+.dash-close{background:var(--panel-2);border:1px solid var(--line-2);color:var(--txt-dim);width:42px;height:42px;border-radius:11px;cursor:pointer;display:grid;place-items:center;flex:0 0 auto}
+.dash-close:hover{color:#fff;border-color:var(--mint)}
+.dash-close svg{width:20px;height:20px}
+.kpi-row{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:26px}
+@media(max-width:760px){.kpi-row{grid-template-columns:1fr}}
+.kpi-card{background:linear-gradient(180deg,var(--panel),var(--bg-2));border:1px solid var(--line);border-radius:14px;padding:20px 22px;position:relative;overflow:hidden}
+.kpi-card::after{content:"";position:absolute;right:-24px;top:-24px;width:96px;height:96px;border-radius:50%;background:var(--mint-soft);opacity:.5}
+.kpi-card .k-ico{width:42px;height:42px;border-radius:11px;background:var(--mint-soft);color:var(--mint);display:grid;place-items:center;margin-bottom:14px;position:relative;z-index:1}
+.kpi-card .k-ico svg{width:22px;height:22px}
+.kpi-card .k-val{font-size:clamp(26px,4vw,34px);font-weight:800;letter-spacing:.5px;position:relative;z-index:1;font-variant-numeric:tabular-nums}
+.kpi-card .k-lab{font-size:13px;color:var(--txt-dim);margin-top:3px;position:relative;z-index:1}
+.table-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.table-tools{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.table-tools .tt-count{font-size:13px;color:var(--txt);font-weight:700}
+.table-tools .tt-hint{font-size:12px;color:var(--txt-faint)}
+.table-tools .tt-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.btn-export{display:inline-flex;align-items:center;gap:7px;background:var(--mint-grad);color:var(--mint-ink);border:0;border-radius:9px;padding:9px 16px;font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 4px 12px var(--mint-glow);transition:.15s}
+.btn-export:hover{transform:translateY(-1px);box-shadow:0 8px 20px var(--mint-glow)}
+.btn-export:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none;filter:grayscale(.4)}
+.btn-export svg{width:16px;height:16px}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.dtable{width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap}
+.dtable th{background:var(--panel-2);color:var(--txt-dim);font-weight:700;text-align:left;padding:11px 13px;border-bottom:1px solid var(--line-2);position:sticky;top:0;z-index:1}
+.dtable td{padding:10px 13px;border-bottom:1px solid var(--line);color:var(--txt);vertical-align:middle}
+.dtable tbody tr:hover td{background:rgba(255,255,255,.025)}
+.dtable td.trunc{max-width:200px;overflow:hidden;text-overflow:ellipsis}
+.dtable .amt{color:var(--amber);font-weight:700;font-variant-numeric:tabular-nums}
+.dtable .empty-row td{text-align:center;color:var(--txt-faint);padding:34px;font-style:italic}
+.badge-tab{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.3px;padding:3px 8px;border-radius:999px;border:1px solid var(--line-2);color:var(--txt-dim)}
+.badge-tab.early{color:var(--lime);border-color:rgba(209,255,3,.4)}
+.ico-btn{background:transparent;border:1px solid var(--line-2);border-radius:7px;width:32px;height:32px;color:var(--amber);cursor:pointer;display:inline-grid;place-items:center;vertical-align:middle}
+.ico-btn:hover{background:rgba(255,180,0,.12);border-color:var(--amber)}
+.ico-btn svg{width:16px;height:16px}
+.pager{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;flex-wrap:wrap;border-top:1px solid var(--line)}
+.pager .pinfo{font-size:12.5px;color:var(--txt-dim)}
+.pager .pbtns{display:flex;gap:4px;flex-wrap:wrap}
+.pager button{min-width:34px;height:34px;padding:0 10px;border:1px solid var(--line-2);background:var(--panel-2);color:var(--txt-dim);border-radius:8px;cursor:pointer;font-weight:700;font-size:13px}
+.pager button:hover:not(:disabled):not(.active){border-color:var(--mint);color:var(--txt)}
+.pager button.active{background:var(--mint);color:var(--mint-ink);border-color:var(--mint)}
+.pager button:disabled{opacity:.35;cursor:not-allowed}
+.dm-back{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(3px);z-index:260;display:none;align-items:center;justify-content:center;padding:16px}
+.dm-back.open{display:flex}
+.dm{background:linear-gradient(180deg,var(--panel),var(--bg-2));border:1px solid var(--line-2);border-radius:14px;max-width:560px;width:100%;max-height:90vh;overflow:auto;position:relative;box-shadow:var(--shadow)}
+.dm-x{position:absolute;top:10px;right:12px;background:var(--panel-2);border:1px solid var(--line-2);color:var(--txt-dim);width:30px;height:30px;border-radius:8px;font-size:19px;line-height:1;cursor:pointer;z-index:2}
+.dm-x:hover{color:#fff;border-color:var(--mint)}
+.dm-body{padding:24px}
+.dm-body h3{margin:0 0 16px;font-size:18px}
+.topbar,.wrap,.site-foot,.member-back,.login-back{display:none!important}
+body{overflow:hidden}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="brand" id="brandHome" href="#" aria-label="Souped Up VIP Village — home">
+    <img src="asset/vip-logo.png" alt="Souped Up VIP Village" class="brand-logo">
+  </a>
+  <div style="display:flex;align-items:center;gap:10px">
+    <button class="member-btn" id="memberBtn" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="mb-txt" id="memberBtnText">เข้าสู่ระบบ</span>
+    </button>
+    <div class="lang-switch">
+      <button data-setlang="th" class="active">TH</button>
+      <button data-setlang="en">EN</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MEMBER AUTH (login / register / profile) ============ -->
+<div class="member-back" id="memberBack">
+  <nav class="topbar member-nav" aria-label="Member navigation">
+    <a class="brand" href="#" aria-label="Souped Up VIP Village — member home">
+      <img src="asset/vip-logo.png" alt="Souped Up VIP Village" class="brand-logo">
+    </a>
+    <div class="lang-switch">
+      <button data-setlang="th" class="active">TH</button>
+      <button data-setlang="en">EN</button>
+    </div>
+  </nav>
+  <div class="member-stage">
+    <div class="member-card card">
+      <div class="speed-line"></div>
+      <button class="member-close" id="memberClose" aria-label="close">×</button>
+      <div class="card-pad" id="memberBody"></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+ <div id="regView">
+  <!-- ============ TOP TABS: Early Bird / Normal Price ============ -->
+  <div class="pkg-tabs" id="pkgTabs">
+    <button data-tab="early" class="active" data-i18n="tab.early">Early Bird</button>
+    <button data-tab="normal" data-i18n="tab.normal">Normal Price</button>
+  </div>
+
+  <!-- ============ 1. BANNER (attachment 1) ============ -->
+  <div class="banner">
+    <img src="asset/vip-banner.png" alt="Souped Up Grand Prix VIP Village" width="2560" height="650">
+  </div>
+
+  <!-- ============ 2. CONTENT / PRICING ============ -->
+  <div class="card">
+    <div class="speed-line"></div>
+    <div class="card-pad">
+      <div class="eyebrow" data-i18n="content.eyebrow">Souped Up VIP Village</div>
+      <div id="contentBlock"></div>
+    </div>
+  </div>
+
+  <!-- ============ 3. VENUE ============ -->
+  <div class="card">
+    <div class="card-pad">
+      <h2 class="sec-title" data-i18n="venue.title">สถานที่จัดงาน</h2>
+      <p class="sec-sub" data-i18n="venue.sub">Venue</p>
+      <div class="venue-grid">
+        <div class="venue-info">
+          <div class="eyebrow" data-i18n="venue.label">สถานที่จัดงาน</div>
+          <div class="v-name" data-i18n="venue.name">บางกอกแดร็ก อเวนิว ประเทศไทย</div>
+          <p class="v-en">Bangkok Drag Avenue, Thailand</p>
+          <a class="map-link" href="https://g.co/kgs/KV6ubAH" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span data-i18n="venue.open">เปิดใน Google Maps</span>
+          </a>
+        </div>
+        <a class="venue-map" href="https://g.co/kgs/KV6ubAH" target="_blank" rel="noopener" title="Bangkok Drag Avenue — Google Maps">
+          <img src="asset/vip-map.png" alt="แผนที่ Bangkok Drag Avenue / Bangkok Drag Avenue map" width="1133" height="802" loading="lazy">
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ REGISTRATION FORM ============ -->
+  <form id="regForm" novalidate>
+
+  <!-- 4. APPLICANT INFO -->
+  <div class="card">
+    <div class="card-pad">
+      <h2 class="sec-title" data-i18n="ap.title">ข้อมูลผู้สมัคร</h2>
+      <p class="sec-sub" data-i18n="ap.sub">Applicant Information</p>
+      <div class="grid">
+        <div class="field">
+          <label data-i18n="ap.name">ชื่อ (Name)<span class="req">*</span></label>
+          <input class="control" name="name" data-i18n-ph="ap.name.ph" required>
+        </div>
+        <div class="field">
+          <label data-i18n="ap.surname">นามสกุล (Surname)<span class="req">*</span></label>
+          <input class="control" name="surname" data-i18n-ph="ap.surname.ph" required>
+        </div>
+        <div class="field">
+          <label data-i18n="ap.phone">เบอร์โทรศัพท์ (Mobile Phone)<span class="req">*</span></label>
+          <input class="control" name="phone" type="tel" inputmode="tel" data-i18n-ph="ap.phone.ph" required>
+        </div>
+        <div class="field">
+          <label data-i18n="ap.email">อีเมล (Email)<span class="req">*</span></label>
+          <input class="control" name="email" type="email" data-i18n-ph="ap.email.ph" required>
+        </div>
+        <div class="field full">
+          <label data-i18n="ap.chan">ช่องทางการติดต่อเพิ่มเติม (Additional contact)</label>
+          <div id="chanBox" style="display:flex;flex-direction:column;gap:10px;margin-top:2px">
+            <div>
+              <label class="checkbox"><input type="checkbox" data-chan="Line"> <span>Line</span></label>
+              <input class="control chan-input" data-chan-input="Line" placeholder="Line ID" style="display:none">
+            </div>
+            <div>
+              <label class="checkbox"><input type="checkbox" data-chan="WeChat"> <span>WeChat</span></label>
+              <input class="control chan-input" data-chan-input="WeChat" placeholder="WeChat ID" style="display:none">
+            </div>
+            <div>
+              <label class="checkbox"><input type="checkbox" data-chan="WhatsApp"> <span>WhatsApp</span></label>
+              <input class="control chan-input" data-chan-input="WhatsApp" placeholder="WhatsApp" style="display:none">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. PACKAGE -->
+  <div class="card">
+    <div class="card-pad">
+      <h2 class="sec-title" data-i18n="pkg.title">ประเภทแพ็กเกจ VIP Village</h2>
+      <p class="sec-sub" data-i18n="pkg.sub">VIP Village Package</p>
+      <div class="pkg-list" id="pkgList"></div>
+    </div>
+  </div>
+
+  <!-- 6. T-SHIRT -->
+  <div class="card">
+    <div class="card-pad">
+      <h2 class="sec-title" data-i18n="shirt.title">ไซส์เสื้อ</h2>
+      <p class="sec-sub" data-i18n="shirt.label">โปรดระบุไซส์เสื้อ (T-Shirt Size)</p>
+      <div class="radio-row">
+        <label class="radio-opt"><input type="radio" name="shirt" value="L"><span data-i18n="shirt.l">L - รอบอก 44" (Chest 44")</span></label>
+        <label class="radio-opt"><input type="radio" name="shirt" value="XL"><span data-i18n="shirt.xl">XL - รอบอก 48" (Chest 48")</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. PARKING -->
+  <div class="card">
+    <div class="card-pad">
+      <h2 class="sec-title" data-i18n="park.title">สำรองพื้นที่จอดรถ</h2>
+      <p class="sec-sub" data-i18n="park.sub">Reserve Parking</p>
+      <div class="info-box">
+        <span class="ico">ⓘ</span>
+        <span data-i18n="park.info">สงวนสิทธิ์ให้จอดเฉพาะเลขทะเบียนที่ลงทะเบียนไว้เท่านั้น / Reserved parking for registered license plates only</span>
+      </div>
+      <div id="parkFields" style="margin-top:14px"></div>
+    </div>
+  </div>
+
+  <!-- 8. BUFFET -->
+  <div class="card">
+    <div class="card-pad">
+      <h2 class="sec-title" data-i18n="buffet.title">อาหารบุฟเฟต์</h2>
+      <p class="sec-sub" data-i18n="buffet.sub">Buffet Catering</p>
+      <div class="buffet-img">
+        <img src="asset/vip-buffet.png" alt="Buffet Catering" width="2560" height="650" loading="lazy">
+      </div>
+      <div class="grid">
+        <div class="field full">
+          <label data-i18n="buffet.avoid">ท่านไม่รับประทานอาหารประเภทใด (What kind of food do you not eat?)</label>
+          <input class="control" name="foodAvoid" data-i18n-ph="buffet.avoid.ph" placeholder="ระบุรายการ หรือเว้นว่าง">
+        </div>
+        <div class="field full">
+          <label data-i18n="buffet.allergy">หากแพ้อาหารประเภทใดโปรดระบุ (If you are allergic to any type of food, please specify.)</label>
+          <input class="control" name="foodAllergy" data-i18n-ph="buffet.allergy.ph" placeholder="ระบุรายการ หรือเว้นว่าง">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. CONSENT -->
+  <div class="card">
+    <div class="card-pad">
+      <h2 class="sec-title" data-i18n="consent.title">ยินยอมให้ข้อมูลส่วนบุคคล</h2>
+      <p class="sec-sub" data-i18n="consent.sub">Information / Consent</p>
+      <div class="consent-text">
+        <p data-i18n="consent.th">ทั้งนี้ข้อมูลส่วนบุคคลดังกล่าวเป็นข้อมูลที่จำเป็นสำหรับการทำงานของบริษัท กรังด์ปรีซ์ อินเตอร์เนชั่นแนล จำกัด (มหาชน) หากไม่มีข้อมูลดังกล่าว อาจส่งผลต่อการให้บริการกับผู้สมัคร ทั้งนี้ผู้สมัครเป็นผู้มีสิทธิเลือกได้ว่า จะบันทึกข้อมูลส่วนบุคคลอื่นใด และยินดีจะเปิดเผยข้อมูลดังกล่าวกับบุคคลหรือหน่วยงานอื่นหรือไม่</p>
+        <p data-i18n="consent.en">The aforementioned personal data is necessary for the operations of Grand Prix International Public Company Limited. Without such data, it may affect the services provided to the applicant. The applicant retains the right to decide whether to provide any additional personal data and whether to consent to the disclosure of such information to other persons or entities.</p>
+        <p><a href="https://www.grandprix.co.th/privacy-policy/" target="_blank" rel="noopener" data-i18n="consent.policy">นโยบายความเป็นส่วนตัว / Privacy Policy</a></p>
+      </div>
+      <div class="radio-row">
+        <label class="radio-opt"><input type="radio" name="consent" value="yes" required><span data-i18n="consent.agree">ยินยอม (I consent)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. SUBMIT -->
+  <button type="submit" class="btn btn-primary btn-block btn-lg" data-i18n="submit">ยืนยันการสมัคร (Submit)</button>
+
+  </form>
+ </div><!-- /#regView -->
+
+ <!-- ============ PAYMENT VIEW ============ -->
+ <div id="payView" hidden>
+   <div class="card"><div class="speed-line"></div><div class="card-pad" id="payScreen"></div></div>
+ </div>
+
+ <!-- ============ DONE VIEW ============ -->
+ <div id="doneView" hidden>
+   <div class="card"><div class="speed-line"></div><div class="card-pad" id="doneScreen"></div></div>
+ </div>
+</div>
+
+<!-- 11. FOOTER -->
+<footer class="site-foot">
+  <div class="foot-inner">
+    <div class="f-title" data-i18n="foot.contact">Contact Center</div>
+    <div>Line : <a href="https://line.me/R/ti/p/@xoautosport" target="_blank" rel="noopener">@xoautosport</a></div>
+    <div><span data-i18n="foot.tel">โทร (Tel)</span> : <a href="tel:0659855145">06-5985-5145</a></div>
+    <div data-i18n="foot.date">วันจันทร์ (Mon.) - ศุกร์ (Fri.) : 08.30 - 17.00 น. (hrs.)</div>
+  </div>
+  <div class="foot-copy">© 2026 NIDSS</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<!-- printable receipt (visible only when printing) -->
+<div id="printReceipt"></div>
+
+<!-- ============ ADMIN LOGIN (Ctrl+Shift+Z) ============ -->
+<div class="login-back" id="loginBack">
+  <div class="login-card card">
+    <div class="speed-line"></div>
+    <div class="card-pad">
+      <div class="login-head">
+        <div>
+          <div class="eyebrow" data-i18n="login.eyebrow">ADMIN</div>
+          <h1 class="page-title" data-i18n="login.title">เข้าสู่ระบบผู้ดูแลระบบ</h1>
+          <p class="page-sub" style="margin:0" data-i18n="login.sub">Admin Login</p>
+        </div>
+        <div class="lang-switch">
+          <button data-setlang="th">TH</button>
+          <button data-setlang="en">EN</button>
+        </div>
+      </div>
+      <form id="loginForm" novalidate>
+        <div class="field full">
+          <label data-i18n="login.user">ชื่อผู้ใช้ (Username)</label>
+          <input class="control" id="lg_user" autocomplete="username" data-i18n-ph="login.user.ph">
+          <div class="err-msg" data-i18n="login.err">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</div>
+        </div>
+        <div class="field full" style="margin-top:14px">
+          <label data-i18n="login.pass">รหัสผ่าน (Password)</label>
+          <input class="control" id="lg_pass" type="password" autocomplete="current-password" data-i18n-ph="login.pass.ph">
+        </div>
+        <div class="actions"><button type="submit" class="btn btn-primary btn-block btn-lg" data-i18n="login.btn">เข้าสู่ระบบ</button></div>
+        <p class="login-hint" data-i18n="login.hint">* เดโม: admin / souped2026</p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DASHBOARD (Ctrl+Shift+Z) ============ -->
+<div class="dash-back" id="dashBack">
+  <div class="dash-wrap">
+    <div class="dash-head">
+      <div class="dash-title" data-i18n-html="dash.title">แดชบอร์ดผู้สมัคร<small>SOUPED UP VIP VILLAGE · DASHBOARD</small></div>
+      <div style="display:flex;align-items:center;gap:12px">
+      <div class="lang-switch">
+        <button data-setlang="th">TH</button>
+        <button data-setlang="en">EN</button>
+      </div>
+      <button class="dash-logout" id="dashLogout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+        <span data-i18n="dash.logout">ออกจากระบบ</span>
+      </button>
+      <button class="dash-close" id="dashClose" title="Ctrl+Shift+Z">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+      </div>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="k-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div class="k-val" id="kpiCount">0</div>
+        <div class="k-lab" data-i18n="dash.count">จำนวนผู้สมัคร</div>
+      </div>
+      <div class="kpi-card">
+        <div class="k-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg></div>
+        <div class="k-val" id="kpiTotal">0</div>
+        <div class="k-lab" data-i18n="dash.total">จำนวนเงินรวม</div>
+      </div>
+    </div>
+    <div class="table-card">
+      <div class="table-tools">
+        <span class="tt-count" id="dashCount"></span>
+        <div class="tt-right">
+          <span class="tt-hint" data-i18n="dash.hint">กด Ctrl+Shift+Z เพื่อปิด</span>
+          <button type="button" class="btn-export" id="dashExport">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            <span data-i18n="dash.export">ส่งออก CSV</span>
+          </button>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table class="dtable" id="dashTable"></table>
+      </div>
+      <div class="pager" id="dashPager"></div>
+    </div>
+  </div>
+</div>
+
+<!-- edit modal -->
+<div class="dm-back" id="dmBack">
+  <div class="dm">
+    <button class="dm-x" id="dmX">×</button>
+    <div class="dm-body" id="dmBody"></div>
+  </div>
+</div>
+
+<script>
+/* ================= State ================= */
+const state = { lang:'th', tab:'early', pkg:null, days:{}, plates:{}, payMethod:'card', tax:false, result:null, dashPage:1 };
+const PAGE_SIZE = 30;
+const el = id => document.getElementById(id);
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+const PRICES = {
+  early:  { p1:3700, p2:7400, p3:7900 },
+  normal: { p1:3900, p2:8400, p3:8900 }
+};
+const PKG_DAYS = { p1:1, p2:2, p3:3 };
+const DAYS = [
+  { id:'d5', th:'5 ธันวาคม 2026', en:'5 December 2026' },
+  { id:'d6', th:'6 ธันวาคม 2026', en:'6 December 2026' },
+  { id:'d7', th:'7 ธันวาคม 2026', en:'7 December 2026' }
+];
+// Per-day seat capacity + mock bookings (demo): d5 full, d6 nearly full, d7 available
+const DAY_CAP = 20;
+const DAY_BOOKED = { d5:20, d6:17, d7:6 };
+const NEAR_LEFT = 3; // "nearly full" when remaining seats <= this
+function dayRemain(id){ return Math.max(0, DAY_CAP - (DAY_BOOKED[id]||0)); }
+function dayStatus(id){ const r = dayRemain(id); return r<=0 ? 'full' : (r<=NEAR_LEFT ? 'near' : 'ok'); }
+function availableDayIds(){ return DAYS.filter(d=>dayStatus(d.id)!=='full').map(d=>d.id); }
+function pkgAvailable(pid){
+  if(pid==='p3') return true; // 3-day is the fixed full-event bundle
+  return availableDayIds().length >= PKG_DAYS[pid]; // 1-/2-day need enough open days
+}
+
+/* ================= i18n ================= */
+const L = {
+  th:{
+    'tab.early':'Early Bird','tab.normal':'Normal Price',
+    'content.eyebrow':'Souped Up VIP Village',
+    'venue.title':'สถานที่จัดงาน','venue.sub':'Venue','venue.label':'สถานที่จัดงาน',
+    'venue.name':'บางกอกแดร็ก อเวนิว ประเทศไทย','venue.open':'เปิดใน Google Maps',
+    'ap.title':'ข้อมูลผู้สมัคร','ap.sub':'Applicant Information',
+    'ap.name':'ชื่อ (Name)','ap.name.ph':'กรอกชื่อ',
+    'ap.surname':'นามสกุล (Surname)','ap.surname.ph':'กรอกนามสกุล',
+    'ap.phone':'เบอร์โทรศัพท์ (Mobile Phone)','ap.phone.ph':'เช่น 08x-xxx-xxxx',
+    'ap.email':'อีเมล (Email)','ap.email.ph':'name@email.com',
+    'ap.chan':'ช่องทางการติดต่อเพิ่มเติม (Additional contact)',
+    'pkg.title':'ประเภทแพ็กเกจ VIP Village','pkg.sub':'VIP Village Package',
+    'pkg.days.label':'จะมาวันไหน? (เลือกได้ {n} วัน)',
+    'pkg.p1':'แพ็กเกจ 1 วัน (1 Day Package)','pkg.p2':'แพ็กเกจ 2 วัน (2 Day Package)','pkg.p3':'แพ็กเกจ 3 วัน (3 Day Package)',
+    'day.full':'(เต็ม)','day.near':'(ใกล้เต็ม)','pkg.full':'เต็ม','pkg.p3.note':'รวมทั้ง 3 วันของงาน (5–7 ธ.ค. 2026) · ระบุทะเบียนรถได้ด้านล่าง',
+    'shirt.title':'ไซส์เสื้อ','shirt.label':'โปรดระบุไซส์เสื้อ (T-Shirt Size)',
+    'shirt.l':'L - รอบอก 44" (Chest 44")','shirt.xl':'XL - รอบอก 48" (Chest 48")',
+    'park.title':'สำรองพื้นที่จอดรถ','park.sub':'Reserve Parking',
+    'park.info':'สงวนสิทธิ์ให้จอดเฉพาะเลขทะเบียนที่ลงทะเบียนไว้เท่านั้น / Reserved parking for registered license plates only',
+    'park.plate':'โปรดระบุทะเบียนรถ (Please Provide License Plate)','park.plate.ph':'ระบุเลขทะเบียนรถ',
+    'park.empty':'กรุณาเลือกวันที่จะเข้าร่วมในหัวข้อแพ็กเกจก่อน',
+    'buffet.title':'อาหารบุฟเฟต์','buffet.sub':'Buffet Catering','buffet.ph':'ภาพอาหารบุฟเฟต์',
+    'buffet.avoid':'ท่านไม่รับประทานอาหารประเภทใด (What kind of food do you not eat?)','buffet.avoid.ph':'ระบุรายการ หรือเว้นว่าง',
+    'buffet.allergy':'หากแพ้อาหารประเภทใดโปรดระบุ (If you are allergic to any type of food, please specify.)','buffet.allergy.ph':'ระบุรายการ หรือเว้นว่าง',
+    'consent.title':'ยินยอมให้ข้อมูลส่วนบุคคล','consent.sub':'ข้อมูลผู้สมัคร (Information)',
+    'consent.th':'ทั้งนี้ข้อมูลส่วนบุคคลดังกล่าวเป็นข้อมูลที่จำเป็นสำหรับการทำงานของบริษัท กรังด์ปรีซ์ อินเตอร์เนชั่นแนล จำกัด (มหาชน) หากไม่มีข้อมูลดังกล่าว อาจส่งผลต่อการให้บริการกับผู้สมัคร ทั้งนี้ผู้สมัครเป็นผู้มีสิทธิเลือกได้ว่า จะบันทึกข้อมูลส่วนบุคคลอื่นใด และยินดีจะเปิดเผยข้อมูลดังกล่าวกับบุคคลหรือหน่วยงานอื่นหรือไม่',
+    'consent.en':'The aforementioned personal data is necessary for the operations of Grand Prix International Public Company Limited. Without such data, it may affect the services provided to the applicant. The applicant retains the right to decide whether to provide any additional personal data and whether to consent to the disclosure of such information to other persons or entities.',
+    'consent.policy':'นโยบายความเป็นส่วนตัว (Privacy Policy)','consent.agree':'ยินยอม (I consent)',
+    'submit':'ยืนยันการสมัคร (Submit)',
+    'foot.contact':'Contact Center','foot.tel':'โทร (Tel)','foot.date':'วันจันทร์ (Mon.) - ศุกร์ (Fri.) : 08.30 - 17.00 น. (hrs.)',
+    'perday':'บาท / วัน','per3':'บาท / 3 วัน','baht':'บาท',
+    'toast.ok':'ส่งข้อมูลการสมัครเรียบร้อยแล้ว ✓','toast.fill':'กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน','toast.consent':'กรุณายินยอมการให้ข้อมูลส่วนบุคคล','toast.pkg':'กรุณาเลือกแพ็กเกจและวันที่เข้าร่วม','toast.days':'กรุณาเลือกวันที่เข้าร่วมให้ครบตามจำนวนวันของแพ็กเกจ',
+    'py.eyebrow':'ชำระเงิน','py.title':'ชำระเงิน','py.sub':'เลือกวิธีการชำระเงิน',
+    'py.days':'วันที่เข้าร่วม','py.pricetab':'ประเภทราคา','sm.total':'ยอดชำระทั้งหมด',
+    'py.card':'บัตรเครดิต','py.card.d':'Visa / Mastercard / JCB','py.qr':'QR / โอนเงิน','py.qr.d':'พร้อมเพย์ / โอนผ่านธนาคาร',
+    'py.tax':'ต้องการออกใบกำกับภาษี','py.tax.name':'ชื่อ-นามสกุล / บริษัท','py.tax.taxid':'เลขประจำตัวผู้เสียภาษี','py.tax.addr':'ที่อยู่สำหรับออกใบกำกับภาษี',
+    'py.card.num':'หมายเลขบัตร','py.card.exp':'วันหมดอายุ (MM/YY)','py.card.cvv':'CVV','py.card.holder':'ชื่อบนบัตร','py.qr.scan':'สแกน QR เพื่อชำระเงิน',
+    'py.terms.t':'เงื่อนไขการชำระเงิน',
+    'py.t1.t':'1. การตรวจสอบยอดเงิน (Verification of the registration fee)',
+    'py.t1.b':'ผู้สมัคร/ผู้ชำระเงิน มีหน้าที่ตรวจสอบยอดเงินที่ต้องชำระให้ถูกต้องครบถ้วนก่อนทำการโอนเงินทุกครั้ง · Please ensure you verify the correct total amount payable before proceeding with any money transfer.',
+    'py.t2.t':'2. การตรวจสอบหลักฐานการโอนเงิน (สลิป) (Verification of proof of payment slip)',
+    'py.t2.b':'กรุณาตรวจสอบความถูกต้องและความชัดเจนของข้อมูลบนสลิปโอนเงิน (เช่น วันที่, เวลา, จำนวนเงิน, บัญชีผู้รับ) ก่อนส่งเป็นหลักฐาน · Kindly verify the accuracy and clarity of the information on your transfer slip before submitting it as proof of payment.',
+    'py.t3.t':'3. นโยบายการคืนเงิน (Refund Policy)',
+    'py.t3.b':'ทางผู้จัดการแข่งขันขอสงวนสิทธิ์ในการไม่คืนเงินค่าสมัครในทุกกรณี · The competition organizer reserves the right to make entry fees non-refundable in all cases.',
+    'py.confirm':'ยืนยันชำระเงิน','btn.back':'ย้อนกลับ',
+    'dn.title':'ชำระเงินสำเร็จ!','dn.sub':'เราได้ส่งอีเมลยืนยันการลงทะเบียนให้คุณแล้ว','dn.email':'ส่งไปที่',
+    'dn.ref':'หมายเลขอ้างอิง','dn.name':'ชื่อผู้สมัคร','dn.pkg':'แพ็กเกจ','dn.days':'วันที่เข้าร่วม','dn.amount':'ยอดที่ชำระ',
+    'dn.new':'ลงทะเบียนรายการใหม่','dn.print':'พิมพ์ใบเสร็จ (PDF)','dn.receipt':'ใบเสร็จรับเงิน · OFFICIAL RECEIPT',
+    'dash.title':'แดชบอร์ดผู้สมัคร<small>SOUPED UP VIP VILLAGE · DASHBOARD</small>',
+    'dash.count':'จำนวนผู้สมัคร','dash.total':'จำนวนเงินรวม','dash.hint':'กด Ctrl+Shift+Z เพื่อปิด',
+    'dash.rows':'รายการ','dash.empty':'ยังไม่มีข้อมูลผู้สมัคร',
+    'dash.edit':'แก้ไขข้อมูลผู้สมัคร','dash.save':'บันทึก','dash.saved':'บันทึกข้อมูลแล้ว ✓','dash.cancel':'ยกเลิก',
+    'dash.h.no':'#','dash.h.name':'ชื่อ','dash.h.surname':'นามสกุล','dash.h.phone':'เบอร์โทร','dash.h.email':'อีเมล','dash.h.pricetab':'ประเภทราคา','dash.h.pkg':'แพ็กเกจ','dash.h.days':'วันที่มา','dash.h.tshirt':'ไซส์เสื้อ','dash.h.contacts':'ช่องทางติดต่อ','dash.h.plates':'ทะเบียนรถ','dash.h.avoid':'อาหารที่ไม่ทาน','dash.h.allergy':'อาหารที่แพ้','dash.h.amount':'ยอดชำระ','dash.h.action':'จัดการ',
+    'dash.showing':'แสดง {a}-{b} จาก {n} รายการ','dash.prev':'ก่อนหน้า','dash.next':'ถัดไป','dash.export':'ส่งออก CSV','dash.exportEmpty':'ยังไม่มีข้อมูลให้ส่งออก','dash.logout':'ออกจากระบบ',
+    'login.eyebrow':'ADMIN','login.title':'เข้าสู่ระบบผู้ดูแลระบบ','login.sub':'Admin Login','login.user':'ชื่อผู้ใช้ (Username)','login.user.ph':'กรอกชื่อผู้ใช้','login.pass':'รหัสผ่าน (Password)','login.pass.ph':'กรอกรหัสผ่าน','login.btn':'เข้าสู่ระบบ','login.err':'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง','login.hint':'* เดโม: ใส่อะไรก็ได้เพื่อเข้าสู่ระบบ',
+    'mem.login':'เข้าสู่ระบบ','mem.account':'บัญชีของฉัน',
+    'mem.tab.register':'สมัครสมาชิก','mem.tab.login':'เข้าสู่ระบบ',
+    'mem.reg.eyebrow':'ยินดีต้อนรับ','mem.reg.title':'สมัครสมาชิก','mem.reg.sub':'สร้างบัญชีเพื่อเลือกซื้อแพ็กเกจ VIP Village',
+    'mem.f.username':'ชื่อผู้ใช้ (Username)','mem.f.username.ph':'เช่น speed_racer',
+    'mem.f.phone':'เบอร์โทรศัพท์ (Mobile Phone)','mem.f.email':'อีเมล (Email)',
+    'mem.f.password':'รหัสผ่าน (Password)','mem.f.password.ph':'อย่างน้อย 6 ตัวอักษร',
+    'mem.f.confirm':'ยืนยันรหัสผ่าน (Confirm Password)','mem.f.confirm.ph':'กรอกรหัสผ่านอีกครั้ง',
+    'mem.btn.register':'สมัครสมาชิก','mem.buy':'เลือกซื้อแพ็กเกจ',
+    'mem.login.eyebrow':'ยินดีต้อนรับ','mem.login.id':'อีเมลหรือชื่อผู้ใช้','mem.login.pass':'รหัสผ่าน (Password)',
+    'mem.login.remember':'จดจำฉันในระบบ','mem.login.forgot':'ลืมรหัสผ่าน?','mem.btn.login':'เข้าสู่ระบบ',
+    'mem.profile.eyebrow':'สมาชิก','mem.profile.title':'บัญชีของฉัน','mem.profile.sub':'ข้อมูลบัญชีของคุณ',
+    'mem.profile.account':'บัญชีของฉัน','mem.profile.history':'ประวัติการซื้อ',
+    'mem.chpw':'เปลี่ยนรหัสผ่าน','mem.newpw':'รหัสผ่านใหม่ (New Password)','mem.chpw.info':'กรอกรหัสผ่านใหม่และยืนยันรหัสผ่านให้ตรงกัน','mem.username.locked':'ชื่อผู้ใช้ไม่สามารถแก้ไขได้',
+    'mem.hist.empty':'ยังไม่มีประวัติการซื้อแพ็กเกจ','mem.hist.plate':'ทะเบียนรถ','mem.hist.receipt':'ดาวน์โหลดใบเสร็จ (PDF)',
+    'mem.edit':'แก้ไขข้อมูล','mem.logout':'ออกจากระบบ','mem.p.none':'—',
+    'v.pwshort':'รหัสผ่านอย่างน้อย 6 ตัวอักษร','v.pwmatch':'รหัสผ่านไม่ตรงกัน',
+    'mem.toast.forgot':'กรุณาติดต่อผู้ดูแลระบบเพื่อรีเซ็ตรหัสผ่าน','mem.toast.needreg':'ยังไม่มีบัญชี กรุณาสมัครสมาชิกก่อน',
+    'mem.toast.registered':'สมัครสมาชิกสำเร็จ ✓','mem.toast.loginok':'เข้าสู่ระบบสำเร็จ ✓','mem.toast.fill':'กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน'
+  },
+  en:{
+    'tab.early':'Early Bird','tab.normal':'Normal Price',
+    'content.eyebrow':'Souped Up VIP Village',
+    'venue.title':'Venue','venue.sub':'สถานที่จัดงาน','venue.label':'Venue',
+    'venue.name':'Bangkok Drag Avenue, Thailand','venue.open':'Open in Google Maps',
+    'ap.title':'Applicant Information','ap.sub':'ข้อมูลผู้สมัคร',
+    'ap.name':'Name (ชื่อ)','ap.name.ph':'Enter your name',
+    'ap.surname':'Surname (นามสกุล)','ap.surname.ph':'Enter your surname',
+    'ap.phone':'Mobile Phone (เบอร์โทรศัพท์)','ap.phone.ph':'e.g. 08x-xxx-xxxx',
+    'ap.email':'Email (อีเมล)','ap.email.ph':'name@email.com',
+    'ap.chan':'Additional contact channels (ช่องทางการติดต่อเพิ่มเติม)',
+    'pkg.title':'VIP Village Package','pkg.sub':'ประเภทแพ็กเกจ',
+    'pkg.days.label':'Which day(s) will you attend? (choose {n})',
+    'pkg.p1':'1 Day Package (แพ็กเกจ 1 วัน)','pkg.p2':'2 Day Package (แพ็กเกจ 2 วัน)','pkg.p3':'3 Day Package (แพ็กเกจ 3 วัน)',
+    'day.full':'(Full)','day.near':'(Nearly full)','pkg.full':'FULL','pkg.p3.note':'Covers all 3 event days (5–7 Dec 2026) · enter license plates below',
+    'shirt.title':'T-Shirt Size','shirt.label':'Please specify T-Shirt Size (โปรดระบุไซส์เสื้อ)',
+    'shirt.l':'L - Chest 44" (รอบอก 44")','shirt.xl':'XL - Chest 48" (รอบอก 48")',
+    'park.title':'Reserve Parking','park.sub':'สำรองพื้นที่จอดรถ',
+    'park.info':'Reserved parking for registered license plates only / สงวนสิทธิ์ให้จอดเฉพาะเลขทะเบียนที่ลงทะเบียนไว้เท่านั้น',
+    'park.plate':'Please Provide License Plate (โปรดระบุทะเบียนรถ)','park.plate.ph':'Enter license plate',
+    'park.empty':'Please select your attendance day(s) in the Package section first.',
+    'buffet.title':'Buffet Catering','buffet.sub':'อาหารบุฟเฟต์','buffet.ph':'Buffet Catering image',
+    'buffet.avoid':'What kind of food do you not eat? (ท่านไม่รับประทานอาหารประเภทใด)','buffet.avoid.ph':'Specify items or leave blank',
+    'buffet.allergy':'If you are allergic to any type of food, please specify. (หากแพ้อาหารประเภทใดโปรดระบุ)','buffet.allergy.ph':'Specify items or leave blank',
+    'consent.title':'Consent to Personal Data','consent.sub':'Information (ข้อมูลผู้สมัคร)',
+    'consent.th':'The aforementioned personal data is necessary for the operations of Grand Prix International Public Company Limited. Without such data, it may affect the services provided to the applicant.',
+    'consent.en':'The applicant retains the right to decide whether to provide any additional personal data and whether to consent to the disclosure of such information to other persons or entities.',
+    'consent.policy':'Privacy Policy (นโยบายความเป็นส่วนตัว)','consent.agree':'I consent (ยินยอม)',
+    'submit':'Submit (ยืนยันการสมัคร)',
+    'foot.contact':'Contact Center','foot.tel':'Tel','foot.date':'Mon. - Fri. : 08.30 - 17.00 hrs.',
+    'perday':'THB / day','per3':'THB / 3 days','baht':'THB',
+    'toast.ok':'Your registration has been submitted ✓','toast.fill':'Please complete all required fields.','toast.consent':'Please provide your consent.','toast.pkg':'Please select a package and attendance day(s).','toast.days':'Please select the required number of day(s) for your package.',
+    'py.eyebrow':'Payment','py.title':'Payment','py.sub':'Choose a payment method',
+    'py.days':'Attendance day(s)','py.pricetab':'Price type','sm.total':'Total Amount',
+    'py.card':'Credit Card','py.card.d':'Visa / Mastercard / JCB','py.qr':'QR / Transfer','py.qr.d':'PromptPay / Bank transfer',
+    'py.tax':'Request a tax invoice','py.tax.name':'Name / Company','py.tax.taxid':'Tax ID','py.tax.addr':'Address for tax invoice',
+    'py.card.num':'Card Number','py.card.exp':'Expiry (MM/YY)','py.card.cvv':'CVV','py.card.holder':'Cardholder Name','py.qr.scan':'Scan the QR to pay',
+    'py.terms.t':'Payment Terms',
+    'py.t1.t':'1. Verification of the registration fee',
+    'py.t1.b':'Please ensure you verify the correct total amount payable before proceeding with any money transfer.',
+    'py.t2.t':'2. Verification of proof of payment slip',
+    'py.t2.b':'Kindly verify the accuracy and clarity of the information on your transfer slip (e.g., date, time, amount, recipient account) before submitting it as proof of payment.',
+    'py.t3.t':'3. Refund Policy',
+    'py.t3.b':'The competition organizer reserves the right to make entry fees non-refundable in all cases.',
+    'py.confirm':'Confirm Payment','btn.back':'Back',
+    'dn.title':'Payment Successful!','dn.sub':'A confirmation email has been sent to you.','dn.email':'Sent to',
+    'dn.ref':'Reference No.','dn.name':'Applicant','dn.pkg':'Package','dn.days':'Attendance day(s)','dn.amount':'Amount Paid',
+    'dn.new':'Register another entry','dn.print':'Print receipt (PDF)','dn.receipt':'OFFICIAL RECEIPT · ใบเสร็จรับเงิน',
+    'dash.title':'Applicants Dashboard<small>SOUPED UP VIP VILLAGE · DASHBOARD</small>',
+    'dash.count':'Applicants','dash.total':'Total Amount','dash.hint':'Press Ctrl+Shift+Z to close',
+    'dash.rows':'record(s)','dash.empty':'No applicants yet',
+    'dash.edit':'Edit applicant','dash.save':'Save','dash.saved':'Saved ✓','dash.cancel':'Cancel',
+    'dash.h.no':'#','dash.h.name':'Name','dash.h.surname':'Surname','dash.h.phone':'Phone','dash.h.email':'Email','dash.h.pricetab':'Price type','dash.h.pkg':'Package','dash.h.days':'Days','dash.h.tshirt':'T-Shirt','dash.h.contacts':'Contacts','dash.h.plates':'License plate','dash.h.avoid':'Food avoided','dash.h.allergy':'Allergies','dash.h.amount':'Amount','dash.h.action':'Manage',
+    'dash.showing':'Showing {a}-{b} of {n}','dash.prev':'Prev','dash.next':'Next','dash.export':'Export CSV','dash.exportEmpty':'No data to export','dash.logout':'Log out',
+    'login.eyebrow':'ADMIN','login.title':'Admin Login','login.sub':'เข้าสู่ระบบผู้ดูแลระบบ','login.user':'Username (ชื่อผู้ใช้)','login.user.ph':'Enter username','login.pass':'Password (รหัสผ่าน)','login.pass.ph':'Enter password','login.btn':'Sign In','login.err':'Invalid username or password','login.hint':'* Demo: enter anything to sign in',
+    'mem.login':'Sign In','mem.account':'My Account',
+    'mem.tab.register':'Register','mem.tab.login':'Sign In',
+    'mem.reg.eyebrow':'Welcome','mem.reg.title':'Create account','mem.reg.sub':'Create an account to buy VIP Village packages',
+    'mem.f.username':'Username (ชื่อผู้ใช้)','mem.f.username.ph':'e.g. speed_racer',
+    'mem.f.phone':'Mobile Phone (เบอร์โทรศัพท์)','mem.f.email':'Email (อีเมล)',
+    'mem.f.password':'Password (รหัสผ่าน)','mem.f.password.ph':'At least 6 characters',
+    'mem.f.confirm':'Confirm Password (ยืนยันรหัสผ่าน)','mem.f.confirm.ph':'Re-enter your password',
+    'mem.btn.register':'Register','mem.buy':'Choose a package',
+    'mem.login.eyebrow':'Welcome','mem.login.id':'Email or Username','mem.login.pass':'Password',
+    'mem.login.remember':'Remember me','mem.login.forgot':'Forgot password?','mem.btn.login':'Sign In',
+    'mem.profile.eyebrow':'Member','mem.profile.title':'My Account','mem.profile.sub':'Your account information',
+    'mem.profile.account':'My Account','mem.profile.history':'Purchase History',
+    'mem.chpw':'Change password','mem.newpw':'New Password (รหัสผ่านใหม่)','mem.chpw.info':'Enter and confirm your new password.','mem.username.locked':'Username cannot be changed.',
+    'mem.hist.empty':'No package purchases yet','mem.hist.plate':'License plate','mem.hist.receipt':'Download receipt (PDF)',
+    'mem.edit':'Edit info','mem.logout':'Log out','mem.p.none':'—',
+    'v.pwshort':'Password must be at least 6 characters','v.pwmatch':'Passwords do not match',
+    'mem.toast.forgot':'Please contact the admin to reset your password','mem.toast.needreg':'No account yet — please register first',
+    'mem.toast.registered':'Registered successfully ✓','mem.toast.loginok':'Signed in ✓','mem.toast.fill':'Please complete all required fields'
+  }
+};
+function t(k){ return (L[state.lang][k] !== undefined ? L[state.lang][k] : k); }
+function fmt(n){ return n.toLocaleString(state.lang==='th'?'th-TH':'en-US'); }
+function money(n){ return fmt(n)+' '+t('baht'); }
+
+/* ================= Content block ================= */
+function renderContent(){
+  const p = PRICES[state.tab];
+  const box = document.getElementById('contentBlock');
+  if(state.tab==='early'){
+    const intro = state.lang==='th'
+      ? 'Souped Up VIP Village พร้อมให้จับจองแล้ววันนี้ กับโปรแกรม Early Bird สุดคุ้ม'
+      : 'Souped Up VIP Village is open for booking today with the great-value Early Bird program.';
+    const c1 = state.lang==='th'
+      ? 'โปรแกรม Early Bird จอง และชำระภายในวันนี้ - 7 พฤศจิกายน 2568 เท่านั้น'
+      : 'Early Bird: book and pay by today – 7 November 2025 only.';
+    const c2 = state.lang==='th'
+      ? 'จำกัดสิทธิ์เพียง 20 ที่นั่ง/วัน หรือจนกว่าที่นั่งจะเต็มตามสิทธิ์ที่ระบุ'
+      : 'Limited to 20 seats/day, or until seats are fully booked.';
+    box.innerHTML =
+      '<p class="price-intro">'+intro+'</p>'+
+      '<div class="price-cards">'+
+        card(state.lang==='th'?'แพ็กเกจ 1 วัน':'1 Day Package', p.p1, 'perday')+
+        card(state.lang==='th'?'แพ็กเกจ 3 วัน (ศ.-อา.)':'3 Day Package (Fri–Sun)', p.p3, 'per3')+
+      '</div>'+
+      '<ul class="cond-list"><li>'+c1+'</li><li>'+c2+'</li></ul>';
+  } else {
+    const intro = state.lang==='th'
+      ? 'Souped Up VIP Village พร้อมให้จับจองแล้ววันนี้'
+      : 'Souped Up VIP Village is open for booking today.';
+    box.innerHTML =
+      '<p class="price-intro">'+intro+'</p>'+
+      '<div class="price-cards">'+
+        card(state.lang==='th'?'แพ็กเกจ 1 วัน':'1 Day Package', p.p1, 'perday')+
+        card(state.lang==='th'?'แพ็กเกจ 3 วัน (ศ.-อา.)':'3 Day Package (Fri–Sun)', p.p3, 'per3')+
+      '</div>';
+  }
+}
+function card(name, price, unitKey){
+  return '<div class="price-card"><div class="pc-name">'+name+'</div>'+
+    '<div class="pc-price">'+fmt(price)+' <span style="font-size:16px;color:var(--txt-dim)">'+t('baht')+'</span></div>'+
+    '<div class="pc-unit">'+t(unitKey)+'</div></div>';
+}
+
+/* ================= Package block ================= */
+function renderPackages(){
+  const p = PRICES[state.tab];
+  const list = document.getElementById('pkgList');
+  const defs = [
+    { id:'p1', key:'pkg.p1', price:p.p1 },
+    { id:'p2', key:'pkg.p2', price:p.p2 },
+    { id:'p3', key:'pkg.p3', price:p.p3 }
+  ];
+  const dayTag = id => { const s=dayStatus(id); return s==='full' ? ' <em class="d-full">'+t('day.full')+'</em>' : (s==='near' ? ' <em class="d-near">'+t('day.near')+'</em>' : ''); };
+  list.innerHTML = defs.map(d=>{
+    const maxN = PKG_DAYS[d.id];
+    const avail = pkgAvailable(d.id);
+    const badge = avail ? '' : '<span class="pkg-badge-full">'+t('pkg.full')+'</span>';
+    let dayPick = '';
+    if(d.id === 'p3'){
+      // 3-day = all event days; no day picker, license plates appear in the parking section
+      dayPick = '<div class="day-pick"><div class="dp-note">'+t('pkg.p3.note')+'</div></div>';
+    } else {
+      const inputType = maxN === 1 ? 'radio' : 'checkbox';
+      const daysHtml = DAYS.map(day=>{
+        const st = dayStatus(day.id);
+        const full = st==='full';
+        const on = state.days[d.id] && state.days[d.id][day.id];
+        return '<label class="day-chip'+(on?' on':'')+(full?' disabled':'')+'">'+
+          '<input type="'+inputType+'" name="day-'+d.id+'" data-day="'+d.id+':'+day.id+'"'+(on?' checked':'')+(full?' disabled':'')+'>'+
+          '<span>'+day[state.lang]+dayTag(day.id)+'</span></label>';
+      }).join('');
+      dayPick = '<div class="day-pick"><div class="dp-label">'+t('pkg.days.label').replace('{n}', maxN)+'</div>'+
+        '<div class="day-grid">'+daysHtml+'</div></div>';
+    }
+    return '<label class="opt'+(state.pkg===d.id?' sel':'')+(avail?'':' opt-disabled')+'" data-pkg="'+d.id+'">'+
+      '<div class="opt-top">'+
+        '<input type="radio" name="pkg" value="'+d.id+'"'+(state.pkg===d.id?' checked':'')+(avail?'':' disabled')+'>'+
+        '<span class="opt-name">'+t(d.key)+badge+'</span>'+
+        '<span class="opt-price">'+fmt(d.price)+' <small>'+t('baht')+'</small></span>'+
+      '</div>'+
+      dayPick+
+    '</label>';
+  }).join('');
+
+  // wire radios
+  list.querySelectorAll('input[name="pkg"]').forEach(r=>{
+    r.addEventListener('change', ()=>{
+      state.pkg = r.value;
+      if(r.value === 'p3'){ state.days.p3 = { d5:true, d6:true, d7:true }; } // auto-select all 3 event days
+      renderPackages(); renderParking();
+    });
+  });
+  // wire day checkboxes with max-day + capacity enforcement
+  list.querySelectorAll('input[data-day]').forEach(c=>{
+    c.addEventListener('change', ()=>{
+      const [pid, did] = c.dataset.day.split(':');
+      if(dayStatus(did)==='full'){ c.checked = false; return; }
+      const maxN = PKG_DAYS[pid];
+      if(maxN === 1){
+        state.days[pid] = {}; state.days[pid][did] = true;
+      } else {
+        state.days[pid] = state.days[pid] || {};
+        const chosen = Object.keys(state.days[pid]).filter(k=>state.days[pid][k]).length;
+        if(c.checked && chosen >= maxN){
+          c.checked = false;
+          toast(t('toast.days'));
+          return;
+        }
+        state.days[pid][did] = c.checked;
+      }
+      renderPackages();
+      renderParking();
+    });
+  });
+}
+
+/* ================= Parking block ================= */
+function selectedDays(){
+  if(!state.pkg || !state.days[state.pkg]) return [];
+  return DAYS.filter(d=>state.days[state.pkg][d.id]);
+}
+function renderParking(){
+  const box = document.getElementById('parkFields');
+  const days = selectedDays();
+  if(days.length===0){
+    box.innerHTML = '<div class="park-empty">'+t('park.empty')+'</div>';
+    return;
+  }
+  box.innerHTML = days.map(d=>{
+    const val = state.plates[d.id] ? ' value="'+state.plates[d.id].replace(/"/g,'&quot;')+'"' : '';
+    return '<div class="field">'+
+      '<label>'+t('park.plate')+' — <b style="color:var(--mint)">'+d[state.lang]+'</b></label>'+
+      '<input class="control" data-plate="'+d.id+'" placeholder="'+t('park.plate.ph')+'"'+val+'>'+
+    '</div>';
+  }).join('');
+  box.querySelectorAll('input[data-plate]').forEach(i=>{
+    i.addEventListener('input', ()=>{ state.plates[i.dataset.plate] = i.value; });
+  });
+}
+
+/* ================= Language ================= */
+function applyLang(){
+  document.documentElement.setAttribute('lang', state.lang);
+  document.documentElement.setAttribute('data-lang', state.lang);
+  document.querySelectorAll('[data-setlang]').forEach(b=>b.classList.toggle('active', b.dataset.setlang===state.lang));
+  document.querySelectorAll('[data-i18n]').forEach(n=>{ n.textContent = t(n.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-html]').forEach(n=>{ n.innerHTML = t(n.dataset.i18nHtml); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(n=>{ n.placeholder = t(n.dataset.i18nPh); });
+  renderContent();
+  renderPackages();
+  renderParking();
+  if(el('payView') && !el('payView').hidden) renderPay();
+  if(el('doneView') && !el('doneView').hidden) renderDone();
+  if(el('dashBack') && el('dashBack').classList.contains('open')) renderDashboard();
+  if(el('dmBack') && el('dmBack').classList.contains('open') && editState) renderEditModal();
+  if(typeof updateMemberBtn === 'function') updateMemberBtn();
+  if(el('memberBack') && el('memberBack').classList.contains('open')) renderMember();
+}
+
+/* ================= Views ================= */
+function showView(v){
+  el('regView').hidden  = v!=='reg';
+  el('payView').hidden  = v!=='pay';
+  el('doneView').hidden = v!=='done';
+  window.scrollTo(0,0);
+}
+
+/* ================= Payment ================= */
+function renderPay(){
+  const price = PRICES[state.tab][state.pkg];
+  const days = selectedDays().map(d=>d[state.lang]).join(', ');
+  const isCard = state.payMethod==='card';
+  el('payScreen').innerHTML =
+   '<p class="eyebrow">'+t('py.eyebrow')+'</p>'+
+   '<h1 class="page-title">'+t('py.title')+'</h1>'+
+   '<p class="page-sub">'+t('py.sub')+'</p>'+
+   '<div class="sum-line"><span class="lab">'+t('pkg.'+state.pkg)+'</span><span class="val">'+money(price)+'</span></div>'+
+   '<div class="sum-line"><span class="lab">'+t('py.days')+'</span><span class="val">'+esc(days)+'</span></div>'+
+   '<div class="sum-line"><span class="lab">'+t('py.pricetab')+'</span><span class="val">'+t('tab.'+state.tab)+'</span></div>'+
+   '<div class="sum-line total"><span class="lab">'+t('sm.total')+'</span><span class="val">'+money(price)+'</span></div>'+
+   '<div class="pay-methods" style="margin-top:20px">'+
+     '<div class="pay-opt '+(isCard?'sel':'')+'" data-pay="card"><div class="p-ico">💳</div><div class="p-name">'+t('py.card')+'</div><div class="p-desc">'+t('py.card.d')+'</div></div>'+
+     '<div class="pay-opt '+(!isCard?'sel':'')+'" data-pay="qr"><div class="p-ico">📱</div><div class="p-name">'+t('py.qr')+'</div><div class="p-desc">'+t('py.qr.d')+'</div></div>'+
+   '</div>'+
+   '<div id="payDetail" style="margin-top:6px"></div>'+
+   '<label class="checkbox" style="margin:18px 0 4px"><input type="checkbox" id="taxCb"'+(state.tax?' checked':'')+'> <span>'+t('py.tax')+'</span></label>'+
+   '<div id="taxFields" class="'+(state.tax?'':'hidden')+'">'+
+     '<div class="field full"><label>'+t('py.tax.name')+'</label><input class="control" id="tax_name"></div>'+
+     '<div class="grid"><div class="field"><label>'+t('py.tax.taxid')+'</label><input class="control" id="tax_id"></div>'+
+     '<div class="field"><label>'+t('py.tax.addr')+'</label><input class="control" id="tax_addr"></div></div>'+
+   '</div>'+
+   '<div class="card" style="margin:18px 0;background:var(--panel-2)"><div class="card-pad" style="padding:16px 18px">'+
+     '<h4 style="margin:0 0 10px;font-size:14px">'+t('py.terms.t')+'</h4>'+
+     '<p class="note" style="margin-bottom:10px"><b>'+t('py.t1.t')+'</b><br>'+t('py.t1.b')+'</p>'+
+     '<p class="note" style="margin-bottom:10px"><b>'+t('py.t2.t')+'</b><br>'+t('py.t2.b')+'</p>'+
+     '<p class="note"><b>'+t('py.t3.t')+'</b><br>'+t('py.t3.b')+'</p>'+
+   '</div></div>'+
+   '<div class="actions"><button type="button" class="btn btn-ghost" id="payBack">'+t('btn.back')+'</button>'+
+     '<div class="spacer"></div>'+
+     '<button type="button" class="btn btn-primary btn-lg" id="confirmPay">'+t('py.confirm')+' · '+money(price)+'</button></div>';
+  renderPayDetail();
+  el('payScreen').querySelectorAll('[data-pay]').forEach(o=>o.onclick=()=>{
+    state.payMethod=o.dataset.pay;
+    el('payScreen').querySelectorAll('.pay-opt').forEach(p=>p.classList.toggle('sel',p===o));
+    renderPayDetail();
+  });
+  el('taxCb').onchange=(e)=>{ state.tax=e.target.checked; el('taxFields').classList.toggle('hidden',!e.target.checked); };
+  el('payBack').onclick=()=>showView('reg');
+  el('confirmPay').onclick=()=>finishPayment();
+}
+function renderPayDetail(){
+  const box = el('payDetail'); if(!box) return;
+  if(state.payMethod==='card'){
+    box.innerHTML =
+      '<div class="field full"><label>'+t('py.card.num')+'</label><input class="control" placeholder="0000 0000 0000 0000" inputmode="numeric"></div>'+
+      '<div class="grid"><div class="field"><label>'+t('py.card.exp')+'</label><input class="control" placeholder="MM/YY"></div>'+
+      '<div class="field"><label>'+t('py.card.cvv')+'</label><input class="control" placeholder="123" inputmode="numeric"></div></div>'+
+      '<div class="field full"><label>'+t('py.card.holder')+'</label><input class="control" placeholder="NAME SURNAME"></div>';
+  } else {
+    box.innerHTML = '<div class="qr-box"><div class="qr-img">'+qrSvg()+'</div>'+
+      '<p style="margin:12px 0 0;font-size:13px;color:var(--txt-dim)">'+t('py.qr.scan')+'</p></div>';
+  }
+}
+function qrSvg(){
+  let cells=''; const n=17; let s=12345;
+  const rnd=()=>{ s=(s*1103515245+12345)&0x7fffffff; return s/0x7fffffff; };
+  for(let y=0;y<n;y++)for(let x=0;x<n;x++){
+    const corner=(x<3&&y<3)||(x>=n-3&&y<3)||(x<3&&y>=n-3);
+    if(corner||rnd()>0.55) cells+='<rect x="'+(x*9)+'" y="'+(y*9)+'" width="9" height="9"/>';
+  }
+  return '<svg viewBox="0 0 '+(n*9)+' '+(n*9)+'" width="150" height="150" fill="#000">'+cells+'</svg>';
+}
+function finishPayment(){
+  const price = PRICES[state.tab][state.pkg];
+  const f = el('regForm');
+  const ref = 'SUVIP-'+Math.random().toString(36).slice(2,7).toUpperCase()+'-'+Math.floor(1000+Math.random()*9000);
+  state.result = {
+    ref,
+    name:(f.name.value+' '+f.surname.value).trim(),
+    email:f.email.value.trim(),
+    pkg:t('pkg.'+state.pkg),
+    days:selectedDays().map(d=>d[state.lang]).join(', '),
+    amount:price
+  };
+  showView('done'); renderDone();
+}
+function renderDone(){
+  const r = state.result || {};
+  el('doneScreen').innerHTML =
+   '<div class="success-wrap">'+
+     '<div class="success-ico">🏁</div>'+
+     '<h1 class="page-title">'+t('dn.title')+'</h1>'+
+     '<p class="page-sub">'+t('dn.sub')+(r.email?(' · '+t('dn.email')+' '+esc(r.email)):'')+'</p>'+
+     '<div class="receipt">'+
+       '<div class="r-head">SOUPED UP · VIP VILLAGE · OFFICIAL RECEIPT</div>'+
+       '<div class="r-row"><span class="rl">'+t('dn.ref')+'</span><span class="rv ref-num">'+esc(r.ref)+'</span></div>'+
+       '<div class="r-row"><span class="rl">'+t('dn.name')+'</span><span class="rv">'+esc(r.name||'-')+'</span></div>'+
+       '<div class="r-row"><span class="rl">'+t('dn.pkg')+'</span><span class="rv">'+esc(r.pkg||'-')+'</span></div>'+
+       '<div class="r-row"><span class="rl">'+t('dn.days')+'</span><span class="rv">'+esc(r.days||'-')+'</span></div>'+
+       '<div class="r-row"><span class="rl">'+t('dn.amount')+'</span><span class="rv" style="color:var(--amber)">'+money(r.amount||0)+'</span></div>'+
+     '</div>'+
+     '<div class="done-actions">'+
+       '<button type="button" class="btn btn-ghost" onclick="window.print()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg> '+t('dn.print')+'</button>'+
+       '<button type="button" class="btn btn-primary" id="newReg">'+t('dn.new')+'</button>'+
+     '</div>'+
+   '</div>';
+  el('newReg').onclick=()=>resetAll();
+
+  populatePrintableReceipt(r, t('dn.title'));
+}
+function populatePrintableReceipt(r, title){
+  const prRow = (label,val,cls)=>'<div class="pr-row'+(cls?' '+cls:'')+'"><span class="prl">'+label+'</span><span class="prv">'+(esc(val)||'-')+'</span></div>';
+  el('printReceipt').innerHTML =
+    '<div class="pr-card">'+
+      '<div class="pr-head">'+
+        '<img class="pr-logo" src="asset/vip-logo.png" alt="Souped Up VIP Village">'+
+        '<div class="pr-sub">'+t('dn.receipt')+'</div>'+
+      '</div>'+
+      '<h2 class="pr-title">'+esc(title||t('dn.receipt'))+'</h2>'+
+      '<div class="pr-rows">'+
+        prRow(t('dn.ref'), r.ref)+
+        prRow(t('dn.name'), r.name)+
+        prRow(t('dn.pkg'), r.pkg)+
+        prRow(t('dn.days'), r.days)+
+        (r.plates?prRow(t('mem.hist.plate'), r.plates):'')+
+        prRow(t('dn.amount'), money(r.amount||0), 'total')+
+      '</div>'+
+      '<div class="pr-foot">Souped Up VIP Village · Grand Prix International Public Company Limited'+(r.email?(' · '+esc(r.email)):'')+'</div>'+
+    '</div>';
+}
+function printHistoryReceipt(id){
+  const order = loadRegs().find(r=>r.id===id);
+  if(!order) return;
+  const plates = (order.plates||[]).filter(p=>p.plate).map(p=>dayLabel(p.day)+': '+p.plate).join('\n');
+  populatePrintableReceipt({
+    ref:order.ref||order.id||'',
+    name:((order.name||'')+' '+(order.surname||'')).trim()||'-',
+    email:order.email||'',
+    pkg:t('pkg.'+order.pkg),
+    days:(order.dayIds||[]).map(dayLabel).join(', '),
+    plates,
+    amount:order.amount||0
+  }, t('dn.receipt'));
+  setTimeout(()=>window.print(),60);
+}
+function resetAll(){
+  state.pkg=null; state.days={}; state.plates={}; state.payMethod='card'; state.tax=false; state.result=null;
+  const f = el('regForm'); if(f) f.reset();
+  document.querySelectorAll('.radio-opt').forEach(o=>o.classList.remove('sel'));
+  document.querySelectorAll('input[data-chan]').forEach(c=>{
+    const inp=document.querySelector('input[data-chan-input="'+c.dataset.chan+'"]');
+    if(inp){ inp.style.display='none'; inp.value=''; }
+  });
+  document.querySelectorAll('.field.invalid').forEach(x=>x.classList.remove('invalid'));
+  renderPackages(); renderParking();
+  showView('reg');
+}
+
+/* ================= Tabs ================= */
+function setTab(tab){
+  state.tab = tab;
+  document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+  renderContent();
+  renderPackages();
+}
+
+/* ================= Toast ================= */
+let toastTimer;
+function toast(msg, ok){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.toggle('ok', !!ok);
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove('show'), 3200);
+}
+
+/* ================= Contact channels ================= */
+document.querySelectorAll('input[data-chan]').forEach(c=>{
+  c.addEventListener('change', ()=>{
+    const inp = document.querySelector('input[data-chan-input="'+c.dataset.chan+'"]');
+    inp.style.display = c.checked ? 'block' : 'none';
+    if(!c.checked) inp.value='';
+    else inp.focus();
+  });
+});
+
+/* ================= Radio option highlight (shirt/consent) ================= */
+document.querySelectorAll('.radio-opt input').forEach(r=>{
+  r.addEventListener('change', ()=>{
+    document.querySelectorAll('.radio-opt input[name="'+r.name+'"]').forEach(x=>{
+      x.closest('.radio-opt').classList.toggle('sel', x.checked);
+    });
+  });
+});
+
+/* ================= Tab / lang buttons ================= */
+document.querySelectorAll('[data-setlang]').forEach(b=>b.onclick=()=>{ state.lang=b.dataset.setlang; applyLang(); });
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+el('brandHome').addEventListener('click', e=>{ e.preventDefault(); showView('reg'); window.scrollTo(0,0); });
+
+/* ================= Submit ================= */
+document.getElementById('regForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const form = e.target;
+  let ok = true;
+  ['name','surname','phone','email'].forEach(n=>{
+    const f = form.elements[n];
+    const wrap = f.closest('.field');
+    const bad = !f.value.trim();
+    wrap.classList.toggle('invalid', bad);
+    if(bad) ok=false;
+  });
+  if(!ok){ toast(t('toast.fill')); return; }
+  if(!state.pkg){ toast(t('toast.pkg')); return; }
+  const days = selectedDays();
+  if(days.length !== PKG_DAYS[state.pkg]){ toast(t('toast.days')); return; }
+  if(!form.querySelector('input[name="consent"]:checked')){ toast(t('toast.consent')); return; }
+
+  const chans = [];
+  document.querySelectorAll('input[data-chan]:checked').forEach(c=>{
+    const v = document.querySelector('input[data-chan-input="'+c.dataset.chan+'"]').value.trim();
+    chans.push(c.dataset.chan + (v?': '+v:''));
+  });
+  const shirt = (form.querySelector('input[name="shirt"]:checked')||{}).value || '-';
+
+  const payload = {
+    priceTab: state.tab,
+    name: form.name.value.trim(),
+    surname: form.surname.value.trim(),
+    phone: form.phone.value.trim(),
+    email: form.email.value.trim(),
+    contacts: chans,
+    package: state.pkg,
+    price: PRICES[state.tab][state.pkg],
+    days: days.map(d=>d.en),
+    tshirt: shirt,
+    plates: days.map(d=>({ day:d.en, plate: state.plates[d.id]||'' })),
+    foodAvoid: form.foodAvoid.value.trim(),
+    foodAllergy: form.foodAllergy.value.trim(),
+    consent: true
+  };
+  console.log('Registration payload:', payload);
+
+  // persist for dashboard
+  addReg({
+    id: 'r'+Date.now()+Math.floor(Math.random()*1000),
+    ts: Date.now(),
+    priceTab: state.tab,
+    name: payload.name,
+    surname: payload.surname,
+    phone: payload.phone,
+    email: payload.email,
+    contacts: chans,
+    pkg: state.pkg,
+    dayIds: days.map(d=>d.id),
+    amount: PRICES[state.tab][state.pkg],
+    tshirt: shirt,
+    plates: days.map(d=>({ day:d.id, plate: state.plates[d.id]||'' })),
+    foodAvoid: payload.foodAvoid,
+    foodAllergy: payload.foodAllergy,
+    consent: true,
+    member: (loadMember() ? (loadMember().username || loadMember().email || '') : '')
+  });
+
+  showView('pay');
+  renderPay();
+});
+
+/* ================= Dashboard ================= */
+const REGS_KEY = 'suvip_regs';
+function loadRegs(){ try{ return JSON.parse(localStorage.getItem(REGS_KEY)) || []; }catch(e){ return []; } }
+function saveRegs(a){ try{ localStorage.setItem(REGS_KEY, JSON.stringify(a)); }catch(e){} }
+function addReg(rec){ const a = loadRegs(); a.push(rec); saveRegs(a); }
+function dayLabel(id){ const d = DAYS.find(x=>x.id===id); return d ? d[state.lang] : id; }
+
+/* ---- Mock data (seeded once if empty) ---- */
+function seedMockIfEmpty(){
+  if(loadRegs().length) return;
+  const firsts = ['สมชาย','มาลี','อนุชา','ปิยะ','กมล','ณัฐพล','วรรณา','ธนกร','ศิริพร','ประเสริฐ','จิราพร','อภิสิทธิ์','สุดา','วิชัย','นภา','เอกชัย','พรทิพย์','สมพร','ชัยวัฒน์','รัตนา','ธีระ','กาญจนา','ภาณุ','สุนิสา','ยุทธนา','อรอุมา','ดนัย','พิมพ์ชนก','สุรชัย','เบญจวรรณ'];
+  const lasts = ['ใจดี','สวยงาม','รักชาติ','มั่งมี','ศรีสุข','ทองคำ','บุญมา','แสงทอง','วงศ์ใหญ่','พรหมมา','จันทร์เพ็ญ','เกียรติศักดิ์','สุขสันต์','ไพศาล','อินทร','มณีรัตน์','ธนโชติ','คงเดช','พูนสุข','ยอดเยี่ยม'];
+  const contactsPool = ['Line','WeChat','WhatsApp'];
+  const foods = ['','','','เนื้อวัว','หมู','อาหารทะเล','ผักชี'];
+  const allergies = ['','','','กุ้ง','ถั่ว','นม','ไข่'];
+  const tabs = ['early','normal'];
+  const pkgs = ['p1','p2','p3'];
+  const platePrefix = ['กก','ขข','คค','งง','จจ','ฉฉ','ชช','ญญ'];
+  const pick = a => a[Math.floor(Math.random()*a.length)];
+  const N = 68;
+  const regs = [];
+  for(let i=0;i<N;i++){
+    const tab = pick(tabs);
+    const pkg = pick(pkgs);
+    const need = PKG_DAYS[pkg];
+    const dayIds = ['d5','d6','d7'].slice().sort(()=>Math.random()-0.5).slice(0,need).sort();
+    const contacts = contactsPool.filter(()=>Math.random()>0.55).map(c=>c+': '+(c==='WhatsApp'?'+66':'@')+(800000000+Math.floor(Math.random()*99999999)));
+    const fn = pick(firsts), ln = pick(lasts);
+    regs.push({
+      id:'mock'+i+'-'+Math.floor(Math.random()*100000),
+      ts: Date.now()-i*3600000,
+      priceTab: tab,
+      name: fn, surname: ln,
+      phone: '0'+(6+Math.floor(Math.random()*3))+String(Math.floor(10000000+Math.random()*89999999)),
+      email: 'user'+(1000+i)+'@example.com',
+      contacts,
+      pkg,
+      dayIds,
+      amount: PRICES[tab][pkg],
+      tshirt: Math.random()>0.5?'L':'XL',
+      plates: dayIds.map(d=>({day:d, plate: pick(platePrefix)+' '+String(1000+Math.floor(Math.random()*8999))})),
+      foodAvoid: pick(foods),
+      foodAllergy: pick(allergies),
+      consent: true
+    });
+  }
+  saveRegs(regs);
+}
+
+/* ---- Member purchase history mockup (seeded once per account) ---- */
+function seedMemberHistory(m){
+  const memberId = m && (m.username || m.email || '');
+  if(!memberId) return;
+  let regs = loadRegs();
+  const hasRealHistory = regs.some(r=>r.member===memberId && !r.mockMemberHistory);
+  const beforeClean = regs.length;
+  regs = regs.filter(r=>!(r.member===memberId && r.mockMemberHistory));
+  if(hasRealHistory){
+    if(regs.length!==beforeClean) saveRegs(regs);
+    return;
+  }
+
+  const base = Date.now();
+  const safeId = memberId.replace(/[^a-zA-Z0-9]/g,'').slice(0,12) || 'member';
+  const samples = [
+    { pkg:'p3', dayIds:['d5','d6','d7'], priceTab:'early', amount:PRICES.early.p3, ago:9, ref:'SUVIP-260823-001' }
+  ];
+
+  samples.forEach((s,i)=>regs.push({
+    id:'member-mock-'+safeId+'-'+i,
+    ts:base-(s.ago*86400000),
+    priceTab:s.priceTab,
+    name:m.name||'สมาชิก', surname:m.surname||'',
+    phone:m.phone||'', email:m.email||'', contacts:[],
+    pkg:s.pkg, dayIds:s.dayIds, amount:s.amount,
+    tshirt:'XL', plates:s.dayIds.map(day=>({day,plate:'กท 2026'})), foodAvoid:'', foodAllergy:'', consent:true,
+    member:memberId, ref:s.ref, mockMemberHistory:true
+  }));
+  saveRegs(regs);
+}
+
+const EDIT_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg>';
+
+function renderDashboard(){
+  const regs = loadRegs();
+  el('kpiCount').textContent = fmt(regs.length);
+  el('kpiTotal').textContent = money(regs.reduce((s,r)=>s+(r.amount||0),0));
+  el('dashCount').textContent = fmt(regs.length)+' '+t('dash.rows');
+
+  const totalPages = Math.max(1, Math.ceil(regs.length / PAGE_SIZE));
+  if(state.dashPage > totalPages) state.dashPage = totalPages;
+  if(state.dashPage < 1) state.dashPage = 1;
+  const start = (state.dashPage-1) * PAGE_SIZE;
+  const pageRegs = regs.slice(start, start + PAGE_SIZE);
+
+  const heads = ['no','name','surname','phone','email','pricetab','pkg','days','tshirt','contacts','plates','avoid','allergy','amount','action']
+    .map(h=>'<th>'+t('dash.h.'+h)+'</th>').join('');
+
+  let body;
+  if(regs.length===0){
+    body = '<tr class="empty-row"><td colspan="15">'+t('dash.empty')+'</td></tr>';
+  } else {
+    body = pageRegs.map((r,idx)=>{
+      const i = start + idx;
+      const days = (r.dayIds||[]).map(dayLabel).join(', ');
+      const plates = (r.plates||[]).filter(p=>p.plate).map(p=>dayLabel(p.day)+': '+esc(p.plate)).join(' · ') || '-';
+      const contacts = (r.contacts||[]).map(esc).join(', ') || '-';
+      const tabBadge = '<span class="badge-tab '+(r.priceTab==='early'?'early':'')+'">'+t('tab.'+r.priceTab)+'</span>';
+      return '<tr>'+
+        '<td>'+(i+1)+'</td>'+
+        '<td>'+esc(r.name)+'</td>'+
+        '<td>'+esc(r.surname)+'</td>'+
+        '<td>'+esc(r.phone)+'</td>'+
+        '<td class="trunc" title="'+esc(r.email)+'">'+esc(r.email)+'</td>'+
+        '<td>'+tabBadge+'</td>'+
+        '<td>'+t('pkg.'+r.pkg)+'</td>'+
+        '<td>'+esc(days)+'</td>'+
+        '<td>'+esc(r.tshirt||'-')+'</td>'+
+        '<td class="trunc" title="'+esc(contacts)+'">'+contacts+'</td>'+
+        '<td>'+plates+'</td>'+
+        '<td class="trunc" title="'+esc(r.foodAvoid||'')+'">'+(esc(r.foodAvoid)||'-')+'</td>'+
+        '<td class="trunc" title="'+esc(r.foodAllergy||'')+'">'+(esc(r.foodAllergy)||'-')+'</td>'+
+        '<td class="amt">'+money(r.amount||0)+'</td>'+
+        '<td><button class="ico-btn" data-edit="'+r.id+'" title="'+t('dash.edit')+'">'+EDIT_ICON+'</button></td>'+
+      '</tr>';
+    }).join('');
+  }
+  el('dashTable').innerHTML = '<thead><tr>'+heads+'</tr></thead><tbody>'+body+'</tbody>';
+  el('dashTable').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openEdit(b.dataset.edit));
+
+  renderPager(regs.length, totalPages, start, pageRegs.length);
+}
+function renderPager(total, totalPages, start, shown){
+  const pager = el('dashPager');
+  if(total === 0){ pager.innerHTML=''; return; }
+  const info = t('dash.showing')
+    .replace('{a}', total?fmt(start+1):0)
+    .replace('{b}', fmt(start+shown))
+    .replace('{n}', fmt(total));
+  // page number window
+  let nums = '';
+  const cur = state.dashPage;
+  const win = [];
+  for(let pg=1; pg<=totalPages; pg++){
+    if(pg===1 || pg===totalPages || (pg>=cur-1 && pg<=cur+1)) win.push(pg);
+    else if(win[win.length-1] !== '…') win.push('…');
+  }
+  nums = win.map(pg => pg==='…'
+    ? '<button disabled>…</button>'
+    : '<button class="'+(pg===cur?'active':'')+'" data-page="'+pg+'">'+pg+'</button>'
+  ).join('');
+  pager.innerHTML =
+    '<span class="pinfo">'+info+'</span>'+
+    '<span class="pbtns">'+
+      '<button data-page="'+(cur-1)+'"'+(cur<=1?' disabled':'')+'>‹ '+t('dash.prev')+'</button>'+
+      nums+
+      '<button data-page="'+(cur+1)+'"'+(cur>=totalPages?' disabled':'')+'>'+t('dash.next')+' ›</button>'+
+    '</span>';
+  pager.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{
+    const pg = parseInt(b.dataset.page,10);
+    if(isNaN(pg) || pg<1 || pg>totalPages || pg===state.dashPage) return;
+    state.dashPage = pg;
+    renderDashboard();
+    const sc = document.querySelector('.table-scroll'); if(sc) sc.scrollTop = 0;
+  });
+}
+
+let editState = null;
+function openEdit(id){
+  const r = loadRegs().find(x=>x.id===id);
+  if(!r) return;
+  const days = {}; (r.dayIds||[]).forEach(d=>days[d]=true);
+  const plates = {}; (r.plates||[]).forEach(p=>{ if(p && p.day) plates[p.day]=p.plate||''; });
+  const contacts = {}; (r.contacts||[]).forEach(c=>{ const i=String(c).indexOf(':'); const k=(i>=0?c.slice(0,i):c).trim(); const v=(i>=0?c.slice(i+1):'').trim(); if(k) contacts[k]=v; });
+  editState = {
+    id: r.id, tab: r.priceTab||'early', pkg: r.pkg||'p1', days, plates, contacts,
+    tshirt: r.tshirt||'', name: r.name||'', surname: r.surname||'', phone: r.phone||'', email: r.email||'',
+    foodAvoid: r.foodAvoid||'', foodAllergy: r.foodAllergy||''
+  };
+  el('dmBack').classList.add('open');
+  renderEditModal();
+}
+function edField(id,label,val,full){ return '<div class="field'+(full?' full':'')+'"><label>'+label+'</label><input class="control" id="'+id+'" value="'+esc(val||'')+'"></div>'; }
+function edContactRow(k){
+  const on = editState.contacts[k]!==undefined;
+  return '<div style="margin-bottom:8px">'+
+    '<label class="checkbox"><input type="checkbox" id="c_'+k+'"'+(on?' checked':'')+'> <span>'+k+'</span></label>'+
+    '<input class="control chan-input" id="ci_'+k+'" placeholder="'+k+'" value="'+esc(editState.contacts[k]||'')+'" style="display:'+(on?'block':'none')+'">'+
+  '</div>';
+}
+function edShirtOpt(v,label){ const on=editState.tshirt===v; return '<label class="radio-opt'+(on?' sel':'')+'"><input type="radio" name="e_shirt" value="'+v+'"'+(on?' checked':'')+'><span>'+label+'</span></label>'; }
+function renderEditModal(){
+  const es = editState;
+  el('dmBody').innerHTML =
+    '<h3>'+t('dash.edit')+'</h3>'+
+    '<div class="grid">'+
+      edField('e_name', t('ap.name'), es.name)+
+      edField('e_surname', t('ap.surname'), es.surname)+
+      edField('e_phone', t('ap.phone'), es.phone)+
+      edField('e_email', t('ap.email'), es.email)+
+    '</div>'+
+    '<div class="field full" style="margin-top:14px"><label>'+t('ap.chan')+'</label>'+
+      edContactRow('Line')+edContactRow('WeChat')+edContactRow('WhatsApp')+
+    '</div>'+
+    '<div id="edDyn" style="margin-top:14px"></div>'+
+    '<div class="field full" style="margin-top:14px"><label>'+t('shirt.label')+'</label>'+
+      '<div class="radio-row">'+edShirtOpt('L', t('shirt.l'))+edShirtOpt('XL', t('shirt.xl'))+'</div>'+
+    '</div>'+
+    '<div class="grid" style="margin-top:14px">'+
+      edField('e_avoid', t('buffet.avoid'), es.foodAvoid, true)+
+      edField('e_allergy', t('buffet.allergy'), es.foodAllergy, true)+
+    '</div>'+
+    '<div class="actions"><button type="button" class="btn btn-ghost" id="e_cancel">'+t('dash.cancel')+'</button><div class="spacer"></div><button type="button" class="btn btn-primary" id="e_save">'+t('dash.save')+'</button></div>';
+  // static text bindings
+  [['e_name','name'],['e_surname','surname'],['e_phone','phone'],['e_email','email'],['e_avoid','foodAvoid'],['e_allergy','foodAllergy']]
+    .forEach(([id,key])=>{ const e=el(id); if(e) e.oninput=()=>{ es[key]=e.value; }; });
+  // contacts
+  ['Line','WeChat','WhatsApp'].forEach(k=>{
+    const cb=el('c_'+k), inp=el('ci_'+k);
+    cb.onchange=()=>{ if(cb.checked){ es.contacts[k]=es.contacts[k]||''; inp.style.display='block'; inp.focus(); } else { delete es.contacts[k]; inp.style.display='none'; } };
+    inp.oninput=()=>{ es.contacts[k]=inp.value; };
+  });
+  // shirt
+  el('dmBody').querySelectorAll('input[name="e_shirt"]').forEach(rd=>rd.onchange=()=>{
+    es.tshirt=rd.value;
+    el('dmBody').querySelectorAll('input[name="e_shirt"]').forEach(x=>x.closest('.radio-opt').classList.toggle('sel',x.checked));
+  });
+  renderEdDyn();
+  el('e_cancel').onclick = closeEdit;
+  el('e_save').onclick = saveEdit;
+}
+function renderEdDyn(){
+  const es = editState;
+  const pkgList = ['p1','p2','p3'].map(pid=>{
+    const maxN = PKG_DAYS[pid];
+    const it = maxN===1 ? 'radio' : 'checkbox';
+    const daysHtml = DAYS.map(day=>{
+      const on = es.pkg===pid && es.days[day.id];
+      return '<label class="day-chip'+(on?' on':'')+(es.pkg!==pid?' disabled':'')+'">'+
+        '<input type="'+it+'" name="ed-day-'+pid+'" data-eday="'+pid+':'+day.id+'"'+(on?' checked':'')+(es.pkg!==pid?' disabled':'')+'>'+
+        '<span>'+day[state.lang]+'</span></label>';
+    }).join('');
+    return '<label class="opt'+(es.pkg===pid?' sel':'')+'">'+
+      '<div class="opt-top"><input type="radio" name="ed-pkg" value="'+pid+'"'+(es.pkg===pid?' checked':'')+'>'+
+        '<span class="opt-name">'+t('pkg.'+pid)+'</span>'+
+        '<span class="opt-price">'+fmt(PRICES[es.tab][pid])+' <small>'+t('baht')+'</small></span></div>'+
+      '<div class="day-pick"><div class="dp-label">'+t('pkg.days.label').replace('{n}',maxN)+'</div>'+
+        '<div class="day-grid">'+daysHtml+'</div></div>'+
+    '</label>';
+  }).join('');
+  const selDays = DAYS.filter(d=>es.days[d.id]);
+  const platesHtml = selDays.length
+    ? selDays.map(d=>'<div class="field"><label>'+t('park.plate')+' — <b style="color:var(--mint)">'+d[state.lang]+'</b></label>'+
+        '<input class="control" data-eplate="'+d.id+'" placeholder="'+t('park.plate.ph')+'" value="'+esc(es.plates[d.id]||'')+'"></div>').join('')
+    : '<div class="park-empty">'+t('park.empty')+'</div>';
+  el('edDyn').innerHTML =
+    '<div class="field full"><label>'+t('py.pricetab')+'</label>'+
+      '<select class="control" id="ed_tab"><option value="early"'+(es.tab==='early'?' selected':'')+'>'+t('tab.early')+'</option><option value="normal"'+(es.tab==='normal'?' selected':'')+'>'+t('tab.normal')+'</option></select></div>'+
+    '<div class="field full" style="margin-top:14px"><label>'+t('pkg.title')+'</label><div class="pkg-list">'+pkgList+'</div></div>'+
+    '<div class="field full" style="margin-top:14px"><label>'+t('park.title')+'</label>'+platesHtml+'</div>'+
+    '<div class="sum-line total" style="margin-top:8px"><span class="lab">'+t('sm.total')+'</span><span class="val">'+money(PRICES[es.tab][es.pkg])+'</span></div>';
+  el('ed_tab').onchange=()=>{ es.tab=el('ed_tab').value; renderEdDyn(); };
+  el('edDyn').querySelectorAll('input[name="ed-pkg"]').forEach(rd=>rd.onchange=()=>{
+    es.pkg=rd.value;
+    const maxN=PKG_DAYS[es.pkg];
+    const sel=DAYS.filter(d=>es.days[d.id]).map(d=>d.id).slice(0,maxN);
+    es.days={}; sel.forEach(d=>es.days[d]=true);
+    renderEdDyn();
+  });
+  el('edDyn').querySelectorAll('input[data-eday]').forEach(c=>c.onchange=()=>{
+    const [pid,did]=c.dataset.eday.split(':'); const maxN=PKG_DAYS[pid];
+    if(maxN===1){ es.days={}; es.days[did]=true; }
+    else {
+      const chosen=DAYS.filter(d=>es.days[d.id]).length;
+      if(c.checked && chosen>=maxN){ c.checked=false; toast(t('toast.days')); return; }
+      if(c.checked) es.days[did]=true; else delete es.days[did];
+    }
+    renderEdDyn();
+  });
+  el('edDyn').querySelectorAll('input[data-eplate]').forEach(i=>i.oninput=()=>{ es.plates[i.dataset.eplate]=i.value; });
+}
+function saveEdit(){
+  const es = editState;
+  const selDays = DAYS.filter(d=>es.days[d.id]).map(d=>d.id);
+  if(selDays.length !== PKG_DAYS[es.pkg]){ toast(t('toast.days')); return; }
+  const regs = loadRegs();
+  const r = regs.find(x=>x.id===es.id);
+  if(!r){ closeEdit(); return; }
+  r.name = es.name.trim(); r.surname = es.surname.trim(); r.phone = es.phone.trim(); r.email = es.email.trim();
+  r.priceTab = es.tab; r.pkg = es.pkg;
+  r.dayIds = selDays;
+  r.plates = selDays.map(d=>({ day:d, plate:(es.plates[d]||'').trim() }));
+  r.amount = PRICES[es.tab][es.pkg];
+  r.tshirt = es.tshirt || '-';
+  r.contacts = Object.keys(es.contacts).map(k=>{ const v=(es.contacts[k]||'').trim(); return k+(v?': '+v:''); });
+  r.foodAvoid = es.foodAvoid.trim(); r.foodAllergy = es.foodAllergy.trim();
+  saveRegs(regs);
+  closeEdit();
+  renderDashboard();
+  toast(t('dash.saved'), true);
+}
+function closeEdit(){ el('dmBack').classList.remove('open'); editState=null; }
+
+function openDashboard(){ renderDashboard(); el('dashBack').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeDashboard(){ el('dashBack').classList.remove('open'); document.body.style.overflow=''; }
+
+function exportCSV(){
+  const regs = loadRegs();
+  if(!regs.length){ toast(t('dash.exportEmpty')); return; }
+  const dayEn = id => { const d = DAYS.find(x=>x.id===id); return d ? d.en : id; };
+  const cols = ['no','name','surname','phone','email','pricetab','pkg','days','tshirt','contacts','plates','avoid','allergy','amount'];
+  const header = cols.map(c=>t('dash.h.'+c));
+  const q = v => '"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+  const rows = regs.map((r,i)=>[
+    i+1,
+    r.name||'', r.surname||'', r.phone||'', r.email||'',
+    (r.priceTab==='early'?'Early Bird':'Normal Price'),
+    'pkg '+(r.pkg||'').replace('p','')+' day',
+    (r.dayIds||[]).map(dayEn).join(' | '),
+    r.tshirt||'-',
+    (r.contacts||[]).join(' | '),
+    (r.plates||[]).filter(p=>p&&p.plate).map(p=>dayEn(p.day)+': '+p.plate).join(' | '),
+    r.foodAvoid||'', r.foodAllergy||'',
+    r.amount||0
+  ].map(q).join(','));
+  const csv = '﻿' + [header.map(q).join(','), ...rows].join('\r\n');
+  const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const d = new Date();
+  const stamp = d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
+  a.href = url; a.download = 'suvip-applicants-'+stamp+'.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  toast(t('dash.saved'), true);
+}
+
+/* ---- Admin auth (demo: any input is accepted) ---- */
+const AUTH_KEY = 'suvip_admin_auth';
+function isAuthed(){ try{ return sessionStorage.getItem(AUTH_KEY)==='1'; }catch(e){ return false; } }
+function setAuthed(v){ try{ v ? sessionStorage.setItem(AUTH_KEY,'1') : sessionStorage.removeItem(AUTH_KEY); }catch(e){} }
+function openLogin(){
+  el('loginForm').reset();
+  el('lg_user').closest('.field').classList.remove('invalid');
+  el('loginBack').classList.add('open');
+  document.body.style.overflow='hidden';
+  setTimeout(()=>el('lg_user').focus(), 60);
+}
+function closeLogin(){ el('loginBack').classList.remove('open'); document.body.style.overflow=''; }
+el('loginForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  // demo: accept any input
+  el('lg_user').closest('.field').classList.remove('invalid');
+  setAuthed(true);
+  closeLogin();
+  openDashboard();
+});
+function logout(){ setAuthed(false); closeDashboard(); }
+
+function returnToSharedDashboard(){
+  window.parent.postMessage({type:'suvip-dashboard:main'}, '*');
+}
+
+el('dashClose').onclick = returnToSharedDashboard;
+el('dashExport').onclick = exportCSV;
+el('dashLogout').onclick = returnToSharedDashboard;
+el('dmX').onclick = closeEdit;
+el('dmBack').addEventListener('click', e=>{ if(e.target===el('dmBack')) closeEdit(); });
+
+function toggleAdmin(){
+  if(el('loginBack').classList.contains('open')){ closeLogin(); return; }
+  if(el('dashBack').classList.contains('open')){ closeDashboard(); return; }
+  if(isAuthed()) openDashboard(); else openLogin();
+}
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape'){
+    if(el('dmBack').classList.contains('open')) closeEdit();
+    else returnToSharedDashboard();
+  }
+});
+
+window.addEventListener('message', e=>{
+  if(e.source!==window.parent || !e.data || e.data.type!=='su-dashboard:refresh') return;
+  state.lang=e.data.lang==='en'?'en':'th';
+  applyLang();
+  renderDashboard();
+});
+
+/* ================= Member auth (login / register / profile) ================= */
+const MEMBER_KEY = 'suvip_member';
+const MEMBER_FEATURE_ENABLED = false;
+function loadMember(){ try{ return JSON.parse(localStorage.getItem(MEMBER_KEY)) || null; }catch(e){ return null; } }
+function saveMember(m){ try{ localStorage.setItem(MEMBER_KEY, JSON.stringify(m)); }catch(e){} }
+// In-memory only: a page refresh always returns to the login/register page.
+let memberAuthed = false;
+function isMemberAuthed(){ return memberAuthed; }
+function setMemberAuthed(v){ memberAuthed = !!v; }
+
+const memberState = { screen:'auth', authTab:'register', draft:{}, file:null, profileTab:'account' };
+
+function updateMemberBtn(){
+  const m = loadMember();
+  el('memberBtnText').textContent = (isMemberAuthed() && m)
+    ? (m.name ? (m.name+' '+(m.surname||'')).trim() : t('mem.account'))
+    : t('mem.login');
+}
+function openMember(){
+  const m = loadMember();
+  if(isMemberAuthed() && m){ memberState.screen='profile'; }
+  else { memberState.screen='auth'; memberState.authTab = 'register'; }
+  memberState.draft = m ? Object.assign({}, m) : {};
+  memberState.profileTab = 'account';
+  renderMember();
+  el('memberBack').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeMember(){ el('memberBack').classList.remove('open'); document.body.style.overflow=''; markGateSeen(); }
+function markGateSeen(){ try{ sessionStorage.setItem('suvip_gate','1'); }catch(e){} }
+function gateSeen(){ try{ return sessionStorage.getItem('suvip_gate')==='1'; }catch(e){ return false; } }
+
+function renderMember(){
+  const s = memberState;
+  const body = el('memberBody');
+  if(s.screen==='profile'){
+    const m = loadMember() || {};
+    const pt = memberState.profileTab || 'account';
+    const tabsHtml =
+      '<div class="tabs"><button data-ptab="account" class="'+(pt==='account'?'active':'')+'">'+t('mem.profile.account')+'</button>'+
+      '<button data-ptab="history" class="'+(pt==='history'?'active':'')+'">'+t('mem.profile.history')+'</button></div>';
+
+    let content;
+    if(pt==='account'){
+      content =
+        '<form id="memAcctForm" novalidate style="display:flex;flex-direction:column;gap:16px">'+
+          '<div class="field full"><label>'+t('mem.f.username')+' 🔒</label><input class="control" id="pa_user" value="'+esc(m.username||'')+'" disabled aria-disabled="true"><div class="hint">'+t('mem.username.locked')+'</div></div>'+
+          '<div class="grid">'+
+            '<div class="field"><label>'+t('mem.f.phone')+'</label><input class="control" id="pa_phone" value="'+esc(m.phone||'')+'" type="tel"></div>'+
+            '<div class="field"><label>'+t('mem.f.email')+'</label><input class="control" id="pa_email" value="'+esc(m.email||'')+'" type="email"></div>'+
+          '</div>'+
+          '<button type="button" class="password-toggle" id="mTogglePassword" aria-expanded="false" aria-controls="passwordFields">'+
+            '<svg class="lock-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>'+
+            '<span class="toggle-label">'+t('mem.chpw')+'</span>'+
+            '<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>'+
+          '</button>'+
+          '<div class="password-fields" id="passwordFields" hidden>'+
+            '<div class="grid">'+
+              '<div class="field"><label>'+t('mem.newpw')+'</label><input class="control" id="pa_pass" type="password" autocomplete="new-password" placeholder="'+t('mem.f.password.ph')+'"><div class="err-msg">'+t('v.pwshort')+'</div></div>'+
+              '<div class="field"><label>'+t('mem.f.confirm')+'</label><input class="control" id="pa_confirm" type="password" autocomplete="new-password" placeholder="'+t('mem.f.confirm.ph')+'"><div class="err-msg">'+t('v.pwmatch')+'</div></div>'+
+            '</div>'+
+            '<div class="info-box"><span class="ico">🔒</span><span>'+t('mem.chpw.info')+'</span></div>'+
+          '</div>'+
+          '<div class="actions"><button type="button" class="btn btn-ghost" id="mLogout">'+t('mem.logout')+'</button><div class="spacer"></div><button type="submit" class="btn btn-primary" id="mSaveAcct">'+t('dash.save')+'</button></div>'+
+        '</form>'+
+        '<div style="text-align:center;margin-top:8px"><button type="button" class="link" id="mBuy">'+t('mem.buy')+' →</button></div>';
+    } else {
+      const mid = (m.username||m.email||'');
+      const mine = loadRegs().filter(r=>r.member && r.member===mid).sort((a,b)=>(b.ts||0)-(a.ts||0));
+      if(mine.length===0){
+        content = '<div class="hist-empty">'+t('mem.hist.empty')+'<div style="margin-top:14px"><button type="button" class="btn btn-primary" id="mBuy">'+t('mem.buy')+'</button></div></div>';
+      } else {
+        content = '<div class="hist-list">' + mine.map(r=>{
+          const days = (r.dayIds||[]).map(dayLabel).join(', ');
+          const plateLines = (r.plates||[]).filter(p=>p.plate).map(p=>'<span>'+esc(dayLabel(p.day))+': <b>'+esc(p.plate)+'</b></span>').join('');
+          const dt = new Date(r.ts||Date.now());
+          const dstr = dt.toLocaleDateString(state.lang==='th'?'th-TH':'en-US',{year:'numeric',month:'short',day:'numeric'});
+          return '<div class="hist-card">'+
+              '<div class="hist-top"><span class="hist-pkg">'+t('pkg.'+r.pkg)+'</span><span class="hist-amt">'+money(r.amount||0)+'</span></div>'+
+              '<div class="hist-days">'+esc(days)+'</div>'+
+              (plateLines?'<div class="hist-plates"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14v-5l-2-5H7l-2 5z"/><path d="M5 12h14"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="16.5" cy="17.5" r="1.5"/></svg><span><strong>'+t('mem.hist.plate')+'</strong><span class="hist-plate-lines">'+plateLines+'</span></span></div>':'')+
+              '<div class="hist-meta"><span class="badge-tab '+(r.priceTab==='early'?'early':'')+'">'+t('tab.'+r.priceTab)+'</span>'+
+                '<span class="hist-ref">'+esc(r.ref||r.id||'')+'</span><span class="hist-date">'+esc(dstr)+'</span></div>'+
+              '<button type="button" class="hist-receipt-btn" data-history-receipt="'+esc(r.id)+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>'+t('mem.hist.receipt')+'</button>'+
+            '</div>';
+        }).join('') + '</div>';
+      }
+    }
+
+    body.innerHTML =
+      '<p class="eyebrow">'+t('mem.profile.eyebrow')+'</p>'+
+      '<h1 class="page-title">'+t('mem.profile.title')+'</h1>'+
+      '<p class="page-sub">'+((m.username||m.email||'')?esc(m.username||m.email):t('mem.profile.sub'))+'</p>'+
+      tabsHtml + content;
+
+    el('memberClose').hidden = false;
+    body.querySelectorAll('[data-ptab]').forEach(b=>b.onclick=()=>{ memberState.profileTab=b.dataset.ptab; renderMember(); });
+    body.querySelectorAll('[data-history-receipt]').forEach(b=>b.onclick=()=>printHistoryReceipt(b.dataset.historyReceipt));
+    const buy = el('mBuy'); if(buy) buy.onclick = ()=>{ closeMember(); window.scrollTo(0,0); };
+    const lo = el('mLogout'); if(lo) lo.onclick = ()=>{ setMemberAuthed(false); memberState.screen='auth'; memberState.authTab='login'; memberState.profileTab='account'; renderMember(); updateMemberBtn(); };
+    const pwToggle = el('mTogglePassword');
+    if(pwToggle) pwToggle.onclick = ()=>{
+      const fields = el('passwordFields');
+      const willOpen = fields.hidden;
+      fields.hidden = !willOpen;
+      pwToggle.classList.toggle('open', willOpen);
+      pwToggle.setAttribute('aria-expanded', String(willOpen));
+      if(willOpen) el('pa_pass').focus();
+    };
+    const acctForm = el('memAcctForm');
+    if(acctForm) acctForm.onsubmit = e=>{
+      e.preventDefault();
+      const pw = el('pa_pass').value, cf = el('pa_confirm').value;
+      if(pw || cf){
+        if(pw.length < 6){ const fl=el('pa_pass').closest('.field'); fl.classList.add('invalid'); fl.querySelector('.err-msg').textContent=t('v.pwshort'); toast(t('v.pwshort')); return; }
+        if(pw !== cf){ const fl=el('pa_confirm').closest('.field'); fl.classList.add('invalid'); fl.querySelector('.err-msg').textContent=t('v.pwmatch'); toast(t('v.pwmatch')); return; }
+      }
+      const mm = loadMember() || {};
+      mm.phone = el('pa_phone').value.trim();
+      mm.email = el('pa_email').value.trim();
+      if(pw) mm.password = pw;
+      saveMember(mm); updateMemberBtn();
+      toast(t('dash.saved'), true);
+      renderMember();
+    };
+    return;
+  }
+
+  // auth screen: tabs + (register account | login)
+  const isReg = s.authTab==='register';
+  const tabs =
+    '<div class="tabs"><button data-mtab="register" class="'+(isReg?'active':'')+'">'+t('mem.tab.register')+'</button>'+
+    '<button data-mtab="login" class="'+(!isReg?'active':'')+'">'+t('mem.tab.login')+'</button></div>';
+  const d = s.draft;
+
+  let inner;
+  if(isReg){
+    inner =
+      '<p class="eyebrow">'+t('mem.reg.eyebrow')+'</p>'+
+      '<h1 class="page-title">'+t('mem.reg.title')+'</h1>'+
+      '<p class="page-sub">'+t('mem.reg.sub')+'</p>'+
+      '<form id="memRegForm" novalidate style="display:flex;flex-direction:column;gap:16px">'+
+        '<div class="field full"><label>'+t('mem.f.username')+'<span class="req">*</span></label><input class="control" id="m_user" value="'+esc(d.username||'')+'" autocomplete="username" placeholder="'+t('mem.f.username.ph')+'"><div class="err-msg">'+t('v.required')+'</div></div>'+
+        '<div class="grid">'+
+          '<div class="field"><label>'+t('mem.f.phone')+'<span class="req">*</span></label><input class="control" id="m_phone" type="tel" value="'+esc(d.phone||'')+'" placeholder="08X-XXX-XXXX"><div class="err-msg">'+t('v.required')+'</div></div>'+
+          '<div class="field"><label>'+t('mem.f.email')+'<span class="req">*</span></label><input class="control" id="m_email" type="email" value="'+esc(d.email||'')+'" placeholder="you@email.com"><div class="err-msg">'+t('v.required')+'</div></div>'+
+        '</div>'+
+        '<div class="grid">'+
+          '<div class="field"><label>'+t('mem.f.password')+'<span class="req">*</span></label><input class="control" id="m_pass" type="password" autocomplete="new-password" placeholder="'+t('mem.f.password.ph')+'"><div class="err-msg">'+t('v.pwshort')+'</div></div>'+
+          '<div class="field"><label>'+t('mem.f.confirm')+'<span class="req">*</span></label><input class="control" id="m_confirm" type="password" autocomplete="new-password" placeholder="'+t('mem.f.confirm.ph')+'"><div class="err-msg">'+t('v.pwmatch')+'</div></div>'+
+        '</div>'+
+        '<div class="actions"><div class="spacer"></div><button type="submit" class="btn btn-primary btn-lg btn-block">'+t('mem.btn.register')+'</button></div>'+
+      '</form>';
+  } else {
+    inner =
+      '<p class="eyebrow">'+t('mem.login.eyebrow')+'</p>'+
+      '<h1 class="page-title">'+t('mem.tab.login')+'</h1>'+
+      '<p class="page-sub">Souped Up VIP Village</p>'+
+      '<form id="memLoginForm" novalidate style="display:flex;flex-direction:column;gap:16px">'+
+        '<div class="field full"><label>'+t('mem.login.id')+'</label><input class="control" id="ml_id" value="'+esc(d.username||d.email||'')+'" autocomplete="username"></div>'+
+        '<div class="field full"><label>'+t('mem.login.pass')+'</label><input class="control" id="ml_pass" type="password" autocomplete="current-password"></div>'+
+        '<div class="row-between"><label class="checkbox"><input type="checkbox" id="ml_remember"> <span>'+t('mem.login.remember')+'</span></label>'+
+          '<button type="button" class="link" id="ml_forgot">'+t('mem.login.forgot')+'</button></div>'+
+        '<button type="submit" class="btn btn-primary btn-block btn-lg">'+t('mem.btn.login')+'</button>'+
+      '</form>';
+  }
+  body.innerHTML = tabs + inner;
+
+  // Auth is a mandatory first page (no close) until signed in; profile is dismissable.
+  el('memberClose').hidden = (s.screen !== 'profile');
+
+  body.querySelectorAll('[data-mtab]').forEach(b=>b.onclick=()=>{ memberState.authTab=b.dataset.mtab; renderMember(); });
+
+  if(isReg){
+    const f = el('memRegForm');
+    f.onsubmit = e=>{
+      e.preventDefault();
+      let ok = true;
+      ['m_user','m_phone','m_email','m_pass','m_confirm'].forEach(id=>{
+        const inp=el(id); const bad=!inp.value.trim(); inp.closest('.field').classList.toggle('invalid',bad); if(bad) ok=false;
+      });
+      if(!ok){ toast(t('mem.toast.fill')); return; }
+      const pw = el('m_pass').value, cf = el('m_confirm').value;
+      if(pw.length < 6){ const fl=el('m_pass').closest('.field'); fl.classList.add('invalid'); fl.querySelector('.err-msg').textContent=t('v.pwshort'); toast(t('v.pwshort')); return; }
+      if(pw !== cf){ const fl=el('m_confirm').closest('.field'); fl.classList.add('invalid'); fl.querySelector('.err-msg').textContent=t('v.pwmatch'); toast(t('v.pwmatch')); return; }
+      const newMember = { username:el('m_user').value.trim(), phone:el('m_phone').value.trim(), email:el('m_email').value.trim(), password:pw, ts:Date.now() };
+      saveMember(newMember);
+      seedMemberHistory(newMember);
+      setMemberAuthed(true); updateMemberBtn();
+      toast(t('mem.toast.registered'), true);
+      closeMember(); window.scrollTo(0,0);   // proceed to package selection
+    };
+  } else {
+    el('ml_forgot').onclick = ()=>toast(t('mem.toast.forgot'));
+    el('memLoginForm').onsubmit = e=>{
+      e.preventDefault();
+      // demo: accept any credentials; create a minimal account if none exists yet
+      const idv = el('ml_id').value.trim();
+      if(!loadMember()){
+        saveMember({ username: idv || 'member', phone:'', email:(idv.indexOf('@')>=0?idv:''), password:'', ts:Date.now() });
+      }
+      seedMemberHistory(loadMember());
+      setMemberAuthed(true); updateMemberBtn();
+      toast(t('mem.toast.loginok'), true);
+      closeMember(); window.scrollTo(0,0);   // proceed to package selection
+    };
+  }
+}
+el('memberBtn').onclick = openMember;
+el('memberClose').onclick = closeMember;
+el('memberBack').addEventListener('click', e=>{ if(e.target===el('memberBack') && isMemberAuthed()) closeMember(); });
+
+/* ================= Init ================= */
+seedMockIfEmpty();
+applyLang();
+renderDashboard();
+el('dashBack').classList.add('open');
+document.body.style.overflow='hidden';
+</script>
+</body>
+</html>
