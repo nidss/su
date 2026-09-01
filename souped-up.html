@@ -1068,7 +1068,7 @@ SCREEN_INIT.auth = function(){
       state.applicant.a_email=state.account.email;
       state.applicant.a_phone=state.account.phone;
       toast(t('t.registered'));
-      go('onboard');
+      go('choose');
     } else {
       const rec=DEMO_USERS[el('l_id').value], pw=el('l_password').value;
       clearMemberRegistrationData();
@@ -1076,7 +1076,7 @@ SCREEN_INIT.auth = function(){
       if(rec.kind==='new'){
         state.profile=emptyMemberProfile();
         toast(t('t.loginok'));
-        go('onboard');
+        go('choose');
       }else{
         state.profile=buildProfile(state.account);
         state.applicant=Object.assign({},state.profile.applicant);
@@ -1089,7 +1089,7 @@ SCREEN_INIT.auth = function(){
 };
 function markField(id,msg){const f=el(id).closest('.field');f.classList.add('invalid');const em=f.querySelector('.err-msg');if(em)em.textContent=msg;f.scrollIntoView({behavior:'smooth',block:'center'});}
 
-/* ---- CHOOSE (post-register hub entry) ---- */
+/* ---- CHOOSE (shown before onboarding for new/incomplete accounts) ---- */
 function hasPersonalInfo(){
   const a=state.applicant||{};
   return !!(a.a_name && a.a_surname && a.a_phone && a.a_email && a.a_idaddr);
@@ -1136,7 +1136,7 @@ function startRacerRegistration(backTarget){
   go('terms');
 }
 
-/* ---- ONBOARD (mandatory personal info right after register) ---- */
+/* ---- ONBOARD (mandatory after choosing an action) ---- */
 SCREENS.onboard = function(){
   return `
   <h1 class="page-title">${esc(t('ob.title'))}</h1>
