@@ -678,6 +678,8 @@ const I18N = {
     "rc.classes":"รุ่นการแข่งขัน (เพิ่มได้หลายรุ่น)","rc.classes.note":"แต่ละรุ่นที่เลือก ต้องกรอกข้อมูลรถยนต์ รุ่น/รหัสเครื่องยนต์ แยกกัน",
     "rc.engine":"ข้อมูลรถยนต์ รุ่น/รหัสเครื่องยนต์ (Model / Engine code)",
     "rc.addracer":"เพิ่มนักแข่ง","rc.removeracer":"ลบนักแข่งคนนี้","rc.collapse":"ย่อ/ขยาย",
+    "rc.applicant.type":"ประเภทผู้สมัคร","rc.applicant.select":"— เลือกประเภทผู้สมัคร —",
+    "rc.applicant.person":"ลงทะเบียนในนามบุคคลธรรมดา","rc.applicant.company":"ลงทะเบียนในนามนิติบุคคล",
     "rc.addclass":"เพิ่มรุ่นแข่งขัน","rc.removeclass":"ลบรุ่นนี้","opt.class":"— เลือกรุ่นการแข่งขัน —","v.selectclass":"กรุณาเลือกรุ่นการแข่งขัน",
     "f.idcard.rc":"อัปโหลดบัตรประชาชนนักแข่ง (ID Card Racer)","f.rphoto":"อัปโหลดรูปนักแข่ง (หน้าตรง) (Racer Image)",
     "opt.select":"— กรุณาเลือก —","opt.carno":"— เลือกเบอร์รถ —",
@@ -793,6 +795,8 @@ const I18N = {
     "rc.classes":"Race Classes (select one or more)","rc.classes.note":"Each selected class requires its own Model / Engine code.",
     "rc.engine":"Vehicle Model / Engine Code",
     "rc.addracer":"Add Racer","rc.removeracer":"Remove this racer","rc.collapse":"Collapse / Expand",
+    "rc.applicant.type":"Applicant Type","rc.applicant.select":"— Select applicant type —",
+    "rc.applicant.person":"Register as an individual","rc.applicant.company":"Register as a juristic person",
     "rc.addclass":"Add race class","rc.removeclass":"Remove this class","opt.class":"— Select race class —","v.selectclass":"Please select a race class.",
     "f.idcard.rc":"Upload Racer's ID Card (ID Card Racer)","f.rphoto":"Upload Racer Image (front-facing)",
     "opt.select":"— Please select —","opt.carno":"— Select number —",
@@ -1014,6 +1018,7 @@ function clearMemberRegistrationData(){
   state.tax=false;
   state.files={};
   state.result=null;
+  state.racerApplicantType='';
   state.pendingChoice=null;
   state.profileTab='info';
 }
@@ -1080,7 +1085,7 @@ SCREEN_INIT.auth = function(){
       if(pw.length<6){markField('r_password',t('v.pwshort'));return;}
       if(pw!==cf){markField('r_confirm',t('v.pwmatch'));return;}
       clearMemberRegistrationData();
-      state.account={username:el('r_username').value.trim(),phone:el('r_phone').value.trim(),email:el('r_email').value.trim(),password:pw};
+      state.account={username:el('r_username').value.trim(),phone:el('r_phone').value.trim(),email:el('r_email').value.trim(),password:pw,demoKind:'new'};
       state.profile=emptyMemberProfile();
       // pre-fill applicant/racer where sensible
       state.applicant.a_email=state.account.email;
@@ -1090,7 +1095,7 @@ SCREEN_INIT.auth = function(){
     } else {
       const rec=DEMO_USERS[el('l_id').value], pw=el('l_password').value;
       clearMemberRegistrationData();
-      state.account=Object.assign({},rec.account,{password:pw});
+      state.account=Object.assign({},rec.account,{password:pw,demoKind:rec.kind});
       if(rec.kind==='new'){
         state.profile=emptyMemberProfile();
         toast(t('t.loginok'));
@@ -1098,6 +1103,7 @@ SCREEN_INIT.auth = function(){
       }else{
         state.profile=buildProfile(state.account);
         state.applicant=Object.assign({},state.profile.applicant);
+        state.bank=buildExistingRefundBank();
         toast(t('t.loginok'));
         go('profile');
       }
@@ -1148,6 +1154,7 @@ function startRacerRegistration(backTarget){
   state.terms={privacy:false,rules:false,guarantee:false};
   state.addRacerMode=true;
   state.racer={};
+  state.racerApplicantType='';
   state.racers=[newRacer()];
   state.files={};
   go('terms');
@@ -1530,11 +1537,17 @@ function racerCardHTML(rc,i){
 SCREENS.racer = function(){
   ensureRacers();
   const cards=state.racers.map((rc,i)=>racerCardHTML(rc,i)).join('');
+  const existingAccount=state.account&&state.account.demoKind==='existing';
+  const applicantTypeField=existingAccount?fieldSelect({
+    id:'r_applicant_type',labelKey:'rc.applicant.type',req:true,full:true,placeholderKey:'rc.applicant.select',value:state.racerApplicantType||'',
+    options:[{v:'person',l:t('rc.applicant.person')},{v:'company',l:t('rc.applicant.company')}]
+  }):'';
   return `
   <p class="eyebrow">${esc(t('rc.eyebrow'))}</p>
   <h1 class="page-title">${esc(t('rc.title'))}</h1>
   <p class="page-sub">${esc(t('rc.sub'))}</p>
   <form id="rcForm" novalidate>
+    ${applicantTypeField}
     <div id="racersWrap">${cards}</div>
     <button type="button" class="btn btn-ghost add-racer" id="addRacerBtn">${PLUS_SVG} ${esc(t('rc.addracer'))}</button>
     <div class="actions">
@@ -1554,6 +1567,8 @@ function collectRacerEntries(card, rc){
 }
 function collectRacers(){
   const scope=el('rcForm'); if(!scope)return;
+  const applicantType=el('r_applicant_type');
+  if(applicantType)state.racerApplicantType=applicantType.value;
   scope.querySelectorAll('.racer-card2').forEach(card=>{
     const rid=card.dataset.rid, rc=racerById(rid); if(!rc)return;
     card.querySelectorAll('[data-rk]').forEach(inp=>{ rc[inp.dataset.rk]=inp.value; });
@@ -2045,17 +2060,20 @@ function genProfRacer(){
     idImg:IMG_IDCARD,photo:IMG_RACER};
 }
 function buildProfile(acct){
-  const fn=(acct&&acct.username&&/[ก-๙]/.test(acct.username))?acct.username:dRnd(D_FIRST), ln=dRnd(D_LAST), addr=pfAddr();
-  const ap={a_type:'person',a_date:'199'+(2+Math.floor(Math.random()*7))+'-0'+(1+Math.floor(Math.random()*8))+'-1'+(1+Math.floor(Math.random()*8)),
-    a_name:fn,a_surname:ln,a_person_name:fn,a_person_surname:ln,a_idaddr:addr,a_deliaddr:addr,
+  const fn='พีรพัฒน์',ln='วงศ์วัฒนะ',addr='99/9 อาคารซูพด์ อัพ ถนนรามอินทรา แขวงคันนายาว เขตคันนายาว กรุงเทพมหานคร 10230';
+  const ap={a_type:'company',a_company:'บริษัท ซูพด์ อัพ มอเตอร์สปอร์ต จำกัด',a_taxid:'0105568123456',a_branch:'head',a_branchno:'',
+    a_contact_name:fn,a_contact_surname:ln,a_name:fn,a_surname:ln,a_idaddr:addr,
     a_phone:(acct&&acct.phone)||'08'+(1+Math.floor(Math.random()*8))+'-'+dPad(Math.floor(Math.random()*1000))+'-'+dPad(Math.floor(Math.random()*10000)),
     a_email:(acct&&acct.email)||'you@email.com',
-    chan_line_on:true,chan_line:'line_'+fn.slice(0,3),chan_wechat_on:false,chan_wechat:'',chan_whatsapp_on:false,chan_whatsapp:'',
-    idImg:IMG_IDCARD};
+    chan_line_on:true,chan_line:'soupedup_company',chan_wechat_on:false,chan_wechat:'',chan_whatsapp_on:false,chan_whatsapp:'',
+    companyDoc:{name:'company-certificate.pdf',data:''}};
   const racers=[genProfRacer(),genProfRacer()];
   const history=racers.map((r,i)=>({ref:'SU26-'+Math.random().toString(36).slice(2,7).toUpperCase()+'-'+(1000+Math.floor(Math.random()*9000)),
     racer:r.r_rname+' '+r.r_rsurname,model:r.r_model,carno:r.r_carno,date:'2026-0'+(2+i)+'-'+dPad(8+i*5),amount:17000,status:'paid'}));
   return {applicant:ap,racers,history,vips:[genVip(0)]};
+}
+function buildExistingRefundBank(){
+  return {rf_bank:'__other__',rf_bankother:'ธนาคารกสิกรไทย (KBank)',rf_accno:'123-4-56789-0',rf_accname:'บริษัท ซูพด์ อัพ มอเตอร์สปอร์ต จำกัด',rf_accsur:''};
 }
 function genVip(i){return {holder:dRnd(D_FIRST)+' '+dRnd(D_LAST),type:dRnd(['Grandstand VIP','Pit VIP','Village Pass']),zone:dRnd(['Zone A','Zone B','Zone C','Pit Lane']),qty:1+Math.floor(Math.random()*3),date:'2026-0'+(3+i)+'-'+dPad(10+i*4)};}
 function profInfoHTML(p){
