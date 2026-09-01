@@ -335,6 +335,8 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 
 
 #screen form{display:flex;flex-direction:column;gap:16px}#screen form .field{margin-bottom:0}#a_date{cursor:pointer}
+.applicant-type{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.type-option{display:flex;align-items:center;gap:10px;padding:13px 14px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.025);cursor:pointer;color:var(--txt-dim);font-weight:600}.type-option:has(input:checked){border-color:var(--mint);background:rgba(111,255,232,.08);color:var(--txt)}.type-option input{width:17px;height:17px;accent-color:var(--mint);margin:0}.form-section-title{margin:4px 0 0;font-size:16px;color:var(--txt)}
+@media(max-width:620px){.applicant-type{grid-template-columns:1fr}}
 #taxFields{display:flex;flex-direction:column;gap:16px;margin-top:12px}#taxFields .field{margin-bottom:0}
 /* ================= dashboard ================= */
 .dash-back{position:fixed;inset:0;background:var(--bg);z-index:200;display:none;overflow:auto}
@@ -654,9 +656,15 @@ const I18N = {
     "modal.close":"ปิด","modal.accept":"รับทราบและยอมรับ",
     /* applicant */
     "ap.eyebrow":"ขั้นตอนที่ 3","ap.title":"ข้อมูลผู้สมัคร","ap.sub":"Applicant Information",
+    "ap.type":"ประเภทผู้สมัคร","ap.type.person":"บุคคลธรรมดา","ap.type.company":"นิติบุคคล",
     "f.date":"วัน/เดือน/ปี (Date)","f.name":"ชื่อ (Name)","f.surname":"นามสกุล (Surname)",
     "f.idaddr":"ที่อยู่ตามบัตรประชาชน (Address on ID card)","f.deliaddr":"ที่อยู่สำหรับจัดส่งพัสดุ (Delivery Address)",
     "f.usidaddr":"ใช้ที่อยู่ตามบัตรประชาชน (Use Address on ID Card)",
+    "f.company":"ชื่อนิติบุคคล (Company Name)","f.taxid":"เลขประจำตัวผู้เสียภาษี 13 หลัก","f.branch":"ประเภทสำนักงาน",
+    "f.headoffice":"สำนักงานใหญ่","f.branchoffice":"สาขา","f.branchno":"เลขที่สาขา",
+    "f.contactname":"ชื่อผู้ติดต่อ","f.contactsurname":"นามสกุลผู้ติดต่อ","f.regaddr":"ที่อยู่จดทะเบียนนิติบุคคล",
+    "f.useregaddr":"ใช้ที่อยู่จดทะเบียนนิติบุคคล","f.companydoc":"อัปโหลดหนังสือรับรองนิติบุคคล",
+    "upload.company.hint":"รองรับไฟล์ .pdf .jpg .png",
     "ap.deli.info":"เป็นที่อยู่สำหรับจัดส่งหนังสือ Souped Up ประจำปี (โปรดให้ข้อมูลที่สามารถจัดส่งหนังสือได้) · Address for Annual Souped Up Book Delivery (Please provide information for delivery)",
     "f.chan":"ช่องทางติดต่อเพิ่มเติม","f.idcard.ap":"อัปโหลดรูปบัตรประชาชนผู้สมัคร (ID Card image)",
     "upload.hint":"รองรับไฟล์ .jpg .png","upload.click":"คลิกเพื่ออัปโหลด",
@@ -764,9 +772,15 @@ const I18N = {
     "doc.read":"Read","doc.accepted":"Acknowledged & Accepted","doc.pending":"Not read yet",
     "modal.close":"Close","modal.accept":"Acknowledge & Accept",
     "ap.eyebrow":"Step 3","ap.title":"Applicant Information","ap.sub":"ข้อมูลผู้สมัคร",
+    "ap.type":"Applicant Type","ap.type.person":"Individual","ap.type.company":"Juristic Person",
     "f.date":"Date (DD/MM/YYYY)","f.name":"Name","f.surname":"Surname",
     "f.idaddr":"Address on ID card","f.deliaddr":"Delivery Address",
     "f.usidaddr":"Use Address on ID Card",
+    "f.company":"Registered Company Name","f.taxid":"13-digit Tax ID","f.branch":"Office Type",
+    "f.headoffice":"Head Office","f.branchoffice":"Branch","f.branchno":"Branch Number",
+    "f.contactname":"Contact Person Name","f.contactsurname":"Contact Person Surname","f.regaddr":"Registered Company Address",
+    "f.useregaddr":"Use Registered Company Address","f.companydoc":"Upload Company Registration Certificate",
+    "upload.company.hint":"Supports .pdf .jpg .png",
     "ap.deli.info":"Address for Annual Souped Up Book Delivery (Please provide information for delivery) · ที่อยู่สำหรับจัดส่งหนังสือ Souped Up ประจำปี",
     "f.chan":"Additional Contact Channels","f.idcard.ap":"Upload Applicant's ID Card (ID Card image)",
     "upload.hint":"Supports .jpg .png","upload.click":"Click to upload",
@@ -1157,12 +1171,10 @@ SCREENS.onboard = function(){
 SCREEN_INIT.onboard = function(){
   const form=el('obForm');
   bindApplicantForm(form);
-  if(state.applicant.idImg && !(state.files.a_idcard&&state.files.a_idcard.thumb)){ state.files.a_idcard={name:'idcard.png',thumb:state.applicant.idImg}; refreshUpload('a_idcard'); }
   form.onsubmit=(e)=>{
     e.preventDefault();
     if(!validateScreen(form)){toast(t('v.fixerr'));return;}
     saveApplicant(form);
-    const f=state.files.a_idcard; if(f&&f.thumb)state.applicant.idImg=f.thumb;
     if(state.profile)state.profile.applicant=state.applicant;
     toast(t('prof.saved'));
     const pc=state.pendingChoice; state.pendingChoice=null;
@@ -1268,6 +1280,7 @@ function bindBankAccount(form,prefix){
 }
 function applicantFormInner(){
   const a=state.applicant;
+  const applicantType=a.a_type||'person';
   const chans=[["line","Line"],["wechat","WeChat"],["whatsapp","WhatsApp"]];
   const chanHtml = chans.map(([k,lbl])=>{
     const on=a['chan_'+k+'_on'];
@@ -1277,15 +1290,45 @@ function applicantFormInner(){
     </div>`;
   }).join("");
   return `
-    ${fieldText({id:'a_date',labelKey:'f.date',req:true,type:'date',value:a.a_date||'',full:true})}
-    <div class="grid">
-      ${fieldText({id:'a_name',labelKey:'f.name',req:true,value:a.a_name||''})}
-      ${fieldText({id:'a_surname',labelKey:'f.surname',req:true,value:a.a_surname||''})}
+    <div class="field full">
+      <label>${esc(t('ap.type'))}<span class="req">*</span></label>
+      <div class="applicant-type">
+        <label class="type-option"><input type="radio" name="a_type" value="person" ${applicantType==='person'?'checked':''}/> ${esc(t('ap.type.person'))}</label>
+        <label class="type-option"><input type="radio" name="a_type" value="company" ${applicantType==='company'?'checked':''}/> ${esc(t('ap.type.company'))}</label>
+      </div>
     </div>
-    ${fieldText({id:'a_idaddr',labelKey:'f.idaddr',req:true,value:a.a_idaddr||'',full:true})}
+    <div data-app-type="person" class="${applicantType==='person'?'':'hidden'}" style="display:flex;flex-direction:column;gap:16px">
+      ${fieldText({id:'a_date',labelKey:'f.date',req:true,type:'date',value:a.a_date||'',full:true})}
+      <div class="grid">
+        ${fieldText({id:'a_person_name',labelKey:'f.name',req:true,value:a.a_person_name||a.a_name||''})}
+        ${fieldText({id:'a_person_surname',labelKey:'f.surname',req:true,value:a.a_person_surname||a.a_surname||''})}
+      </div>
+    </div>
+    <div data-app-type="company" class="${applicantType==='company'?'':'hidden'}" style="display:flex;flex-direction:column;gap:16px">
+      <h3 class="form-section-title">${esc(t('ap.type.company'))}</h3>
+      ${fieldText({id:'a_company',labelKey:'f.company',req:true,value:a.a_company||'',full:true})}
+      <div class="grid">
+        ${fieldText({id:'a_taxid',labelKey:'f.taxid',req:true,value:a.a_taxid||''})}
+        ${fieldSelect({id:'a_branch',labelKey:'f.branch',req:true,value:a.a_branch||'head',options:[{v:'head',l:t('f.headoffice')},{v:'branch',l:t('f.branchoffice')}],placeholderKey:'opt.select'})}
+      </div>
+      <div class="field full ${a.a_branch==='branch'?'':'hidden'}" data-branch-wrap>
+        <label>${esc(t('f.branchno'))}<span class="req">*</span></label>
+        <input class="control" id="a_branchno" value="${esc(a.a_branchno||'')}"/>
+        <div class="err-msg">${esc(t('v.required'))}</div>
+      </div>
+      <div class="grid">
+        ${fieldText({id:'a_contact_name',labelKey:'f.contactname',req:true,value:a.a_contact_name||''})}
+        ${fieldText({id:'a_contact_surname',labelKey:'f.contactsurname',req:true,value:a.a_contact_surname||''})}
+      </div>
+    </div>
+    <div class="field full" data-field="a_idaddr">
+      <label id="a_addr_label">${esc(t(applicantType==='company'?'f.regaddr':'f.idaddr'))}<span class="req">*</span></label>
+      <input class="control" id="a_idaddr" data-req value="${esc(a.a_idaddr||'')}"/>
+      <div class="err-msg">${esc(t('v.required'))}</div>
+    </div>
     <div class="field full" data-field="a_deliaddr">
       <label>${esc(t('f.deliaddr'))}<span class="req">*</span></label>
-      <label class="checkbox" style="margin-bottom:8px"><input type="checkbox" id="a_useid"/> ${esc(t('f.usidaddr'))}</label>
+      <label class="checkbox" style="margin-bottom:8px"><input type="checkbox" id="a_useid"/> <span id="a_useid_text">${esc(t(applicantType==='company'?'f.useregaddr':'f.usidaddr'))}</span></label>
       <input class="control" id="a_deliaddr" data-req value="${esc(a.a_deliaddr||'')}"/>
       <div class="info-box"><span class="ico">📦</span><span>${esc(t('ap.deli.info'))}</span></div>
       <div class="err-msg">${esc(t('v.required'))}</div>
@@ -1298,7 +1341,7 @@ function applicantFormInner(){
       <label>${esc(t('f.chan'))}</label>
       <div class="grid">${chanHtml}</div>
     </div>
-    ${fieldUpload({id:'a_idcard',labelKey:'f.idcard.ap',req:true})}
+    ${fieldUpload({id:'a_idcard',labelKey:applicantType==='company'?'f.companydoc':'f.idcard.ap',req:true})}
     <hr style="border:0;border-top:1px solid var(--line);margin:24px 0"/>
     <h3 style="margin:6px 0 2px;font-size:16px">${esc(t('bk.refund.t'))}</h3>
     <p class="page-sub" style="margin-bottom:14px;font-size:12.5px">${esc(t('bk.refund.s'))}</p>
@@ -1306,7 +1349,46 @@ function applicantFormInner(){
 }
 function bindApplicantForm(form){
   bindUploads(form);
+  restoreApplicantUpload();
   bindBankAccount(form,'rf');
+  const typeSections=[...form.querySelectorAll('[data-app-type]')];
+  typeSections.forEach(section=>section.querySelectorAll('[data-req]').forEach(inp=>inp.setAttribute('data-type-req','')));
+  const applyApplicantType=()=>{
+    const checked=form.querySelector('input[name="a_type"]:checked');
+    const type=checked?checked.value:'person';
+    state.applicant.a_type=type;
+    typeSections.forEach(section=>{
+      const active=section.dataset.appType===type;
+      section.classList.toggle('hidden',!active);
+      section.querySelectorAll('[data-type-req]').forEach(inp=>{
+        if(active)inp.setAttribute('data-req','');else inp.removeAttribute('data-req');
+      });
+      if(!active)section.querySelectorAll('.invalid').forEach(field=>field.classList.remove('invalid'));
+    });
+    const addrLabel=el('a_addr_label');
+    if(addrLabel)addrLabel.innerHTML=esc(t(type==='company'?'f.regaddr':'f.idaddr'))+'<span class="req">*</span>';
+    const useText=el('a_useid_text');
+    if(useText)useText.textContent=t(type==='company'?'f.useregaddr':'f.usidaddr');
+    const upload=el('a_idcard');
+    if(upload){
+      upload.accept=type==='company'?'.pdf,.jpg,.jpeg,.png,application/pdf,image/png,image/jpeg':'.jpg,.jpeg,.png,image/png,image/jpeg';
+      const field=upload.closest('.field'), label=field&&field.querySelector(':scope > label'), hint=field&&field.querySelector('.u-txt');
+      if(label)label.innerHTML=esc(t(type==='company'?'f.companydoc':'f.idcard.ap'))+'<span class="req">*</span>';
+      if(hint)hint.textContent=t('upload.click')+' · '+t(type==='company'?'upload.company.hint':'upload.hint');
+    }
+    applyBranchRequirement();
+  };
+  const applyBranchRequirement=()=>{
+    const type=(form.querySelector('input[name="a_type"]:checked')||{}).value||'person';
+    const branch=el('a_branch'), wrap=form.querySelector('[data-branch-wrap]'), input=el('a_branchno');
+    if(!branch||!wrap||!input)return;
+    const required=type==='company'&&branch.value==='branch';
+    wrap.classList.toggle('hidden',!required);
+    if(required)input.setAttribute('data-req','');else{input.removeAttribute('data-req');wrap.classList.remove('invalid');}
+  };
+  form.querySelectorAll('input[name="a_type"]').forEach(radio=>radio.onchange=applyApplicantType);
+  const branch=el('a_branch');if(branch)branch.onchange=applyBranchRequirement;
+  applyApplicantType();
   const dateEl=el('a_date');
   if(dateEl){ const openPicker=()=>{ try{ if(typeof dateEl.showPicker==='function') dateEl.showPicker(); }catch(e){} }; dateEl.addEventListener('click',openPicker); dateEl.addEventListener('focus',openPicker); }
   const useid=el('a_useid'); if(useid)useid.onchange=(e)=>{ if(e.target.checked){ el('a_deliaddr').value=el('a_idaddr').value; } };
@@ -1337,12 +1419,35 @@ SCREEN_INIT.applicant = function(){
 };
 function saveApplicant(form){
   collect(form,state.applicant);
+  const selected=form.querySelector('input[name="a_type"]:checked');
+  state.applicant.a_type=selected?selected.value:'person';
+  if(state.applicant.a_type==='company'){
+    state.applicant.a_name=state.applicant.a_contact_name||'';
+    state.applicant.a_surname=state.applicant.a_contact_surname||'';
+  }else{
+    state.applicant.a_name=state.applicant.a_person_name||'';
+    state.applicant.a_surname=state.applicant.a_person_surname||'';
+  }
   ['line','wechat','whatsapp'].forEach(k=>{const on=form.querySelector('[data-chan="'+k+'"]');state.applicant['chan_'+k+'_on']=on&&on.checked;const inp=el('chan_'+k);if(inp)state.applicant['chan_'+k]=inp.value;});
   ['rf_bank','rf_bankother','rf_accno','rf_accname','rf_accsur'].forEach(k=>{
     const inp=form.querySelector('#'+k);
     if(inp)state.bank[k]=inp.value;
     delete state.applicant[k];
   });
+  persistApplicantUpload();
+}
+function persistApplicantUpload(){
+  const f=state.files.a_idcard;
+  if(!f)return;
+  if(state.applicant.a_type==='company')state.applicant.companyDoc={name:f.name,data:f.data||f.thumb||''};
+  else if(f.thumb)state.applicant.idImg=f.thumb;
+}
+function restoreApplicantUpload(){
+  if(state.files.a_idcard)return;
+  const a=state.applicant||{};
+  if(a.a_type==='company'&&a.companyDoc)state.files.a_idcard={name:a.companyDoc.name||'company-document.pdf',data:a.companyDoc.data||'',thumb:null};
+  else if(a.idImg)state.files.a_idcard={name:'idcard.png',thumb:a.idImg};
+  if(state.files.a_idcard)refreshUpload('a_idcard');
 }
 
 /* ---- RACER ---- */
@@ -1892,10 +1997,10 @@ function finishPayment(){
 }
 function buildProfileFromReg(){
   const a=state.applicant||{};
-  const ap={a_date:a.a_date||'',a_name:a.a_name||'',a_surname:a.a_surname||'',a_idaddr:a.a_idaddr||'',a_deliaddr:a.a_deliaddr||a.a_idaddr||'',
+  const ap=Object.assign({},a,{a_type:a.a_type||'person',a_date:a.a_date||'',a_name:a.a_name||'',a_surname:a.a_surname||'',a_idaddr:a.a_idaddr||'',a_deliaddr:a.a_deliaddr||a.a_idaddr||'',
     a_phone:a.a_phone||'',a_email:a.a_email||(state.account&&state.account.email)||'',
     chan_line_on:!!a.chan_line_on,chan_line:a.chan_line||'',chan_wechat_on:!!a.chan_wechat_on,chan_wechat:a.chan_wechat||'',chan_whatsapp_on:!!a.chan_whatsapp_on,chan_whatsapp:a.chan_whatsapp||'',
-    idImg:IMG_IDCARD};
+    idImg:a.idImg||IMG_IDCARD});
   const racers=(state.racers||[]).filter(rc=>rc.r_rname||rc.r_rsurname||(rc.entries||[]).some(e=>e.cls)).map(rc=>{
     const es=(rc.entries||[]).filter(e=>e.cls);
     return {r_rname:rc.r_rname||'',r_rsurname:rc.r_rsurname||'',r_idaddr:rc.r_idaddr||'',
@@ -1941,8 +2046,8 @@ function genProfRacer(){
 }
 function buildProfile(acct){
   const fn=(acct&&acct.username&&/[ก-๙]/.test(acct.username))?acct.username:dRnd(D_FIRST), ln=dRnd(D_LAST), addr=pfAddr();
-  const ap={a_date:'199'+(2+Math.floor(Math.random()*7))+'-0'+(1+Math.floor(Math.random()*8))+'-1'+(1+Math.floor(Math.random()*8)),
-    a_name:fn,a_surname:ln,a_idaddr:addr,a_deliaddr:addr,
+  const ap={a_type:'person',a_date:'199'+(2+Math.floor(Math.random()*7))+'-0'+(1+Math.floor(Math.random()*8))+'-1'+(1+Math.floor(Math.random()*8)),
+    a_name:fn,a_surname:ln,a_person_name:fn,a_person_surname:ln,a_idaddr:addr,a_deliaddr:addr,
     a_phone:(acct&&acct.phone)||'08'+(1+Math.floor(Math.random()*8))+'-'+dPad(Math.floor(Math.random()*1000))+'-'+dPad(Math.floor(Math.random()*10000)),
     a_email:(acct&&acct.email)||'you@email.com',
     chan_line_on:true,chan_line:'line_'+fn.slice(0,3),chan_wechat_on:false,chan_wechat:'',chan_whatsapp_on:false,chan_whatsapp:'',
@@ -2041,12 +2146,10 @@ SCREEN_INIT.profile=function(){
   const apf=el('apInfoForm');
   if(apf){
     bindApplicantForm(apf);
-    if(state.applicant.idImg && !(state.files.a_idcard&&state.files.a_idcard.thumb)){ state.files.a_idcard={name:'idcard.png',thumb:state.applicant.idImg}; refreshUpload('a_idcard'); }
     apf.onsubmit=(e)=>{
       e.preventDefault();
       if(!validateScreen(apf)){toast(t('v.fixerr'));return;}
       saveApplicant(apf);
-      const f=state.files.a_idcard; if(f&&f.thumb)state.applicant.idImg=f.thumb;
       if(state.profile)state.profile.applicant=state.applicant;
       toast(t('prof.saved'));
       const pc=state.pendingChoice; state.pendingChoice=null;
@@ -2133,6 +2236,10 @@ function bindUploads(scope){
       if(/^image\//.test(f.type)){
         const reader=new FileReader();
         reader.onload=ev=>{rec.thumb=ev.target.result;state.files[inp.id]=rec;refreshUpload(inp.id);};
+        reader.readAsDataURL(f);
+      } else if(f.type==='application/pdf'){
+        const reader=new FileReader();
+        reader.onload=ev=>{rec.data=ev.target.result;state.files[inp.id]=rec;refreshUpload(inp.id);};
         reader.readAsDataURL(f);
       } else {state.files[inp.id]=rec;refreshUpload(inp.id);}
       toast(t('t.uploaded'));
