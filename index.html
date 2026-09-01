@@ -1172,6 +1172,10 @@ function hasPersonalInfo(){
   const a=state.applicant||{};
   return !!(a.a_name && a.a_surname && a.a_phone && a.a_email && a.a_idaddr);
 }
+function hasRefundAccount(){
+  const b=state.bank||{};
+  return !!(b.rf_bank && b.rf_accno && b.rf_accname && (b.rf_bank!=='__other__'||b.rf_bankother));
+}
 SCREENS.choose = function(){
   return `
   <p class="eyebrow">${esc(t('ch.eyebrow'))}</p>
@@ -1221,7 +1225,7 @@ SCREENS.onboard = function(){
   <p class="page-sub">${esc(t('ob.sub'))}</p>
   <div class="info-box"><span class="ico">📋</span><span>${esc(t('ob.info'))}</span></div>
   <form id="obForm" novalidate>
-    ${applicantFormInner()}
+    ${applicantFormInner({showRefund:state.pendingChoice!=='vip'})}
     <div class="actions">
       <div class="spacer"></div>
       <button type="submit" class="btn btn-primary btn-lg">${esc(t('ob.next'))}</button>
@@ -1238,7 +1242,8 @@ SCREEN_INIT.onboard = function(){
     if(state.profile)state.profile.applicant=state.applicant;
     toast(t('prof.saved'));
     const pc=state.pendingChoice; state.pendingChoice=null;
-    if(pc)openChosenAction(pc);
+    if(pc==='racer-profile')startRacerRegistration('profile');
+    else if(pc)openChosenAction(pc);
     else go('choose');
   };
 };
@@ -1341,9 +1346,10 @@ function bindBankAccount(form,prefix){
     else{inp.removeAttribute('data-req');wrap.classList.remove('invalid');}
   };
 }
-function applicantFormInner(){
+function applicantFormInner(opts={}){
   const a=state.applicant;
   const applicantType=a.a_type||'person';
+  const showRefund=opts.showRefund!==false;
   return `
     <div class="field full">
       <label>${esc(t('ap.type'))}<span class="req">*</span></label>
@@ -1386,10 +1392,10 @@ function applicantFormInner(){
     </div>
     ${fieldText({id:'chan_line',labelKey:'f.line',req:true,value:a.chan_line||'',full:true})}
     ${fieldUpload({id:'a_idcard',labelKey:applicantType==='company'?'f.companydoc':'f.idcard.ap',req:true})}
-    <hr style="border:0;border-top:1px solid var(--line);margin:24px 0"/>
+    ${showRefund?`<hr style="border:0;border-top:1px solid var(--line);margin:24px 0"/>
     <h3 style="margin:6px 0 2px;font-size:16px">${esc(t('bk.refund.t'))}</h3>
     <p class="page-sub" style="margin-bottom:14px;font-size:12.5px">${esc(t('bk.refund.s'))}</p>
-    ${bankAccountFields('rf')}`;
+    ${bankAccountFields('rf')}`:''}`;
 }
 function bindApplicantForm(form){
   bindUploads(form);
@@ -2267,7 +2273,10 @@ SCREEN_INIT.profile=function(){
     };
   }
   // racers tab
-  const ar=el('profAddRacer'); if(ar)ar.onclick=()=>startRacerRegistration('profile');
+  const ar=el('profAddRacer'); if(ar)ar.onclick=()=>{
+    if(!hasRefundAccount()){state.pendingChoice='racer-profile';go('onboard');return;}
+    startRacerRegistration('profile');
+  };
   sc.querySelectorAll('[data-rimg]').forEach(b=>b.onclick=()=>{const r=state.profile.racers[+b.dataset.rimg];openDashImg(b.dataset.kind==='photo'?r.photo:r.idImg,b.dataset.kind==='photo'?'รูปนักแข่ง':'บัตรประชาชนนักแข่ง');});
   // vip tab
   const bv=el('profBuyVip'); if(bv)bv.onclick=()=>startVipPurchase('profile');
