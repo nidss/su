@@ -561,6 +561,14 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .vipx-total .price,.vipx-total strong{font-family:'Rajdhani',sans-serif;font-size:28px;color:var(--lime);font-weight:800;white-space:nowrap}
 .vipx-done{text-align:center;padding:28px 0}.vipx-done .icon{font-size:58px}.vipx-done .ref{font-family:'Rajdhani',monospace;color:var(--mint);font-size:20px;font-weight:800}
 @media(max-width:720px){.vipx-packages{grid-template-columns:1fr}.vipx-media{grid-template-columns:1fr}.vipx-account,.vipx-plates{grid-template-columns:1fr}.vipx-sec-head{flex-direction:column}.vipx-tabs{width:100%}}
+/* The original SUVIP page runs in an isolated frame so its UI remains unchanged. */
+body.vip-frame-mode{background:#0a0b0d}
+body.vip-frame-mode>.bg-flag,body.vip-frame-mode>.bg-driver,body.vip-frame-mode>.topbar{display:none}
+body.vip-frame-mode>.wrap{max-width:none;margin:0;padding:0}
+body.vip-frame-mode>.wrap>.card{border:0;border-radius:0;background:none;box-shadow:none;overflow:visible}
+body.vip-frame-mode #screen{padding:0}
+body.vip-frame-mode>.wrap>.foot{display:none}
+#suvipFrame{display:block;width:100%;min-height:100vh;border:0;background:#0a0b0d}
 /* ---- Parking: multi-pit booking panel ---- */
 .book-panel{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:16px}
 .bk-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;font-size:13.5px}
@@ -968,6 +976,7 @@ genTakenPits();
 /* ================= Render root ================= */
 function render(){
   renderStepper();
+  document.body.classList.toggle('vip-frame-mode',state.step==='vip');
   el('stepper').classList.toggle('hidden', state.step==='profile' || state.step==='auth' || state.step==='choose' || state.step==='onboard' || state.step==='vip' || state.step==='vipPay' || state.step==='vipDone');
   const s=el("screen");
   s.innerHTML = SCREENS[state.step]();
@@ -2124,6 +2133,32 @@ function vipReceiptPdfHTML(){
   return `<div class="appdoc"><div class="ad-pad"><div class="ad-top"><div class="ad-brand"><img class="ad-logo" src="asset/vip-logo.png" alt="SUVIP"/><div class="ad-sub">SOUPED UP VIP EXPERIENCE</div></div><div class="ad-meta"><div class="ad-title">OFFICIAL RECEIPT</div><div>${esc(today)}</div><div class="ad-ref">${esc(r.ref||'')}</div></div></div><div class="ad-sec"><div class="ad-sec-h">${esc(t('vipx.member'))}</div><div class="ad-grid"><div class="ad-row full"><span class="ad-k">${esc(t('vipx.member'))}</span><span class="ad-v">${esc(r.holder||'-')}</span></div></div></div><div class="ad-sec"><div class="ad-sec-h">${esc(t('vipx.summary'))}</div><table class="rcpt-tbl"><tbody><tr><td>${esc(t('vipx.package'))}</td><td>${esc(r.type||'-')}</td></tr><tr><td>${esc(t('vipx.days'))}</td><td>${esc(r.zone||'-')}</td></tr><tr><td>${esc(t('vipx.shirt'))}</td><td>${esc(r.shirt||'-')}</td></tr></tbody><tfoot><tr><td class="tot-l">${esc(t('dn.amount'))}</td><td class="num tot-v">${esc(money(r.amount||0))}</td></tr></tfoot></table></div><div class="ad-foot"><span>Souped Up 2026 · SUVIP · NIDSS</span><span class="ad-demo">DEMO</span></div></div></div>`;
 }
 SCREEN_INIT.vipDone=function(){el('vipReceipt').onclick=()=>openPdfDoc(vipReceiptPdfHTML(),'SUVIP Receipt');el('vipAnother').onclick=()=>startVipPurchase(state.vip.back);el('vipProfile').onclick=()=>{state.profileTab='vip';go('profile');};};
+
+/* Use the original SUVIP document for the visible purchase experience. */
+function embeddedVipMember(){
+  const a=state.applicant||{},acc=state.account||{};
+  return {lang:state.lang,username:acc.username||'',name:a.a_name||'',surname:a.a_surname||'',phone:a.a_phone||acc.phone||'',email:a.a_email||acc.email||'',line:a.chan_line||''};
+}
+function saveEmbeddedVipPurchase(rec){
+  if(!rec||!rec.ref)return;
+  if(!state.profile)state.profile=emptyMemberProfile();
+  if(!state.profile.vips)state.profile.vips=[];
+  if(!state.profile.vips.some(v=>v.ref===rec.ref))state.profile.vips.push(rec);
+  state.profile.applicant=Object.assign({},state.applicant);
+  state.vip.result=rec;
+}
+SCREENS.vip=function(){return `<iframe id="suvipFrame" src="vip.html" title="Souped Up VIP Village"></iframe>`;};
+SCREEN_INIT.vip=function(){
+  const frame=el('suvipFrame');
+  frame.onload=()=>frame.contentWindow.postMessage({type:'su:member',member:embeddedVipMember()},'*');
+};
+window.addEventListener('message',e=>{
+  const frame=el('suvipFrame');
+  if(!frame||e.source!==frame.contentWindow||!e.data)return;
+  if(e.data.type==='suvip:resize')frame.style.height=Math.max(720,Number(e.data.height)||0)+'px';
+  else if(e.data.type==='suvip:complete')saveEmbeddedVipPurchase(e.data.record);
+  else if(e.data.type==='suvip:profile'){state.profileTab='vip';go('profile');}
+});
 
 /* ---- DONE ---- */
 SCREENS.done = function(){
