@@ -1272,8 +1272,7 @@ function applicantFormInner(){
     <hr style="border:0;border-top:1px solid var(--line);margin:24px 0"/>
     <h3 style="margin:6px 0 2px;font-size:16px">${esc(t('bk.refund.t'))}</h3>
     <p class="page-sub" style="margin-bottom:14px;font-size:12.5px">${esc(t('bk.refund.s'))}</p>
-    ${bankAccountFields('rf')}
-    <label class="checkbox" style="margin-top:14px"><input type="checkbox" id="rf_save" ${state.bank.rf_save?'checked':''}/> ${esc(t('bk.save'))}</label>`;
+    ${bankAccountFields('rf')}`;
 }
 function bindApplicantForm(form){
   bindUploads(form);
@@ -1314,8 +1313,6 @@ function saveApplicant(form){
     if(inp)state.bank[k]=inp.value;
     delete state.applicant[k];
   });
-  const save=form.querySelector('#rf_save');
-  if(save)state.bank.rf_save=save.checked;
 }
 
 /* ---- RACER ---- */
