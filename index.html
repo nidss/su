@@ -986,6 +986,7 @@ const DEMO_USERS = {
     account:{username:'existing_user',email:'existing.user@example.com',phone:'089-999-9999',password:'demo123'}
   }
 };
+const VIP_SITE_URL='https://nidss.github.io/suvip/';
 
 function clearMemberRegistrationData(){
   state.terms={privacy:false,rules:false,guarantee:false};
@@ -1118,10 +1119,20 @@ SCREEN_INIT.choose = function(){
   el('screen').querySelectorAll('[data-choose]').forEach(b=>b.onclick=()=>{
     const target=b.dataset.choose;
     if(!hasPersonalInfo()){ toast(t('ch.needinfo')); state.pendingChoice=target; go('onboard'); return; }
-    state.profileTab = target==='vip'?'vip':'racers';
-    go('profile');
+    openChosenAction(target);
   });
 };
+function openChosenAction(target){
+  if(target==='vip'){
+    window.location.href=VIP_SITE_URL;
+    return;
+  }
+  state.addRacerMode=true;
+  state.racer={};
+  state.racers=[newRacer()];
+  state.files={};
+  go('racer');
+}
 
 /* ---- ONBOARD (mandatory personal info right after register) ---- */
 SCREENS.onboard = function(){
@@ -1150,7 +1161,7 @@ SCREEN_INIT.onboard = function(){
     if(state.profile)state.profile.applicant=state.applicant;
     toast(t('prof.saved'));
     const pc=state.pendingChoice; state.pendingChoice=null;
-    if(pc){ state.profileTab=pc==='vip'?'vip':'racers'; go('profile'); }
+    if(pc)openChosenAction(pc);
     else go('choose');
   };
 };
