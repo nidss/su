@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="th" data-lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Souped Up 2026</title>
+<meta name="description" content="ระบบสมัครสมาชิกและลงทะเบียนการแข่งขัน Souped Up / Souped Up Competition Registration System" />
+<link rel="icon" type="image/png" sizes="16x16" href="asset/favicon-16x16.png" />
+<link rel="shortcut icon" href="asset/favicon-16x16.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -515,6 +524,43 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .cls-engfield .control,.cls-carfield .control{border-color:var(--mint-soft)}
 .add-class{align-self:flex-start;margin-top:12px;border-style:dashed}
 .add-racer{width:100%;justify-content:center;border-style:dashed;margin-bottom:20px}
+/* ---------- Integrated VIP Village module ---------- */
+.vipx{display:flex;flex-direction:column;gap:22px}
+.vipx-hero{position:relative;overflow:hidden;border-radius:14px;border:1px solid var(--line);min-height:210px;background:#070b13}
+.vipx-hero>img{width:100%;height:100%;min-height:210px;object-fit:cover;display:block;opacity:.78}
+.vipx-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(4,7,13,.9),rgba(4,7,13,.3) 64%,rgba(4,7,13,.15))}
+.vipx-hero-copy{position:absolute;z-index:1;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:clamp(22px,5vw,48px);max-width:680px}
+.vipx-logo{width:min(260px,58%);max-height:76px;object-fit:contain;object-position:left center;margin-bottom:14px}
+.vipx-hero-copy h1{font-size:clamp(26px,5vw,42px);line-height:1.05;margin:0 0 8px;font-family:'Rajdhani','Noto Sans Thai',sans-serif}
+.vipx-hero-copy p{margin:0;color:#dce3ea;font-size:14px}
+.vipx-section{border:1px solid var(--line);border-radius:13px;background:var(--panel-2);padding:20px}
+.vipx-sec-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px}
+.vipx-sec-head h2{font-size:18px;margin:0}.vipx-sec-head p{font-size:12px;color:var(--txt-dim);margin:3px 0 0}
+.vipx-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;background:var(--bg);border-radius:10px;padding:5px}
+.vipx-tabs button{border:0;border-radius:7px;background:transparent;color:var(--txt-dim);padding:10px 13px;font-weight:700;cursor:pointer}
+.vipx-tabs button.active,.vipx-tabs button.sel{background:var(--mint);color:var(--mint-ink)}
+.vipx-price-note{margin:12px 0 0;color:var(--amber);font-size:12px}
+.vipx-packages{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.vipx-package{border:1.5px solid var(--line-2);border-radius:11px;background:var(--bg);padding:17px;cursor:pointer;text-align:left;color:var(--txt);transition:.15s}
+.vipx-package:hover,.vipx-package.selected,.vipx-package.sel{border-color:var(--mint);background:var(--mint-soft);box-shadow:0 0 0 3px rgba(111,255,232,.08)}
+.vipx-package .name,.vipx-package strong{display:block;font-weight:800}.vipx-package .price,.vipx-package span{display:block;font-family:'Rajdhani',sans-serif;color:var(--lime);font-size:24px;font-weight:800;margin-top:8px}
+.vipx-package .small,.vipx-package small{display:block;font-size:11px;color:var(--txt-faint);margin-top:2px}
+.vipx-days,.vipx-shirts{display:flex;flex-wrap:wrap;gap:9px}
+.vipx-chip{display:flex;align-items:center;gap:8px;border:1px solid var(--line-2);border-radius:9px;padding:10px 13px;background:var(--bg);cursor:pointer;color:var(--txt-dim);font-size:13px}
+.vipx-chip.selected,.vipx-chip.sel{border-color:var(--mint);color:var(--mint);background:var(--mint-soft)}
+.vipx-chip.disabled,.vipx-chip:disabled{opacity:.7;cursor:default}
+.vipx-account{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 18px}
+.vipx-account .item,.vipx-account>strong,.vipx-account>span{padding-bottom:8px;border-bottom:1px solid var(--line)}
+.vipx-account .k{font-size:11px;color:var(--txt-faint)}.vipx-account .v{font-size:14px;margin-top:3px;word-break:break-word}
+.vipx-media{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;align-items:stretch}
+.vipx-media img{width:100%;height:100%;min-height:190px;object-fit:cover;border-radius:11px;border:1px solid var(--line)}
+.vipx-media>img:only-child{grid-column:1/-1;max-height:420px}
+.vipx-media-copy{display:flex;flex-direction:column;justify-content:center}.vipx-media-copy h2{margin:0 0 8px;font-size:20px}.vipx-media-copy p{margin:0;color:var(--txt-dim);font-size:13px;line-height:1.7}
+.vipx-plates{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.vipx-total{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px;border:1px solid var(--mint);background:var(--mint-soft);border-radius:11px}
+.vipx-total .price,.vipx-total strong{font-family:'Rajdhani',sans-serif;font-size:28px;color:var(--lime);font-weight:800;white-space:nowrap}
+.vipx-done{text-align:center;padding:28px 0}.vipx-done .icon{font-size:58px}.vipx-done .ref{font-family:'Rajdhani',monospace;color:var(--mint);font-size:20px;font-weight:800}
+@media(max-width:720px){.vipx-packages{grid-template-columns:1fr}.vipx-media{grid-template-columns:1fr}.vipx-account,.vipx-plates{grid-template-columns:1fr}.vipx-sec-head{flex-direction:column}.vipx-tabs{width:100%}}
 /* ---- Parking: multi-pit booking panel ---- */
 .book-panel{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:16px}
 .bk-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;font-size:13.5px}
@@ -541,6 +587,8 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .book-panel.shake{animation:bkshk .4s}
 @keyframes bkshk{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
 </style>
+</head>
+<body>
 <div class="bg-flag"></div>
 <div class="bg-driver"></div>
 <div class="topbar">
@@ -721,6 +769,19 @@ const I18N = {
     "ob.info":"ข้อมูลนี้จะถูกใช้สำหรับการลงทะเบียนนักแข่งและการซื้อบัตรทุกครั้ง แก้ไขภายหลังได้ที่เมนูข้อมูลส่วนตัว","ob.next":"บันทึกและไปต่อ",
     "vip.holder":"ชื่อผู้ถือบัตร","vip.type":"ประเภทบัตร","vip.zone":"โซน","vip.qty":"จำนวน","vip.buy.title":"ซื้อบัตร Vip Village","vip.bought":"ซื้อบัตร Vip Village เรียบร้อยแล้ว",
     "vip.type.grand":"Grandstand VIP","vip.type.pit":"Pit VIP","vip.type.village":"Village Pass",
+    "vipx.title":"VIP Village 2026","vipx.sub":"สัมผัสการแข่งขันในพื้นที่รับรองพิเศษ พร้อมอาหารและที่จอดรถสำหรับผู้ถือบัตร",
+    "vipx.location":"สถานที่จัดงาน","vipx.location.text":"Bangkok Drag Avenue · 5–7 ธันวาคม 2026",
+    "vipx.member":"ข้อมูลผู้ถือบัตร","vipx.member.sub":"ใช้ข้อมูลจากบัญชีสมาชิกของคุณโดยอัตโนมัติ",
+    "vipx.package":"ประเภทแพ็กเกจ VIP Village","vipx.package.sub":"เลือกช่วงราคาและจำนวนวันที่ต้องการเข้าร่วม",
+    "vipx.early":"Early Bird","vipx.normal":"ราคาปกติ","vipx.early.note":"จองและชำระภายใน 7 พฤศจิกายน 2568 · จำกัด 20 ที่นั่ง/วัน","vipx.normal.note":"ราคาปกติสำหรับการจองทั่วไป",
+    "vipx.p1":"แพ็กเกจ 1 วัน","vipx.p2":"แพ็กเกจ 2 วัน","vipx.p3":"แพ็กเกจ 3 วัน","vipx.perpkg":"ต่อแพ็กเกจ",
+    "vipx.days":"วันที่เข้าร่วม","vipx.days.sub":"เลือกวันให้ครบตามแพ็กเกจ","vipx.day5":"ศุกร์ 5 ธ.ค.","vipx.day6":"เสาร์ 6 ธ.ค.","vipx.day7":"อาทิตย์ 7 ธ.ค.",
+    "vipx.shirt":"ไซส์เสื้อ","vipx.shirt.l":"L · รอบอก 44 นิ้ว","vipx.shirt.xl":"XL · รอบอก 48 นิ้ว","vipx.parking":"สำรองที่จอดรถ","vipx.parking.sub":"กรอกทะเบียนรถสำหรับแต่ละวันที่เลือก","vipx.plate":"ทะเบียนรถ",
+    "vipx.food":"อาหารบุฟเฟต์","vipx.food.text":"พื้นที่ VIP Village มีอาหารและเครื่องดื่มบริการตลอดช่วงกิจกรรม","vipx.avoid":"อาหารที่ไม่รับประทาน","vipx.allergy":"อาหารที่แพ้",
+    "vipx.consent":"ข้าพเจ้ายินยอมให้ใช้ข้อมูลสำหรับการจองและให้บริการ VIP Village","vipx.next":"ตรวจสอบและชำระเงิน",
+    "vipx.err.pkg":"กรุณาเลือกแพ็กเกจ VIP","vipx.err.days":"กรุณาเลือกวันที่ให้ครบตามแพ็กเกจ","vipx.err.shirt":"กรุณาเลือกไซส์เสื้อ","vipx.err.plate":"กรุณากรอกทะเบียนรถให้ครบ","vipx.err.consent":"กรุณายอมรับการใช้ข้อมูล",
+    "vipx.pay.title":"ชำระเงิน VIP Village","vipx.pay.sub":"ตรวจสอบแพ็กเกจและเลือกวิธีชำระเงิน","vipx.summary":"สรุปรายการ","vipx.confirm":"ยืนยันชำระเงิน",
+    "vipx.done.title":"ซื้อบัตร VIP Village สำเร็จ!","vipx.done.sub":"รายการซื้อถูกบันทึกไว้ในโปรไฟล์ของคุณแล้ว","vipx.ref":"หมายเลขอ้างอิง","vipx.another":"ซื้อแพ็กเกจเพิ่ม","vipx.profile":"กลับไปโปรไฟล์",
     "prof.edit":"แก้ไข","prof.addracer":"เพิ่มนักแข่ง","prof.logout":"ออกจากระบบ","prof.viewid":"ดูรูปบัตรประชาชน","prof.noracer":"ยังไม่มีข้อมูลนักแข่ง","prof.racerno":"นักแข่งคนที่",
     "prof.welcome":"ยินดีต้อนรับกลับ","prof.saved":"บันทึกข้อมูลแล้ว",
     "prof.account":"บัญชีผู้ใช้","prof.changepw":"เปลี่ยนรหัสผ่าน","prof.pwsaved":"เปลี่ยนรหัสผ่านเรียบร้อยแล้ว","f.curpw":"รหัสผ่านปัจจุบัน","f.newpw":"รหัสผ่านใหม่","f.confirmpw":"ยืนยันรหัสผ่านใหม่","v.curpwwrong":"รหัสผ่านปัจจุบันไม่ถูกต้อง",
@@ -831,6 +892,19 @@ const I18N = {
     "ob.info":"This information is used for every racer registration and ticket purchase. You can edit it later in the Personal Info menu.","ob.next":"Save & continue",
     "vip.holder":"Ticket holder","vip.type":"Ticket type","vip.zone":"Zone","vip.qty":"Quantity","vip.buy.title":"Buy Vip Village Ticket","vip.bought":"Vip Village ticket purchased",
     "vip.type.grand":"Grandstand VIP","vip.type.pit":"Pit VIP","vip.type.village":"Village Pass",
+    "vipx.title":"VIP Village 2026","vipx.sub":"Experience the race from an exclusive hospitality area with food and reserved parking",
+    "vipx.location":"Event Location","vipx.location.text":"Bangkok Drag Avenue · 5–7 December 2026",
+    "vipx.member":"Ticket Holder","vipx.member.sub":"Automatically uses information from your member account",
+    "vipx.package":"VIP Village Package","vipx.package.sub":"Choose a price period and number of event days",
+    "vipx.early":"Early Bird","vipx.normal":"Normal Price","vipx.early.note":"Book and pay by 7 November 2025 · limited to 20 seats/day","vipx.normal.note":"Standard booking price",
+    "vipx.p1":"1 Day Package","vipx.p2":"2 Day Package","vipx.p3":"3 Day Package","vipx.perpkg":"per package",
+    "vipx.days":"Event Days","vipx.days.sub":"Select the required number of days","vipx.day5":"Fri 5 Dec","vipx.day6":"Sat 6 Dec","vipx.day7":"Sun 7 Dec",
+    "vipx.shirt":"T-Shirt Size","vipx.shirt.l":"L · Chest 44 inches","vipx.shirt.xl":"XL · Chest 48 inches","vipx.parking":"Reserved Parking","vipx.parking.sub":"Enter a license plate for each selected day","vipx.plate":"License Plate",
+    "vipx.food":"Buffet","vipx.food.text":"Food and beverages are served throughout the event in the VIP Village","vipx.avoid":"Food to avoid","vipx.allergy":"Food allergies",
+    "vipx.consent":"I consent to the use of my information for this VIP Village booking and service","vipx.next":"Review & Pay",
+    "vipx.err.pkg":"Please choose a VIP package","vipx.err.days":"Please select all required event days","vipx.err.shirt":"Please choose a T-shirt size","vipx.err.plate":"Please enter all license plates","vipx.err.consent":"Please accept the data consent",
+    "vipx.pay.title":"VIP Village Payment","vipx.pay.sub":"Review the package and choose a payment method","vipx.summary":"Order Summary","vipx.confirm":"Confirm Payment",
+    "vipx.done.title":"VIP Village Purchase Complete!","vipx.done.sub":"The purchase has been added to your profile","vipx.ref":"Reference Number","vipx.another":"Buy Another Package","vipx.profile":"Back to Profile",
     "prof.edit":"Edit","prof.addracer":"Add Racer","prof.logout":"Log out","prof.viewid":"View ID card","prof.noracer":"No racer data yet","prof.racerno":"Racer #",
     "prof.welcome":"Welcome back","prof.saved":"Saved",
     "prof.account":"Account","prof.changepw":"Change password","prof.pwsaved":"Password changed successfully","f.curpw":"Current password","f.newpw":"New password","f.confirmpw":"Confirm new password","v.curpwwrong":"Current password is incorrect",
@@ -856,6 +930,10 @@ const MODELS = {
 const CAR_GARAGE = ["อู่ Speed Garage","อู่ Turbo Modify","อู่ NOS Racing","อู่ Nitro Works","อู่ Apex Tuning","อู่ Redline Shop","อู่ Boost Lab","อู่ ช.ไก่ Racing","อู่ Torque Team","อู่ Dyno Pro","อู่ ส.มอเตอร์สปอร์ต"];
 const PRICES = {entry:7000, deposit:10000};
 const DISCOUNTS = {"SOUPEDUP":500,"EARLYBIRD":1000,"VIP2026":1500};
+const VIP_PRICES={early:{p1:3700,p2:7400,p3:7900},normal:{p1:3900,p2:8400,p3:8900}};
+const VIP_DAYS=[{id:'d5',key:'vipx.day5'},{id:'d6',key:'vipx.day6'},{id:'d7',key:'vipx.day7'}];
+const VIP_PACKAGE_DAYS={p1:1,p2:2,p3:3};
+function freshVipState(back){return {back:back||'choose',priceTab:'early',pkg:'',days:[],shirt:'',plates:{},foodAvoid:'',foodAllergy:'',consent:false,payMethod:'card',tax:false,result:null};}
 
 /* ================= State ================= */
 const state = {
@@ -873,7 +951,8 @@ const state = {
   payMethod:"card",
   tax:false,
   files:{},
-  takenPits:[]
+  takenPits:[],
+  vip:freshVipState('choose')
 };
 const STEPS = ["terms","racer","parking","bank","summary","pay","done"];
 
@@ -889,7 +968,7 @@ genTakenPits();
 /* ================= Render root ================= */
 function render(){
   renderStepper();
-  el('stepper').classList.toggle('hidden', state.step==='profile' || state.step==='auth' || state.step==='choose' || state.step==='onboard');
+  el('stepper').classList.toggle('hidden', state.step==='profile' || state.step==='auth' || state.step==='choose' || state.step==='onboard' || state.step==='vip' || state.step==='vipPay' || state.step==='vipDone');
   const s=el("screen");
   s.innerHTML = SCREENS[state.step]();
   window.scrollTo({top:0,behavior:"smooth"});
@@ -982,8 +1061,6 @@ const DEMO_USERS = {
     account:{username:'existing_user',email:'existing.user@example.com',phone:'089-999-9999',password:'demo123'}
   }
 };
-const VIP_SITE_URL='https://nidss.github.io/suvip/';
-
 function clearMemberRegistrationData(){
   state.terms={privacy:false,rules:false,guarantee:false};
   state.applicant={};
@@ -996,6 +1073,7 @@ function clearMemberRegistrationData(){
   state.tax=false;
   state.files={};
   state.result=null;
+  state.vip=freshVipState('choose');
   state.pendingChoice=null;
   state.profileTab='info';
 }
@@ -1121,7 +1199,7 @@ SCREEN_INIT.choose = function(){
 };
 function openChosenAction(target){
   if(target==='vip'){
-    window.location.href=VIP_SITE_URL;
+    startVipPurchase('choose');
     return;
   }
   startRacerRegistration('choose');
@@ -1957,6 +2035,90 @@ function buildProfileFromReg(){
   return {applicant:ap, racers:racers.length?racers:[], history, vips:(state.profile&&state.profile.vips)||[]};
 }
 
+/* ---- INTEGRATED VIP ---- */
+function vipHolderName(){
+  const a=state.applicant||{};
+  if(a.a_type==='company')return a.a_company||((a.a_name||'')+' '+(a.a_surname||'')).trim();
+  return ((a.a_name||'')+' '+(a.a_surname||'')).trim();
+}
+function vipPackageLabel(pkg){return t('vipx.'+(pkg||'p1'));}
+function vipDayLabels(days){return VIP_DAYS.filter(d=>(days||[]).includes(d.id)).map(d=>t(d.key));}
+function vipPrice(){const v=state.vip||freshVipState();return v.pkg?(VIP_PRICES[v.priceTab][v.pkg]||0):0;}
+function startVipPurchase(backTarget){state.vip=freshVipState(backTarget||'choose');go('vip');}
+function vipBackTarget(){return state.vip&&state.vip.back==='profile'?'profile':'choose';}
+
+SCREENS.vip=function(){
+  const v=state.vip||(state.vip=freshVipState('choose'));
+  const a=state.applicant||{};
+  const selectedDays=VIP_DAYS.filter(d=>v.days.includes(d.id));
+  const plates=selectedDays.map(d=>`<div class="field"><label>${esc(t('vipx.plate'))} · ${esc(t(d.key))}</label><input class="control" data-vipplate="${d.id}" value="${esc(v.plates[d.id]||'')}" placeholder="กข 1234"/></div>`).join('');
+  return `<div class="vipx">
+    <section class="vipx-hero" style="background-image:linear-gradient(90deg,rgba(5,8,12,.94),rgba(5,8,12,.46)),url('asset/vip-banner.png')">
+      <div class="vipx-hero-copy"><img class="vipx-logo" src="asset/vip-logo.png" alt="SUVIP"/><p class="eyebrow">SOUPED UP VIP EXPERIENCE</p><h1>${esc(t('vipx.title'))}</h1><p>${esc(t('vipx.sub'))}</p></div>
+    </section>
+    <form id="vipForm" novalidate>
+      <section class="vipx-section"><div class="vipx-sec-head"><h2>${esc(t('vipx.member'))}</h2><p>${esc(t('vipx.member.sub'))}</p></div>
+        <div class="vipx-account"><strong>${esc(vipHolderName()||state.account?.username||'-')}</strong><span>${esc(a.a_phone||state.account?.phone||'-')} · ${esc(a.a_email||state.account?.email||'-')}</span>${a.chan_line?`<span>Line: ${esc(a.chan_line)}</span>`:''}</div>
+      </section>
+      <section class="vipx-section"><div class="vipx-sec-head"><div><h2>${esc(t('vipx.location'))}</h2><p>${esc(t('vipx.location.text'))}</p></div><a class="btn btn-ghost btn-sm" href="https://g.co/kgs/KV6ubAH" target="_blank" rel="noopener">Google Maps</a></div><div class="vipx-media"><img src="asset/vip-map.png" alt="VIP location map"/></div></section>
+      <section class="vipx-section"><div class="vipx-sec-head"><h2>${esc(t('vipx.package'))}</h2><p>${esc(t('vipx.package.sub'))}</p></div>
+        <div class="vipx-tabs"><button type="button" data-viptab="early" class="${v.priceTab==='early'?'sel':''}">${esc(t('vipx.early'))}</button><button type="button" data-viptab="normal" class="${v.priceTab==='normal'?'sel':''}">${esc(t('vipx.normal'))}</button></div>
+        <p class="vipx-price-note">${esc(t(v.priceTab==='early'?'vipx.early.note':'vipx.normal.note'))}</p>
+        <div class="vipx-packages">${['p1','p2','p3'].map(p=>`<button type="button" data-vippkg="${p}" class="vipx-package ${v.pkg===p?'sel':''}"><strong>${esc(t('vipx.'+p))}</strong><span>${esc(money(VIP_PRICES[v.priceTab][p]))}</span><small>${esc(t('vipx.perpkg'))}</small></button>`).join('')}</div>
+      </section>
+      <section class="vipx-section"><div class="vipx-sec-head"><h2>${esc(t('vipx.days'))}</h2><p>${esc(t('vipx.days.sub'))}</p></div><div class="vipx-days">${VIP_DAYS.map(d=>`<button type="button" data-vipday="${d.id}" class="vipx-chip ${v.days.includes(d.id)?'sel':''}" ${v.pkg==='p3'?'disabled':''}>${esc(t(d.key))}</button>`).join('')}</div></section>
+      <section class="vipx-section"><div class="vipx-sec-head"><h2>${esc(t('vipx.shirt'))}</h2></div><div class="vipx-shirts">${['L','XL'].map(s=>`<button type="button" data-vipshirt="${s}" class="vipx-chip ${v.shirt===s?'sel':''}">${esc(t('vipx.shirt.'+s.toLowerCase()))}</button>`).join('')}</div></section>
+      <section class="vipx-section"><div class="vipx-sec-head"><h2>${esc(t('vipx.parking'))}</h2><p>${esc(t('vipx.parking.sub'))}</p></div><div class="vipx-plates">${plates||`<p class="muted">${esc(t('vipx.days.sub'))}</p>`}</div></section>
+      <section class="vipx-section"><div class="vipx-sec-head"><h2>${esc(t('vipx.food'))}</h2><p>${esc(t('vipx.food.text'))}</p></div><div class="vipx-media"><img src="asset/vip-buffet.png" alt="VIP buffet"/></div><div class="grid" style="margin-top:16px"><div class="field"><label>${esc(t('vipx.avoid'))}</label><input class="control" id="vip_food_avoid" value="${esc(v.foodAvoid)}"/></div><div class="field"><label>${esc(t('vipx.allergy'))}</label><input class="control" id="vip_food_allergy" value="${esc(v.foodAllergy)}"/></div></div></section>
+      <section class="vipx-section"><label class="checkbox"><input type="checkbox" id="vip_consent" ${v.consent?'checked':''}/><span>${esc(t('vipx.consent'))}</span></label></section>
+      <div class="actions"><button type="button" class="btn btn-ghost" data-back>${esc(t('btn.back'))}</button><div class="spacer"></div><button type="submit" class="btn btn-primary btn-lg">${esc(t('vipx.next'))}</button></div>
+    </form>
+  </div>`;
+};
+SCREEN_INIT.vip=function(){
+  const sc=el('screen'),v=state.vip;
+  sc.querySelectorAll('[data-viptab]').forEach(b=>b.onclick=()=>{v.priceTab=b.dataset.viptab;render();});
+  sc.querySelectorAll('[data-vippkg]').forEach(b=>b.onclick=()=>{v.pkg=b.dataset.vippkg;v.days=v.pkg==='p3'?VIP_DAYS.map(d=>d.id):[];v.plates={};render();});
+  sc.querySelectorAll('[data-vipday]').forEach(b=>b.onclick=()=>{if(!v.pkg){toast(t('vipx.err.pkg'));return;}const need=VIP_PACKAGE_DAYS[v.pkg];const id=b.dataset.vipday;if(need===1)v.days=[id];else if(v.days.includes(id))v.days=v.days.filter(x=>x!==id);else if(v.days.length<need)v.days.push(id);else toast(t('vipx.err.days'));render();});
+  sc.querySelectorAll('[data-vipshirt]').forEach(b=>b.onclick=()=>{v.shirt=b.dataset.vipshirt;render();});
+  sc.querySelectorAll('[data-vipplate]').forEach(i=>i.oninput=()=>{v.plates[i.dataset.vipplate]=i.value;});
+  el('vip_food_avoid').oninput=e=>v.foodAvoid=e.target.value;el('vip_food_allergy').oninput=e=>v.foodAllergy=e.target.value;el('vip_consent').onchange=e=>v.consent=e.target.checked;
+  sc.querySelector('[data-back]').onclick=()=>go(vipBackTarget());
+  el('vipForm').onsubmit=e=>{e.preventDefault();if(!v.pkg){toast(t('vipx.err.pkg'));return;}if(v.days.length!==VIP_PACKAGE_DAYS[v.pkg]){toast(t('vipx.err.days'));return;}if(!v.consent){toast(t('vipx.err.consent'));return;}go('vipPay');};
+};
+
+SCREENS.vipPay=function(){
+  const v=state.vip,days=vipDayLabels(v.days).join(', '),plates=v.days.map(id=>`${esc(t(VIP_DAYS.find(d=>d.id===id).key))}: ${esc(v.plates[id])}`).join('<br>');
+  return `<div class="vipx"><section class="vipx-section"><p class="eyebrow">SUVIP</p><h1 class="page-title">${esc(t('vipx.pay.title'))}</h1><p class="page-sub">${esc(t('vipx.pay.sub'))}</p></section>
+    <section class="vipx-section"><div class="vipx-sec-head"><h2>${esc(t('vipx.summary'))}</h2></div><div class="pinfo-grid"><div class="pinfo-row"><div class="l">${esc(t('vipx.member'))}</div><div class="v">${esc(vipHolderName()||'-')}</div></div><div class="pinfo-row"><div class="l">${esc(t('vipx.package'))}</div><div class="v">${esc(vipPackageLabel(v.pkg))}</div></div><div class="pinfo-row"><div class="l">${esc(t('vipx.days'))}</div><div class="v">${esc(days)}</div></div><div class="pinfo-row"><div class="l">${esc(t('vipx.shirt'))}</div><div class="v">${esc(v.shirt)}</div></div><div class="pinfo-row full"><div class="l">${esc(t('vipx.parking'))}</div><div class="v">${plates}</div></div></div><div class="vipx-total"><span>${esc(t('sm.total'))}</span><strong>${esc(money(vipPrice()))}</strong></div></section>
+    <section class="vipx-section"><div class="pay-methods"><button type="button" data-vippay="card" class="pay-opt ${v.payMethod==='card'?'sel':''}">${esc(t('py.card'))}</button><button type="button" data-vippay="qr" class="pay-opt ${v.payMethod==='qr'?'sel':''}">${esc(t('py.qr'))}</button></div><div id="vipPayDetail" style="margin-top:18px"></div></section>
+    <section class="vipx-section"><label class="checkbox"><input type="checkbox" id="vipTaxCb" ${v.tax?'checked':''}/><span>${esc(t('py.tax'))}</span></label><div id="vipTaxFields" class="grid ${v.tax?'':'hidden'}" style="margin-top:16px"><div class="field full"><label>${esc(t('py.tax.name'))}</label><input class="control"/></div><div class="field full"><label>${esc(t('py.tax.addr'))}</label><textarea class="control"></textarea></div><div class="field"><label>${esc(t('py.tax.taxid'))}</label><input class="control"/></div><div class="field"><label>${esc(t('f.branch'))}</label><input class="control"/></div></div></section>
+    <div class="actions"><button class="btn btn-ghost" data-back>${esc(t('btn.back'))}</button><div class="spacer"></div><button class="btn btn-primary btn-lg" id="vipConfirmPay">${esc(t('vipx.confirm'))} · ${esc(money(vipPrice()))}</button></div></div>`;
+};
+function renderVipPayDetail(){
+  const box=el('vipPayDetail');if(!box)return;
+  box.innerHTML=state.vip.payMethod==='card'?`<div class="field full"><label>${esc(t('py.card.num'))}</label><input class="control" placeholder="0000 0000 0000 0000" inputmode="numeric"/></div><div class="grid"><div class="field"><label>${esc(t('py.card.exp'))}</label><input class="control" placeholder="MM/YY"/></div><div class="field"><label>${esc(t('py.card.cvv'))}</label><input class="control" placeholder="123" inputmode="numeric"/></div></div><div class="field full"><label>${esc(t('py.card.holder'))}</label><input class="control" value="${esc(vipHolderName())}"/></div>`:`<div class="qr-box"><div class="qr-img">${qrSvg()}</div><p style="margin:12px 0 0;font-size:13px;color:var(--txt-dim)">${esc(t('py.qr.scan'))}</p></div>`;
+}
+SCREEN_INIT.vipPay=function(){
+  renderVipPayDetail();const sc=el('screen'),v=state.vip;
+  sc.querySelectorAll('[data-vippay]').forEach(b=>b.onclick=()=>{v.payMethod=b.dataset.vippay;sc.querySelectorAll('[data-vippay]').forEach(x=>x.classList.toggle('sel',x===b));renderVipPayDetail();});
+  el('vipTaxCb').onchange=e=>{v.tax=e.target.checked;el('vipTaxFields').classList.toggle('hidden',!v.tax);};sc.querySelector('[data-back]').onclick=()=>go('vip');el('vipConfirmPay').onclick=finishVipPurchase;
+};
+function finishVipPurchase(){
+  const v=state.vip,ref='VIP26-'+Math.random().toString(36).slice(2,7).toUpperCase()+'-'+Math.floor(1000+Math.random()*9000),today=new Date().toISOString().slice(0,10);
+  const rec={holder:vipHolderName()||state.account?.username||'-',type:vipPackageLabel(v.pkg),zone:vipDayLabels(v.days).join(', '),qty:1,date:today,amount:vipPrice(),ref,shirt:v.shirt,plates:v.days.map(id=>({day:id,plate:v.plates[id]||''})),foodAvoid:v.foodAvoid,foodAllergy:v.foodAllergy,priceTab:v.priceTab};
+  if(!state.profile)state.profile=emptyMemberProfile();if(!state.profile.vips)state.profile.vips=[];state.profile.applicant=Object.assign({},state.applicant);state.profile.vips.push(rec);v.result=rec;toast(t('vip.bought'));go('vipDone');
+}
+SCREENS.vipDone=function(){
+  const r=state.vip&&state.vip.result||{};
+  return `<div class="vipx vipx-done"><div class="success-ico">✦</div><h1 class="page-title">${esc(t('vipx.done.title'))}</h1><p class="page-sub">${esc(t('vipx.done.sub'))}</p><div class="receipt"><div class="r-head">SUVIP · OFFICIAL RECEIPT</div><div class="r-row"><span class="rl">${esc(t('vipx.ref'))}</span><span class="rv ref-num">${esc(r.ref||'')}</span></div><div class="r-row"><span class="rl">${esc(t('vipx.member'))}</span><span class="rv">${esc(r.holder||'-')}</span></div><div class="r-row"><span class="rl">${esc(t('vipx.package'))}</span><span class="rv">${esc(r.type||'-')}</span></div><div class="r-row"><span class="rl">${esc(t('vipx.days'))}</span><span class="rv">${esc(r.zone||'-')}</span></div><div class="r-row"><span class="rl">${esc(t('dn.amount'))}</span><span class="rv" style="color:var(--amber)">${esc(money(r.amount||0))}</span></div></div><div class="actions" style="justify-content:center;flex-wrap:wrap"><button class="btn btn-ghost" id="vipReceipt">${D_ICON.printer} ${esc(t('dn.receipt'))}</button><button class="btn btn-ghost" id="vipAnother">${esc(t('vipx.another'))}</button><button class="btn btn-primary" id="vipProfile">${esc(t('vipx.profile'))}</button></div></div>`;
+};
+function vipReceiptPdfHTML(){
+  const r=state.vip&&state.vip.result||{},today=new Date().toLocaleDateString(state.lang==='th'?'th-TH':'en-US',{year:'numeric',month:'long',day:'numeric'});
+  return `<div class="appdoc"><div class="ad-pad"><div class="ad-top"><div class="ad-brand"><img class="ad-logo" src="asset/vip-logo.png" alt="SUVIP"/><div class="ad-sub">SOUPED UP VIP EXPERIENCE</div></div><div class="ad-meta"><div class="ad-title">OFFICIAL RECEIPT</div><div>${esc(today)}</div><div class="ad-ref">${esc(r.ref||'')}</div></div></div><div class="ad-sec"><div class="ad-sec-h">${esc(t('vipx.member'))}</div><div class="ad-grid"><div class="ad-row full"><span class="ad-k">${esc(t('vipx.member'))}</span><span class="ad-v">${esc(r.holder||'-')}</span></div></div></div><div class="ad-sec"><div class="ad-sec-h">${esc(t('vipx.summary'))}</div><table class="rcpt-tbl"><tbody><tr><td>${esc(t('vipx.package'))}</td><td>${esc(r.type||'-')}</td></tr><tr><td>${esc(t('vipx.days'))}</td><td>${esc(r.zone||'-')}</td></tr><tr><td>${esc(t('vipx.shirt'))}</td><td>${esc(r.shirt||'-')}</td></tr></tbody><tfoot><tr><td class="tot-l">${esc(t('dn.amount'))}</td><td class="num tot-v">${esc(money(r.amount||0))}</td></tr></tfoot></table></div><div class="ad-foot"><span>Souped Up 2026 · SUVIP · NIDSS</span><span class="ad-demo">DEMO</span></div></div></div>`;
+}
+SCREEN_INIT.vipDone=function(){el('vipReceipt').onclick=()=>openPdfDoc(vipReceiptPdfHTML(),'SUVIP Receipt');el('vipAnother').onclick=()=>startVipPurchase(state.vip.back);el('vipProfile').onclick=()=>{state.profileTab='vip';go('profile');};};
+
 /* ---- DONE ---- */
 SCREENS.done = function(){
   const r=state.result||{};
@@ -2031,7 +2193,8 @@ function profVipHTML(p){
       <div class="pinfo-grid">
         ${row(t('vip.holder'),v.holder)}${row(t('vip.type'),v.type)}
         ${row(t('vip.zone'),v.zone)}${row(t('vip.qty'),String(v.qty))}
-        ${row(t('hist.date'),v.date)}
+        ${row(t('hist.date'),v.date)}${v.ref?row(t('vipx.ref'),v.ref):''}
+        ${v.amount?row(t('hist.amount'),money(v.amount)):''}${v.shirt?row(t('vipx.shirt'),v.shirt):''}
       </div>
     </div>`).join(''):`<div class="prof-empty">${esc(t('prof.novip'))}</div>`;
   return `<div class="prof-card">
@@ -2107,29 +2270,8 @@ SCREEN_INIT.profile=function(){
   const ar=el('profAddRacer'); if(ar)ar.onclick=()=>startRacerRegistration('profile');
   sc.querySelectorAll('[data-rimg]').forEach(b=>b.onclick=()=>{const r=state.profile.racers[+b.dataset.rimg];openDashImg(b.dataset.kind==='photo'?r.photo:r.idImg,b.dataset.kind==='photo'?'รูปนักแข่ง':'บัตรประชาชนนักแข่ง');});
   // vip tab
-  const bv=el('profBuyVip'); if(bv)bv.onclick=()=>openBuyVip();
+  const bv=el('profBuyVip'); if(bv)bv.onclick=()=>startVipPurchase('profile');
 };
-function openBuyVip(){
-  const types=[t('vip.type.grand'),t('vip.type.pit'),t('vip.type.village')];
-  const zones=['Zone A','Zone B','Zone C','Pit Lane'];
-  el('dmBody').innerHTML=`<h3>${esc(t('vip.buy.title'))}</h3>
-    <div style="display:flex;flex-direction:column;gap:14px">
-      <div class="field" data-field="vip_holder"><label>${esc(t('vip.holder'))}<span class="req">*</span></label><input class="control" id="vip_holder"/><div class="err-msg">${esc(t('v.required'))}</div></div>
-      <div class="field"><label>${esc(t('vip.type'))}</label><select class="control" id="vip_type">${types.map(x=>`<option>${esc(x)}</option>`).join('')}</select></div>
-      <div class="field"><label>${esc(t('vip.zone'))}</label><select class="control" id="vip_zone">${zones.map(x=>`<option>${esc(x)}</option>`).join('')}</select></div>
-      <div class="field"><label>${esc(t('vip.qty'))}</label><input class="control" id="vip_qty" type="number" min="1" value="1"/></div>
-    </div>
-    <div class="actions" style="margin-top:20px"><button class="btn btn-ghost" id="dmCancel">${esc(t('modal.close'))}</button><div class="spacer"></div><button class="btn btn-primary" id="dmSave">${esc(t('prof.buyvip'))}</button></div>`;
-  el('dmBack').classList.add('open');
-  el('dmCancel').onclick=closeDashModal;
-  el('dmSave').onclick=()=>{
-    const holder=el('vip_holder').value.trim();
-    if(!holder){ const f=el('vip_holder').closest('.field'); f.classList.add('invalid'); el('vip_holder').focus(); return; }
-    if(!state.profile.vips)state.profile.vips=[];
-    state.profile.vips.push({holder, type:el('vip_type').value, zone:el('vip_zone').value, qty:Math.max(1,parseInt(el('vip_qty').value)||1), date:new Date().toISOString().slice(0,10)});
-    closeDashModal(); render(); toast(t('vip.bought'));
-  };
-}
 function openProfEditApplicant(){
   const a=state.profile.applicant;
   const fields=[['a_date','f.date','date'],['a_name','f.name'],['a_surname','f.surname'],['a_idaddr','f.idaddr'],['a_deliaddr','f.deliaddr'],['a_phone','f.phone'],['a_email','f.email','email'],['chan_line','Line'],['chan_wechat','WeChat'],['chan_whatsapp','WhatsApp']];
@@ -2648,3 +2790,5 @@ document.addEventListener('keydown',(e)=>{
 setLang('th');
 render();
 </script>
+</body>
+</html>
