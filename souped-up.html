@@ -1242,6 +1242,9 @@ function bankAccountFields(prefix){
   const b=state.bank;
   const bankOpts=BANKS[state.lang].map(x=>({v:x,l:x})).concat([{v:'__other__',l:t('bank.other')}]);
   const other=b[prefix+'_bank']==='__other__';
+  const surnameField=fieldText({id:prefix+'_accsur',labelKey:'f.accsur',req:true,value:b[prefix+'_accsur']||''});
+  const adaptiveSurname=prefix==='rf';
+  const hideSurname=adaptiveSurname&&state.applicant.a_type==='company';
   return `
     ${fieldSelect({id:prefix+'_bank',labelKey:'f.bank',req:true,options:bankOpts,placeholderKey:'opt.bank',value:b[prefix+'_bank']||'',full:true})}
     <div class="field full ${other?'':'hidden'}" data-otherwrap="${prefix}">
@@ -1252,7 +1255,7 @@ function bankAccountFields(prefix){
     ${fieldText({id:prefix+'_accno',labelKey:'f.accno',req:true,value:b[prefix+'_accno']||'',full:true})}
     <div class="grid">
       ${fieldText({id:prefix+'_accname',labelKey:'f.accname',req:true,value:b[prefix+'_accname']||''})}
-      ${fieldText({id:prefix+'_accsur',labelKey:'f.accsur',req:true,value:b[prefix+'_accsur']||''})}
+      ${adaptiveSurname?`<div data-refund-surname class="${hideSurname?'hidden':''}">${surnameField}</div>`:surnameField}
     </div>`;
 }
 function bindBankAccount(form,prefix){
@@ -1348,6 +1351,13 @@ function bindApplicantForm(form){
     });
     const addrLabel=el('a_addr_label');
     if(addrLabel)addrLabel.innerHTML=esc(t(type==='company'?'f.regaddr':'f.idaddr'))+'<span class="req">*</span>';
+    const refundSurname=form.querySelector('[data-refund-surname]'), refundSurnameInput=el('rf_accsur');
+    if(refundSurname&&refundSurnameInput){
+      const hide=type==='company';
+      refundSurname.classList.toggle('hidden',hide);
+      if(hide){refundSurnameInput.removeAttribute('data-req');refundSurnameInput.closest('.field').classList.remove('invalid');}
+      else refundSurnameInput.setAttribute('data-req','');
+    }
     const upload=el('a_idcard');
     if(upload){
       upload.accept=type==='company'?'.pdf,.jpg,.jpeg,.png,application/pdf,image/png,image/jpeg':'.jpg,.jpeg,.png,image/png,image/jpeg';
@@ -1412,6 +1422,7 @@ function saveApplicant(form){
     if(inp)state.bank[k]=inp.value;
     delete state.applicant[k];
   });
+  if(state.applicant.a_type==='company')state.bank.rf_accsur='';
   persistApplicantUpload();
 }
 function persistApplicantUpload(){
