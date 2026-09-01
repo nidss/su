@@ -715,6 +715,8 @@ const I18N = {
     "ch.racer.title":"ลงทะเบียนนักแข่ง","ch.racer.desc":"สมัครและลงทะเบียนนักแข่งเข้าร่วมการแข่งขัน",
     "ch.vip.title":"ซื้อบัตร VIP Village","ch.vip.desc":"จองบัตรเข้าชมพื้นที่ VIP Village",
     "ch.needinfo":"กรุณากรอกข้อมูลส่วนตัวก่อน",
+    "ob.eyebrow":"ขั้นตอนแรก","ob.title":"กรอกข้อมูลส่วนตัว","ob.sub":"กรอกข้อมูลให้เรียบร้อยก่อนเริ่มทำรายการ",
+    "ob.info":"ข้อมูลนี้จะถูกใช้สำหรับการลงทะเบียนนักแข่งและการซื้อบัตรทุกครั้ง แก้ไขภายหลังได้ที่เมนูข้อมูลส่วนตัว","ob.next":"บันทึกและไปต่อ",
     "vip.holder":"ชื่อผู้ถือบัตร","vip.type":"ประเภทบัตร","vip.zone":"โซน","vip.qty":"จำนวน","vip.buy.title":"ซื้อบัตร Vip Village","vip.bought":"ซื้อบัตร Vip Village เรียบร้อยแล้ว",
     "vip.type.grand":"Grandstand VIP","vip.type.pit":"Pit VIP","vip.type.village":"Village Pass",
     "prof.edit":"แก้ไข","prof.addracer":"เพิ่มนักแข่ง","prof.logout":"ออกจากระบบ","prof.viewid":"ดูรูปบัตรประชาชน","prof.noracer":"ยังไม่มีข้อมูลนักแข่ง","prof.racerno":"นักแข่งคนที่",
@@ -812,6 +814,8 @@ const I18N = {
     "ch.racer.title":"Register Racer","ch.racer.desc":"Sign up and register racers for the competition",
     "ch.vip.title":"Buy VIP Village Ticket","ch.vip.desc":"Reserve access to the VIP Village area",
     "ch.needinfo":"Please fill in your personal info first",
+    "ob.eyebrow":"First step","ob.title":"Complete your personal info","ob.sub":"Fill this in before you start any transaction",
+    "ob.info":"This information is used for every racer registration and ticket purchase. You can edit it later in the Personal Info menu.","ob.next":"Save & continue",
     "vip.holder":"Ticket holder","vip.type":"Ticket type","vip.zone":"Zone","vip.qty":"Quantity","vip.buy.title":"Buy Vip Village Ticket","vip.bought":"Vip Village ticket purchased",
     "vip.type.grand":"Grandstand VIP","vip.type.pit":"Pit VIP","vip.type.village":"Village Pass",
     "prof.edit":"Edit","prof.addracer":"Add Racer","prof.logout":"Log out","prof.viewid":"View ID card","prof.noracer":"No racer data yet","prof.racerno":"Racer #",
@@ -872,7 +876,7 @@ genTakenPits();
 /* ================= Render root ================= */
 function render(){
   renderStepper();
-  el('stepper').classList.toggle('hidden', state.step==='profile' || state.step==='auth' || state.step==='choose');
+  el('stepper').classList.toggle('hidden', state.step==='profile' || state.step==='auth' || state.step==='choose' || state.step==='onboard');
   const s=el("screen");
   s.innerHTML = SCREENS[state.step]();
   window.scrollTo({top:0,behavior:"smooth"});
@@ -1005,7 +1009,7 @@ SCREEN_INIT.auth = function(){
       state.applicant.a_email=state.account.email;
       state.applicant.a_phone=state.account.phone;
       toast(t('t.registered'));
-      go('choose');
+      go('onboard');
     } else {
       // demo login: any username/password is accepted
       const idv=el('l_id').value.trim(), pw=el('l_password').value;
@@ -1042,10 +1046,42 @@ SCREENS.choose = function(){
 SCREEN_INIT.choose = function(){
   el('screen').querySelectorAll('[data-choose]').forEach(b=>b.onclick=()=>{
     const target=b.dataset.choose;
-    if(!hasPersonalInfo()){ toast(t('ch.needinfo')); state.pendingChoice=target; state.profileTab='info'; go('profile'); return; }
+    if(!hasPersonalInfo()){ toast(t('ch.needinfo')); state.pendingChoice=target; go('onboard'); return; }
     state.profileTab = target==='vip'?'vip':'racers';
     go('profile');
   });
+};
+
+/* ---- ONBOARD (mandatory personal info right after register) ---- */
+SCREENS.onboard = function(){
+  return `
+  <p class="eyebrow">${esc(t('ob.eyebrow'))}</p>
+  <h1 class="page-title">${esc(t('ob.title'))}</h1>
+  <p class="page-sub">${esc(t('ob.sub'))}</p>
+  <div class="info-box"><span class="ico">📋</span><span>${esc(t('ob.info'))}</span></div>
+  <form id="obForm" novalidate>
+    ${applicantFormInner()}
+    <div class="actions">
+      <div class="spacer"></div>
+      <button type="submit" class="btn btn-primary btn-lg">${esc(t('ob.next'))}</button>
+    </div>
+  </form>`;
+};
+SCREEN_INIT.onboard = function(){
+  const form=el('obForm');
+  bindApplicantForm(form);
+  if(state.applicant.idImg && !(state.files.a_idcard&&state.files.a_idcard.thumb)){ state.files.a_idcard={name:'idcard.png',thumb:state.applicant.idImg}; refreshUpload('a_idcard'); }
+  form.onsubmit=(e)=>{
+    e.preventDefault();
+    if(!validateScreen(form)){toast(t('v.fixerr'));return;}
+    saveApplicant(form);
+    const f=state.files.a_idcard; if(f&&f.thumb)state.applicant.idImg=f.thumb;
+    if(state.profile)state.profile.applicant=state.applicant;
+    toast(t('prof.saved'));
+    const pc=state.pendingChoice; state.pendingChoice=null;
+    if(pc){ state.profileTab=pc==='vip'?'vip':'racers'; go('profile'); }
+    else go('choose');
+  };
 };
 
 /* ---- TERMS ---- */
