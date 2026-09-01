@@ -2154,7 +2154,7 @@ function saveEmbeddedVipPurchase(rec){
   state.profile.applicant=Object.assign({},state.applicant);
   state.vip.result=rec;
 }
-SCREENS.vip=function(){return `<iframe id="suvipFrame" src="vip.html" title="Souped Up VIP Village"></iframe>`;};
+SCREENS.vip=function(){return `<iframe id="suvipFrame" src="vip.html?v=20260902c" title="Souped Up VIP Village"></iframe>`;};
 SCREEN_INIT.vip=function(){
   const frame=el('suvipFrame');
   frame.onload=()=>frame.contentWindow.postMessage({type:'su:member',member:embeddedVipMember()},'*');
@@ -2165,6 +2165,7 @@ window.addEventListener('message',e=>{
   if(e.data.type==='suvip:resize')frame.style.height=Math.max(720,Number(e.data.height)||0)+'px';
   else if(e.data.type==='suvip:complete')saveEmbeddedVipPurchase(e.data.record);
   else if(e.data.type==='suvip:profile'){state.profileTab='vip';go('profile');}
+  else if(e.data.type==='suvip:back')go(vipBackTarget());
   else if(e.data.type==='suvip:scroll-top')window.scrollTo({top:Math.max(0,frame.getBoundingClientRect().top+window.scrollY-84),behavior:'smooth'});
 });
 

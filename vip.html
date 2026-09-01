@@ -563,7 +563,11 @@ h2.sec-title{font-size:clamp(19px,3.4vw,25px);margin:0 0 4px;font-weight:700;let
   </div>
 
   <!-- 10. SUBMIT -->
-  <button type="submit" class="btn btn-primary btn-block btn-lg" data-i18n="submit">ยืนยันการสมัคร (Submit)</button>
+  <div class="actions">
+    <button type="button" class="btn btn-ghost" id="regBack" data-i18n="btn.back">ย้อนกลับ</button>
+    <div class="spacer"></div>
+    <button type="submit" class="btn btn-primary btn-lg" data-i18n="submit">ยืนยันการสมัคร (Submit)</button>
+  </div>
 
   </form>
  </div><!-- /#regView -->
@@ -1235,6 +1239,10 @@ el('memberBtn').addEventListener('click',e=>{
   if(!hostMember)return;
   e.preventDefault();e.stopImmediatePropagation();window.parent.postMessage({type:'suvip:profile'},'*');
 },true);
+el('regBack').onclick=()=>{
+  if(window.parent!==window) window.parent.postMessage({type:'suvip:back'},'*');
+  else window.history.back();
+};
 if(window.ResizeObserver){
   const resizeObserver=new ResizeObserver(()=>window.parent.postMessage({type:'suvip:resize',height:Math.max(document.body.scrollHeight,document.documentElement.scrollHeight)},'*'));
   resizeObserver.observe(document.body);
