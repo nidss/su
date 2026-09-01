@@ -26,9 +26,9 @@ This drops lines 1–9 (`<!DOCTYPE>` … `<link rel="icon">`), the standalone `<
 
 ## Architecture (all inside `index.html`, one `<script>`)
 
-A vanilla-JS screen router drives a 9-step wizard. Read these to understand the whole app:
+A vanilla-JS screen router drives a 7-step racer-registration wizard. Account signup and mandatory personal-information onboarding happen before the wizard and are hidden from its stepper. Read these to understand the whole app:
 
-- **`state`** — single global object holding all app data. `STEPS = ["auth","terms","applicant","racer","parking","bank","summary","pay","done"]`.
+- **`state`** — single global object holding all app data. `STEPS = ["terms","racer","parking","bank","summary","pay","done"]`.
 - **`SCREENS[step]()`** returns the screen's HTML string; **`SCREEN_INIT[step]()`** (optional) wires its events after it's injected. `render()` sets `el('screen').innerHTML = SCREENS[state.step]()` then calls the matching `SCREEN_INIT`. `go(step)` sets `state.step` and re-renders.
 - Because `render()` blows away and rebuilds the DOM, in-progress form values are captured back into `state` before any re-render via `persistCurrentForm()` (used by language switch) and per-screen `collect*`/`save*` helpers. When adding a screen, follow this collect-then-render pattern or typed data is lost.
 - **i18n**: `I18N.th` / `I18N.en` key maps; `t(key)` looks up the current `state.lang`. Every user-facing string goes through a key in **both** language blocks.
@@ -40,7 +40,7 @@ A vanilla-JS screen router drives a 9-step wizard. Read these to understand the 
 - **Parking**: `pkSlots()` derives one booking slot per race-class entry across all racers; `state.parking.assign` maps `slotKey → pit`. Cost is per car: `PRICES.entry + PRICES.deposit` × number of slots.
 - **Account/Profile**: `state.account = {username, email, phone, password}`. Demo login uses the two records in `DEMO_USERS`: the new-user record starts mandatory personal-info onboarding with an empty profile, while the existing-user record loads a populated profile with racers, history, and VIP. Registration and post-payment auto-login also populate `state.account`. `state.profile` (built by `buildProfile` for the existing demo user, or `buildProfileFromReg` after payment) feeds the "My Profile" screen.
 - **Bank accounts**: `state.bank` stores both account groups. The applicant deposit-refund fields (`rf_*`) are rendered and saved with the personal-information form; the bank wizard screen contains only the winner prize-payment fields (`pz_*`).
-- **Post-onboarding choice**: `openChosenAction(target)` sends the racer option directly to a fresh racer-information screen and redirects the VIP option to `VIP_SITE_URL` (`https://nidss.github.io/suvip/`).
+- **Post-onboarding choice**: `openChosenAction(target)` starts the racer option at a fresh terms screen before racer information and redirects the VIP option to `VIP_SITE_URL` (`https://nidss.github.io/suvip/`).
 
 ### Hidden entry points
 
