@@ -485,48 +485,11 @@ h2.sec-title{font-size:clamp(19px,3.4vw,25px);margin:0 0 4px;font-weight:700;let
   <!-- ============ REGISTRATION FORM ============ -->
   <form id="regForm" novalidate>
 
-  <!-- 4. APPLICANT INFO -->
-  <div class="card">
-    <div class="card-pad">
-      <h2 class="sec-title" data-i18n="ap.title">ข้อมูลผู้สมัคร</h2>
-      <p class="sec-sub" data-i18n="ap.sub">Applicant Information</p>
-      <div class="grid">
-        <div class="field">
-          <label data-i18n="ap.name">ชื่อ (Name)<span class="req">*</span></label>
-          <input class="control" name="name" data-i18n-ph="ap.name.ph" required>
-        </div>
-        <div class="field">
-          <label data-i18n="ap.surname">นามสกุล (Surname)<span class="req">*</span></label>
-          <input class="control" name="surname" data-i18n-ph="ap.surname.ph" required>
-        </div>
-        <div class="field">
-          <label data-i18n="ap.phone">เบอร์โทรศัพท์ (Mobile Phone)<span class="req">*</span></label>
-          <input class="control" name="phone" type="tel" inputmode="tel" data-i18n-ph="ap.phone.ph" required>
-        </div>
-        <div class="field">
-          <label data-i18n="ap.email">อีเมล (Email)<span class="req">*</span></label>
-          <input class="control" name="email" type="email" data-i18n-ph="ap.email.ph" required>
-        </div>
-        <div class="field full">
-          <label data-i18n="ap.chan">ช่องทางการติดต่อเพิ่มเติม (Additional contact)</label>
-          <div id="chanBox" style="display:flex;flex-direction:column;gap:10px;margin-top:2px">
-            <div>
-              <label class="checkbox"><input type="checkbox" data-chan="Line"> <span>Line</span></label>
-              <input class="control chan-input" data-chan-input="Line" placeholder="Line ID" style="display:none">
-            </div>
-            <div>
-              <label class="checkbox"><input type="checkbox" data-chan="WeChat"> <span>WeChat</span></label>
-              <input class="control chan-input" data-chan-input="WeChat" placeholder="WeChat ID" style="display:none">
-            </div>
-            <div>
-              <label class="checkbox"><input type="checkbox" data-chan="WhatsApp"> <span>WhatsApp</span></label>
-              <input class="control chan-input" data-chan-input="WhatsApp" placeholder="WhatsApp" style="display:none">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- Applicant data comes from the shared SU member profile. -->
+  <input type="hidden" name="name">
+  <input type="hidden" name="surname">
+  <input type="hidden" name="phone">
+  <input type="hidden" name="email">
 
   <!-- 5. PACKAGE -->
   <div class="card">
@@ -537,19 +500,7 @@ h2.sec-title{font-size:clamp(19px,3.4vw,25px);margin:0 0 4px;font-weight:700;let
     </div>
   </div>
 
-  <!-- 6. T-SHIRT -->
-  <div class="card">
-    <div class="card-pad">
-      <h2 class="sec-title" data-i18n="shirt.title">ไซส์เสื้อ</h2>
-      <p class="sec-sub" data-i18n="shirt.label">โปรดระบุไซส์เสื้อ (T-Shirt Size)</p>
-      <div class="radio-row">
-        <label class="radio-opt"><input type="radio" name="shirt" value="L"><span data-i18n="shirt.l">L - รอบอก 44" (Chest 44")</span></label>
-        <label class="radio-opt"><input type="radio" name="shirt" value="XL"><span data-i18n="shirt.xl">XL - รอบอก 48" (Chest 48")</span></label>
-      </div>
-    </div>
-  </div>
-
-  <!-- 7. PARKING -->
+  <!-- 6. PARKING -->
   <div class="card">
     <div class="card-pad">
       <h2 class="sec-title" data-i18n="park.title">สำรองพื้นที่จอดรถ</h2>
@@ -559,6 +510,18 @@ h2.sec-title{font-size:clamp(19px,3.4vw,25px);margin:0 0 4px;font-weight:700;let
         <span data-i18n="park.info">สงวนสิทธิ์ให้จอดเฉพาะเลขทะเบียนที่ลงทะเบียนไว้เท่านั้น / Reserved parking for registered license plates only</span>
       </div>
       <div id="parkFields" style="margin-top:14px"></div>
+    </div>
+  </div>
+
+  <!-- 7. T-SHIRT -->
+  <div class="card">
+    <div class="card-pad">
+      <h2 class="sec-title" data-i18n="shirt.title">ไซส์เสื้อ</h2>
+      <p class="sec-sub" data-i18n="shirt.label">โปรดระบุไซส์เสื้อ (T-Shirt Size)</p>
+      <div class="radio-row">
+        <label class="radio-opt"><input type="radio" name="shirt" value="L"><span data-i18n="shirt.l">L - รอบอก 44" (Chest 44")</span></label>
+        <label class="radio-opt"><input type="radio" name="shirt" value="XL"><span data-i18n="shirt.xl">XL - รอบอก 48" (Chest 48")</span></label>
+      </div>
     </div>
   </div>
 
@@ -1180,15 +1143,7 @@ el('brandHome').addEventListener('click', e=>{ e.preventDefault(); showView('reg
 document.getElementById('regForm').addEventListener('submit', e=>{
   e.preventDefault();
   const form = e.target;
-  let ok = true;
-  ['name','surname','phone','email'].forEach(n=>{
-    const f = form.elements[n];
-    const wrap = f.closest('.field');
-    const bad = !f.value.trim();
-    wrap.classList.toggle('invalid', bad);
-    if(bad) ok=false;
-  });
-  if(!ok){ toast(t('toast.fill')); return; }
+  if(['name','surname','phone','email'].some(n=>!form.elements[n].value.trim())){toast(t('toast.fill'));return;}
   if(!state.pkg){ toast(t('toast.pkg')); return; }
   const days = selectedDays();
   if(days.length !== PKG_DAYS[state.pkg]){ toast(t('toast.days')); return; }
@@ -1260,9 +1215,6 @@ function applyHostMember(data){
   if(f){
     f.name.value=hostMember.name||'';f.surname.value=hostMember.surname||'';
     f.phone.value=hostMember.phone||'';f.email.value=hostMember.email||'';
-    const lineCheck=document.querySelector('input[data-chan="Line"]');
-    const lineInput=document.querySelector('input[data-chan-input="Line"]');
-    if(lineCheck&&lineInput&&hostMember.line){lineCheck.checked=true;lineInput.style.display='block';lineInput.value=hostMember.line;}
   }
   applyLang();setTab(state.tab);
   const memberButton=el('memberBtn');
