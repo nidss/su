@@ -39,6 +39,7 @@ A vanilla-JS screen router drives a 9-step wizard. Read these to understand the 
 - **Racers**: `state.racers` is an array; each racer has `{id, r_rname, r_rsurname, r_idaddr, r_team, entries[], collapsed}`. Each entry is one race class `{cls, engine, carno}` — a racer can enter multiple of the 14 `RACE_CLASSES`, each with its own engine code and car number. `state.racer` is a flattened mirror of the first racer kept only so downstream screens keep working.
 - **Parking**: `pkSlots()` derives one booking slot per race-class entry across all racers; `state.parking.assign` maps `slotKey → pit`. Cost is per car: `PRICES.entry + PRICES.deposit` × number of slots.
 - **Account/Profile**: `state.account = {username, email, phone, password}`. Demo login uses the two records in `DEMO_USERS`: the new-user record starts mandatory personal-info onboarding with an empty profile, while the existing-user record loads a populated profile with racers, history, and VIP. Registration and post-payment auto-login also populate `state.account`. `state.profile` (built by `buildProfile` for the existing demo user, or `buildProfileFromReg` after payment) feeds the "My Profile" screen.
+- **Bank accounts**: `state.bank` stores both account groups. The applicant deposit-refund fields (`rf_*`) are rendered and saved with the personal-information form; the bank wizard screen contains only the winner prize-payment fields (`pz_*`).
 
 ### Hidden entry points
 
