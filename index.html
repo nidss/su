@@ -637,7 +637,10 @@ const I18N = {
     "tab.register":"สมัครสมาชิก","tab.login":"เข้าสู่ระบบ",
     "f.username":"ชื่อผู้ใช้","f.phone":"เบอร์โทรศัพท์","f.email":"อีเมล","f.password":"รหัสผ่าน",
     "f.confirm":"ยืนยันรหัสผ่าน","btn.register":"สมัครสมาชิก",
-    "f.loginid":"อีเมลหรือชื่อผู้ใช้","f.forgot":"ลืมรหัสผ่าน?","f.remember":"จดจำฉันในระบบ","btn.login":"เข้าสู่ระบบ",
+    "f.loginid":"เลือกผู้ใช้","f.forgot":"ลืมรหัสผ่าน?","f.remember":"จดจำฉันในระบบ","btn.login":"เข้าสู่ระบบ",
+    "auth.user.select":"— เลือกบัญชีตัวอย่าง —",
+    "auth.user.new":"ผู้ใช้ใหม่ — ยังไม่มีข้อมูลส่วนตัว นักแข่ง หรือ VIP",
+    "auth.user.existing":"ผู้ใช้เดิม — มีข้อมูล นักแข่ง และ VIP แล้ว",
     "ph.username":"เช่น speed_racer","ph.phone":"08X-XXX-XXXX","ph.email":"you@email.com",
     "ph.password":"อย่างน้อย 6 ตัวอักษร","ph.confirm":"กรอกรหัสผ่านอีกครั้ง","ph.loginid":"อีเมลหรือชื่อผู้ใช้",
     /* terms */
@@ -746,7 +749,10 @@ const I18N = {
     "tab.register":"Register","tab.login":"Sign In",
     "f.username":"Username","f.phone":"Phone Number","f.email":"Email","f.password":"Password",
     "f.confirm":"Confirm Password","btn.register":"Register",
-    "f.loginid":"Email or Username","f.forgot":"Forgot password?","f.remember":"Remember me","btn.login":"Sign In",
+    "f.loginid":"Select User","f.forgot":"Forgot password?","f.remember":"Remember me","btn.login":"Sign In",
+    "auth.user.select":"— Select a demo account —",
+    "auth.user.new":"New user — no personal info, racer, or VIP",
+    "auth.user.existing":"Existing user — personal info, racers, and VIP ready",
     "ph.username":"e.g. speed_racer","ph.phone":"08X-XXX-XXXX","ph.email":"you@email.com",
     "ph.password":"At least 6 characters","ph.confirm":"Re-enter your password","ph.loginid":"Email or username",
     "terms.eyebrow":"Step 2","terms.title":"Terms & Conditions",
@@ -970,6 +976,37 @@ function collect(scope,obj){
 const SCREENS = {};
 const SCREEN_INIT = {};
 
+const DEMO_USERS = {
+  new:{
+    kind:'new',
+    account:{username:'new_user',email:'new.user@example.com',phone:'081-111-1111',password:'demo123'}
+  },
+  existing:{
+    kind:'existing',
+    account:{username:'existing_user',email:'existing.user@example.com',phone:'089-999-9999',password:'demo123'}
+  }
+};
+
+function clearMemberRegistrationData(){
+  state.terms={privacy:false,rules:false,guarantee:false};
+  state.applicant={};
+  state.racer={};
+  state.racers=[];
+  state.parking={pit:"",assign:{},active:"",privatePit:false};
+  state.bank={};
+  state.discount={code:"",amount:0};
+  state.payMethod='card';
+  state.tax=false;
+  state.files={};
+  state.result=null;
+  state.pendingChoice=null;
+  state.profileTab='info';
+}
+
+function emptyMemberProfile(){
+  return {applicant:{},racers:[],history:[],vips:[]};
+}
+
 /* ---- AUTH ---- */
 SCREENS.auth = function(){
   const isReg = state.authTab==="register";
@@ -994,7 +1031,13 @@ SCREENS.auth = function(){
     </div>
     <div class="actions"><button type="submit" class="btn btn-primary btn-block btn-lg">${esc(t('btn.register'))}</button></div>
   ` : `
-    ${fieldText({id:'l_id',labelKey:'f.loginid',ph:'ph.loginid',req:true,full:true})}
+    ${fieldSelect({
+      id:'l_id',labelKey:'f.loginid',req:true,full:true,placeholderKey:'auth.user.select',
+      options:[
+        {v:'new',l:t('auth.user.new')},
+        {v:'existing',l:t('auth.user.existing')}
+      ]
+    })}
     ${fieldText({id:'l_password',labelKey:'f.password',ph:'ph.password',req:true,type:'password',full:true})}
     <div class="row-between">
       <label class="checkbox"><input type="checkbox" id="l_remember"/> ${esc(t('f.remember'))}</label>
@@ -1008,6 +1051,12 @@ SCREEN_INIT.auth = function(){
   el('screen').querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{state.authTab=b.dataset.tab;render();});
   const form=el('authForm');
   const fb=el('forgotBtn'); if(fb)fb.onclick=()=>toast(t('t.forgot'));
+  const demoUser=el('l_id');
+  if(demoUser)demoUser.onchange=()=>{
+    const rec=DEMO_USERS[demoUser.value];
+    const password=el('l_password');
+    if(rec&&password)password.value=rec.account.password;
+  };
   form.onsubmit=(e)=>{
     e.preventDefault();
     if(!validateScreen(form)) return;
@@ -1015,17 +1064,28 @@ SCREEN_INIT.auth = function(){
       const pw=el('r_password').value, cf=el('r_confirm').value;
       if(pw.length<6){markField('r_password',t('v.pwshort'));return;}
       if(pw!==cf){markField('r_confirm',t('v.pwmatch'));return;}
+      clearMemberRegistrationData();
       state.account={username:el('r_username').value.trim(),phone:el('r_phone').value.trim(),email:el('r_email').value.trim(),password:pw};
+      state.profile=emptyMemberProfile();
       // pre-fill applicant/racer where sensible
       state.applicant.a_email=state.account.email;
       state.applicant.a_phone=state.account.phone;
       toast(t('t.registered'));
       go('onboard');
     } else {
-      // demo login: any username/password is accepted
-      const idv=el('l_id').value.trim(), pw=el('l_password').value;
-      state.account={username:idv,email:idv.includes('@')?idv:'',phone:(state.account&&state.account.phone)||'',password:pw};
-      state.profile=buildProfile(state.account); state.applicant=Object.assign({}, state.profile.applicant); toast(t('t.loginok')); go('profile');
+      const rec=DEMO_USERS[el('l_id').value], pw=el('l_password').value;
+      clearMemberRegistrationData();
+      state.account=Object.assign({},rec.account,{password:pw});
+      if(rec.kind==='new'){
+        state.profile=emptyMemberProfile();
+        toast(t('t.loginok'));
+        go('onboard');
+      }else{
+        state.profile=buildProfile(state.account);
+        state.applicant=Object.assign({},state.profile.applicant);
+        toast(t('t.loginok'));
+        go('profile');
+      }
     }
   };
 };
