@@ -789,7 +789,7 @@ const I18N = {
     "prof.edit":"แก้ไข","prof.addracer":"เพิ่มนักแข่ง","prof.logout":"ออกจากระบบ","prof.viewid":"ดูรูปบัตรประชาชน","prof.noracer":"ยังไม่มีข้อมูลนักแข่ง","prof.racerno":"นักแข่งคนที่",
     "prof.welcome":"ยินดีต้อนรับกลับ","prof.saved":"บันทึกข้อมูลแล้ว",
     "prof.account":"บัญชีผู้ใช้","prof.changepw":"เปลี่ยนรหัสผ่าน","prof.pwsaved":"เปลี่ยนรหัสผ่านเรียบร้อยแล้ว","f.curpw":"รหัสผ่านปัจจุบัน","f.newpw":"รหัสผ่านใหม่","f.confirmpw":"ยืนยันรหัสผ่านใหม่","v.curpwwrong":"รหัสผ่านปัจจุบันไม่ถูกต้อง",
-    "hist.ref":"หมายเลขอ้างอิง","hist.racer":"นักแข่ง","hist.model":"รุ่นการแข่งขัน","hist.carno":"เบอร์รถ","hist.date":"วันที่","hist.amount":"ยอดชำระ","hist.status":"สถานะ","hist.paid":"ชำระแล้ว","hist.none":"ยังไม่มีประวัติการลงทะเบียน",
+    "hist.ref":"หมายเลขอ้างอิง","hist.racer":"นักแข่ง","hist.model":"รุ่นการแข่งขัน","hist.carno":"เบอร์รถ","hist.date":"วันที่","hist.amount":"ยอดชำระ","hist.status":"สถานะ","hist.receipt":"ใบเสร็จ","hist.paid":"ชำระแล้ว","hist.none":"ยังไม่มีประวัติการลงทะเบียน",
     "lang.name":"ภาษาไทย"
   },
   en:{
@@ -912,7 +912,7 @@ const I18N = {
     "prof.edit":"Edit","prof.addracer":"Add Racer","prof.logout":"Log out","prof.viewid":"View ID card","prof.noracer":"No racer data yet","prof.racerno":"Racer #",
     "prof.welcome":"Welcome back","prof.saved":"Saved",
     "prof.account":"Account","prof.changepw":"Change password","prof.pwsaved":"Password changed successfully","f.curpw":"Current password","f.newpw":"New password","f.confirmpw":"Confirm new password","v.curpwwrong":"Current password is incorrect",
-    "hist.ref":"Reference No.","hist.racer":"Racer","hist.model":"Competition","hist.carno":"Car No.","hist.date":"Date","hist.amount":"Amount","hist.status":"Status","hist.paid":"Paid","hist.none":"No registration history yet",
+    "hist.ref":"Reference No.","hist.racer":"Racer","hist.model":"Competition","hist.carno":"Car No.","hist.date":"Date","hist.amount":"Amount","hist.status":"Status","hist.receipt":"Receipt","hist.paid":"Paid","hist.none":"No registration history yet",
     "lang.name":"English"
   }
 };
@@ -2124,8 +2124,8 @@ SCREENS.vipDone=function(){
   const r=state.vip&&state.vip.result||{};
   return `<div class="vipx vipx-done"><div class="success-ico">✦</div><h1 class="page-title">${esc(t('vipx.done.title'))}</h1><p class="page-sub">${esc(t('vipx.done.sub'))}</p><div class="receipt"><div class="r-head">SUVIP · OFFICIAL RECEIPT</div><div class="r-row"><span class="rl">${esc(t('vipx.ref'))}</span><span class="rv ref-num">${esc(r.ref||'')}</span></div><div class="r-row"><span class="rl">${esc(t('vipx.member'))}</span><span class="rv">${esc(r.holder||'-')}</span></div><div class="r-row"><span class="rl">${esc(t('vipx.package'))}</span><span class="rv">${esc(r.type||'-')}</span></div><div class="r-row"><span class="rl">${esc(t('vipx.days'))}</span><span class="rv">${esc(r.zone||'-')}</span></div><div class="r-row"><span class="rl">${esc(t('dn.amount'))}</span><span class="rv" style="color:var(--amber)">${esc(money(r.amount||0))}</span></div></div><div class="actions" style="justify-content:center;flex-wrap:wrap"><button class="btn btn-ghost" id="vipReceipt">${D_ICON.printer} ${esc(t('dn.receipt'))}</button><button class="btn btn-ghost" id="vipAnother">${esc(t('vipx.another'))}</button><button class="btn btn-primary" id="vipProfile">${esc(t('vipx.profile'))}</button></div></div>`;
 };
-function vipReceiptPdfHTML(){
-  const r=state.vip&&state.vip.result||{},today=new Date().toLocaleDateString(state.lang==='th'?'th-TH':'en-US',{year:'numeric',month:'long',day:'numeric'});
+function vipReceiptPdfHTML(record){
+  const r=record||(state.vip&&state.vip.result)||{},today=r.date||new Date().toLocaleDateString(state.lang==='th'?'th-TH':'en-US',{year:'numeric',month:'long',day:'numeric'});
   return `<div class="appdoc"><div class="ad-pad"><div class="ad-top"><div class="ad-brand"><img class="ad-logo" src="asset/vip-logo.png" alt="SUVIP"/><div class="ad-sub">SOUPED UP VIP EXPERIENCE</div></div><div class="ad-meta"><div class="ad-title">OFFICIAL RECEIPT</div><div>${esc(today)}</div><div class="ad-ref">${esc(r.ref||'')}</div></div></div><div class="ad-sec"><div class="ad-sec-h">${esc(t('vipx.member'))}</div><div class="ad-grid"><div class="ad-row full"><span class="ad-k">${esc(t('vipx.member'))}</span><span class="ad-v">${esc(r.holder||'-')}</span></div></div></div><div class="ad-sec"><div class="ad-sec-h">${esc(t('vipx.summary'))}</div><table class="rcpt-tbl"><tbody><tr><td>${esc(t('vipx.package'))}</td><td>${esc(r.type||'-')}</td></tr><tr><td>${esc(t('vipx.days'))}</td><td>${esc(r.zone||'-')}</td></tr><tr><td>${esc(t('vipx.shirt'))}</td><td>${esc(r.shirt||'-')}</td></tr></tbody><tfoot><tr><td class="tot-l">${esc(t('dn.amount'))}</td><td class="num tot-v">${esc(money(r.amount||0))}</td></tr></tfoot></table></div><div class="ad-foot"><span>Souped Up 2026 · SUVIP · NIDSS</span><span class="ad-demo">DEMO</span></div></div></div>`;
 }
 SCREEN_INIT.vipDone=function(){el('vipReceipt').onclick=()=>openPdfDoc(vipReceiptPdfHTML(),'SUVIP Receipt');el('vipAnother').onclick=()=>startVipPurchase(state.vip.back);el('vipProfile').onclick=()=>{state.profileTab='vip';go('profile');};};
@@ -2203,7 +2203,10 @@ function buildProfile(acct){
 function buildExistingRefundBank(){
   return {rf_bank:'__other__',rf_bankother:'ธนาคารกสิกรไทย (KBank)',rf_accno:'123-4-56789-0',rf_accname:'บริษัท ซูพด์ อัพ มอเตอร์สปอร์ต จำกัด',rf_accsur:''};
 }
-function genVip(i){return {holder:dRnd(D_FIRST)+' '+dRnd(D_LAST),type:dRnd(['Grandstand VIP','Pit VIP','Village Pass']),zone:dRnd(['Zone A','Zone B','Zone C','Pit Lane']),qty:1+Math.floor(Math.random()*3),date:'2026-0'+(3+i)+'-'+dPad(10+i*4)};}
+function genVip(i){
+  const qty=1+Math.floor(Math.random()*3);
+  return {holder:dRnd(D_FIRST)+' '+dRnd(D_LAST),type:dRnd(['Grandstand VIP','Pit VIP','Village Pass']),zone:dRnd(['Zone A','Zone B','Zone C','Pit Lane']),qty,date:'2026-0'+(3+i)+'-'+dPad(10+i*4),ref:'VIP26-DEMO-'+dPad(1000+i),amount:8900*qty,shirt:dRnd(['S','M','L','XL'])};
+}
 function profInfoHTML(p){
   const acc=state.account||{};
   const uname=acc.username||((state.applicant.a_name||'')+' '+(state.applicant.a_surname||'')).trim()||'-';
@@ -2228,7 +2231,7 @@ function profVipHTML(p){
   const row=(lab,val)=>`<div class="pinfo-row"><div class="l">${esc(lab)}</div><div class="v">${esc(val||'-')}</div></div>`;
   const cards=vips.length?vips.map((v,i)=>`
     <div class="racer-card">
-      <div class="rc-head"><span class="rc-badge">${esc(t('prof.vip.card'))} ${i+1}</span></div>
+      <div class="rc-head"><span class="rc-badge">${esc(t('prof.vip.card'))} ${i+1}</span><button type="button" class="btn btn-ghost btn-sm" data-vipreceipt="${i}">${D_ICON.printer} ${esc(t('hist.receipt'))}</button></div>
       <div class="pinfo-grid">
         ${row(t('vip.holder'),v.holder)}${row(t('vip.type'),v.type)}
         ${row(t('vip.zone'),v.zone)}${row(t('vip.qty'),String(v.qty))}
@@ -2263,10 +2266,27 @@ function profRacersHTML(p){
   </div>`;
 }
 function profHistoryHTML(p){
-  const rows=p.history.length?p.history.map(h=>`<tr><td class="ref-num">${esc(h.ref)}</td><td>${esc(h.racer)}</td><td>${esc(h.model)}</td><td>#${esc(h.carno)}</td><td>${esc(h.date)}</td><td>${esc(money(h.amount))}</td><td><span class="badge-paid">${esc(t('hist.paid'))}</span></td></tr>`).join(''):`<tr><td colspan="7" style="text-align:center;color:var(--txt-dim);padding:24px">${esc(t('hist.none'))}</td></tr>`;
+  const rows=p.history.length?p.history.map((h,i)=>`<tr><td class="ref-num">${esc(h.ref)}</td><td>${esc(h.racer)}</td><td>${esc(h.model)}</td><td>#${esc(h.carno)}</td><td>${esc(h.date)}</td><td>${esc(money(h.amount))}</td><td><span class="badge-paid">${esc(t('hist.paid'))}</span></td><td><button type="button" class="btn btn-ghost btn-sm" data-histreceipt="${i}">${D_ICON.printer} ${esc(t('hist.receipt'))}</button></td></tr>`).join(''):`<tr><td colspan="8" style="text-align:center;color:var(--txt-dim);padding:24px">${esc(t('hist.none'))}</td></tr>`;
   return `<div class="table-card" style="border:1px solid var(--line);border-radius:12px"><div class="table-scroll"><table class="dtable">
-    <thead><tr><th>${esc(t('hist.ref'))}</th><th>${esc(t('hist.racer'))}</th><th>${esc(t('hist.model'))}</th><th>${esc(t('hist.carno'))}</th><th>${esc(t('hist.date'))}</th><th>${esc(t('hist.amount'))}</th><th>${esc(t('hist.status'))}</th></tr></thead>
+    <thead><tr><th>${esc(t('hist.ref'))}</th><th>${esc(t('hist.racer'))}</th><th>${esc(t('hist.model'))}</th><th>${esc(t('hist.carno'))}</th><th>${esc(t('hist.date'))}</th><th>${esc(t('hist.amount'))}</th><th>${esc(t('hist.status'))}</th><th>${esc(t('hist.receipt'))}</th></tr></thead>
     <tbody>${rows}</tbody></table></div></div>`;
+}
+function profileHistoryReceiptPdfHTML(h,p){
+  const a=(p&&p.applicant)||{},isCompany=a.a_type==='company';
+  const payer=isCompany?(a.a_company||'-'):(((a.a_name||'')+' '+(a.a_surname||'')).trim()||'-');
+  const payerType=isCompany?(state.lang==='th'?'นิติบุคคล':'Company'):(state.lang==='th'?'บุคคลธรรมดา':'Individual');
+  const info=[
+    `<div class="ad-row"><span class="ad-k">${state.lang==='th'?'ชื่อผู้ชำระเงิน':'Payer'}</span><span class="ad-v">${esc(payer)}</span></div>`,
+    `<div class="ad-row"><span class="ad-k">${state.lang==='th'?'ประเภทผู้สมัคร':'Applicant type'}</span><span class="ad-v">${esc(payerType)}</span></div>`
+  ];
+  if(a.a_email)info.push(`<div class="ad-row"><span class="ad-k">${esc(t('f.email'))}</span><span class="ad-v">${esc(a.a_email)}</span></div>`);
+  if(a.a_phone)info.push(`<div class="ad-row"><span class="ad-k">${esc(t('f.phone'))}</span><span class="ad-v">${esc(a.a_phone)}</span></div>`);
+  return `<div class="appdoc"><div class="ad-pad">
+    <div class="ad-top"><div class="ad-brand"><img class="ad-logo" src="asset/logo-main-b.png" alt="SOUPED UP 2026"/><div class="ad-sub">ใบเสร็จรับเงิน · OFFICIAL RECEIPT</div></div><div class="ad-meta"><div>${state.lang==='th'?'เลขที่ใบเสร็จ':'Receipt No.'}</div><div class="ad-ref">${esc(h.ref||'')}</div><div style="margin-top:8px">${esc(t('hist.date'))} <b>${esc(h.date||'-')}</b></div><div>${esc(t('hist.status'))} <b style="color:#1f9d55">${esc(t('hist.paid'))}</b></div></div></div>
+    <div class="ad-sec"><div class="ad-sec-h">${state.lang==='th'?'ข้อมูลผู้ชำระเงิน':'Payer Information'}</div><div class="ad-grid">${info.join('')}</div></div>
+    <div class="ad-sec"><div class="ad-sec-h">${state.lang==='th'?'รายการชำระเงิน':'Payment Details'}</div><table class="rcpt-tbl"><thead><tr><th>#</th><th>${esc(t('hist.racer'))}</th><th>${esc(t('hist.carno'))}</th><th>${esc(t('hist.model'))}</th><th class="num">${esc(t('hist.amount'))}</th></tr></thead><tbody><tr><td>1</td><td>${esc(h.racer||'-')}</td><td>${h.carno?'#'+esc(h.carno):'-'}</td><td>${esc(h.model||'-')}</td><td class="num">${esc(money(h.amount||0))}</td></tr></tbody><tfoot><tr><td colspan="4" class="tot-l">${esc(t('dn.amount'))}</td><td class="num tot-v">${esc(money(h.amount||0))}</td></tr></tfoot></table></div>
+    <div class="ad-foot"><span>Souped Up 2026 · NIDSS</span><span class="ad-demo">DEMO</span></div>
+  </div></div>`;
 }
 SCREENS.profile=function(){
   if(!state.profile)state.profile=buildProfile(state.account);
@@ -2313,6 +2333,9 @@ SCREEN_INIT.profile=function(){
   sc.querySelectorAll('[data-rimg]').forEach(b=>b.onclick=()=>{const r=state.profile.racers[+b.dataset.rimg];openDashImg(b.dataset.kind==='photo'?r.photo:r.idImg,b.dataset.kind==='photo'?'รูปนักแข่ง':'บัตรประชาชนนักแข่ง');});
   // vip tab
   const bv=el('profBuyVip'); if(bv)bv.onclick=()=>startVipPurchase('profile');
+  sc.querySelectorAll('[data-vipreceipt]').forEach(b=>b.onclick=()=>{const v=(state.profile.vips||[])[+b.dataset.vipreceipt];if(v)openPdfDoc(vipReceiptPdfHTML(v),'SUVIP Receipt');});
+  // registration history tab
+  sc.querySelectorAll('[data-histreceipt]').forEach(b=>b.onclick=()=>{const h=(state.profile.history||[])[+b.dataset.histreceipt];if(h)openPdfDoc(profileHistoryReceiptPdfHTML(h,state.profile),state.lang==='th'?'ใบเสร็จรับเงิน · Receipt':'Official Receipt');});
 };
 function openProfEditApplicant(){
   const a=state.profile.applicant;
