@@ -1109,6 +1109,7 @@ function clearMemberRegistrationData(){
   state.discount={code:"",amount:0};
   state.payMethod='card';
   state.tax=false;
+  state.taxInfo={name:'',id:'',addr:''};
   state.files={};
   state.result=null;
   state.vip=freshVipState('choose');
@@ -2004,15 +2005,39 @@ SCREENS.summary = function(){
   <p class="page-sub">${esc(t('sm.sub'))}</p>
   ${cars}
   <div class="sum-line total"><span class="lab">${esc(t('sm.total'))} · ${c.cars} ${esc(t('pk.book.car'))}</span><span class="val">${esc(money(c.total))}</span></div>
+
+  <label class="checkbox" style="margin:18px 0 4px"><input type="checkbox" id="taxCb" ${state.tax?'checked':''}/> ${esc(t('py.tax'))}</label>
+  <div id="taxFields" class="${state.tax?'':'hidden'}">
+    <div class="field full"><label>${esc(t('py.tax.name'))}</label><input class="control" id="tax_name" value="${esc((state.taxInfo&&state.taxInfo.name)||payerName())}"/></div>
+    <div class="field full"><label>${esc(t('py.tax.taxid'))}</label><input class="control" id="tax_id" value="${esc((state.taxInfo&&state.taxInfo.id)||'')}"/></div>
+    <div class="field full"><label>${esc(t('py.tax.addr'))}</label><input class="control" id="tax_addr" value="${esc((state.taxInfo&&state.taxInfo.addr)||'')}"/></div>
+  </div>
+
+  <div class="card" style="margin:18px 0;background:var(--panel-2)">
+    <div class="card-pad" style="padding:16px 18px">
+      <h4 style="margin:0 0 10px;font-size:14px">${esc(t('py.terms.t'))}</h4>
+      <p class="note" style="margin-bottom:10px"><b>${esc(t('py.t1.t'))}</b><br/>${esc(t('py.t1.b'))}</p>
+      <p class="note" style="margin-bottom:10px"><b>${esc(t('py.t2.t'))}</b><br/>${esc(t('py.t2.b'))}</p>
+      <p class="note"><b>${esc(t('py.t3.t'))}</b><br/>${esc(t('py.t3.b'))}</p>
+    </div>
+  </div>
+
   <div class="actions">
     <button class="btn btn-ghost" data-back>${esc(t('btn.back'))}</button>
     <div class="spacer"></div>
     <button class="btn btn-primary" id="toPay">${esc(t('btn.pay'))}</button>
   </div>`;
 };
+/* เก็บค่าใบกำกับภาษีจากหน้าสรุปยอดก่อน re-render เพื่อไม่ให้ค่าที่กรอกหาย */
+function collectTax(){
+  const cb=el('taxCb'); if(!cb)return;
+  state.tax=cb.checked;
+  state.taxInfo={name:(el('tax_name')||{}).value||'',id:(el('tax_id')||{}).value||'',addr:(el('tax_addr')||{}).value||''};
+}
 SCREEN_INIT.summary = function(){
-  el('screen').querySelector('[data-back]').onclick=()=>go('bank');
-  el('toPay').onclick=()=>go('pay');
+  el('taxCb').onchange=(e)=>{state.tax=e.target.checked;el('taxFields').classList.toggle('hidden',!e.target.checked);};
+  el('screen').querySelector('[data-back]').onclick=()=>{collectTax();go('bank');};
+  el('toPay').onclick=()=>{collectTax();go('pay');};
 };
 
 /* ---- PAYMENT ---- */
@@ -2038,22 +2063,6 @@ SCREENS.pay = function(){
   </div>
   <div id="payDetail" style="margin-top:6px"></div>
 
-  <label class="checkbox" style="margin:18px 0 4px"><input type="checkbox" id="taxCb" ${state.tax?'checked':''}/> ${esc(t('py.tax'))}</label>
-  <div id="taxFields" class="${state.tax?'':'hidden'}">
-    <div class="field full"><label>${esc(t('py.tax.name'))}</label><input class="control" id="tax_name" value="${esc(payerName())}"/></div>
-    <div class="field full"><label>${esc(t('py.tax.taxid'))}</label><input class="control" id="tax_id"/></div>
-    <div class="field full"><label>${esc(t('py.tax.addr'))}</label><input class="control" id="tax_addr"/></div>
-  </div>
-
-  <div class="card" style="margin:18px 0;background:var(--panel-2)">
-    <div class="card-pad" style="padding:16px 18px">
-      <h4 style="margin:0 0 10px;font-size:14px">${esc(t('py.terms.t'))}</h4>
-      <p class="note" style="margin-bottom:10px"><b>${esc(t('py.t1.t'))}</b><br/>${esc(t('py.t1.b'))}</p>
-      <p class="note" style="margin-bottom:10px"><b>${esc(t('py.t2.t'))}</b><br/>${esc(t('py.t2.b'))}</p>
-      <p class="note"><b>${esc(t('py.t3.t'))}</b><br/>${esc(t('py.t3.b'))}</p>
-    </div>
-  </div>
-
   <div class="actions">
     <button class="btn btn-ghost" data-back>${esc(t('btn.back'))}</button>
     <div class="spacer"></div>
@@ -2063,7 +2072,6 @@ SCREENS.pay = function(){
 SCREEN_INIT.pay = function(){
   renderPayDetail();
   el('screen').querySelectorAll('[data-pay]').forEach(o=>o.onclick=()=>{state.payMethod=o.dataset.pay;el('screen').querySelectorAll('.pay-opt').forEach(p=>p.classList.toggle('sel',p===o));renderPayDetail();});
-  el('taxCb').onchange=(e)=>{state.tax=e.target.checked;el('taxFields').classList.toggle('hidden',!e.target.checked);};
   el('screen').querySelector('[data-back]').onclick=()=>go('summary');
   el('confirmPay').onclick=()=>{finishPayment();};
 };
@@ -2527,6 +2535,7 @@ function persistCurrentForm(){
   const rf=el('rcForm'); if(rf)collectRacers();
   const pf=el('pkForm'); if(pf)savePark(pf);
   const bf=el('bkForm'); if(bf)saveBank(bf);
+  if(el('taxCb'))collectTax();
 }
 
 /* ================= Boot ================= */
