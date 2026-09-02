@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script src="asset/qrcode-generator.js"></script>
 <style>
 :root{
   --bg:#0a0b0d;
@@ -269,6 +270,10 @@ h2.sec-title{font-size:clamp(19px,3.4vw,25px);margin:0 0 4px;font-weight:700;let
 .receipt .r-row:last-child{border-bottom:0}
 .receipt .r-row .rl{color:var(--txt-dim)}
 .receipt .r-row .rv{font-weight:700}
+.checkin-passes{display:grid;gap:10px;padding:14px 18px;border-top:1px dashed var(--line-2)}
+.checkin-pass{display:grid;grid-template-columns:132px 1fr;gap:14px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#0C142A}
+.checkin-pass svg{display:block;width:132px;height:132px}.checkin-pass b,.checkin-pass span{display:block}.checkin-pass b{font-size:13px}.checkin-pass span{font-size:10.5px;margin-top:4px;color:#596273}.checkin-pass .pass-ref{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:700;color:#0C142A;overflow-wrap:anywhere}
+@media(max-width:420px){.checkin-pass{grid-template-columns:108px 1fr}.checkin-pass svg{width:108px;height:108px}}
 .ref-num{font-family:'Rajdhani',monospace;letter-spacing:2px;color:var(--amber)}
 .done-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
 .done-actions .btn{min-width:180px;flex:0 1 220px}
@@ -293,6 +298,8 @@ h2.sec-title{font-size:clamp(19px,3.4vw,25px);margin:0 0 4px;font-weight:700;let
   #printReceipt .pr-row .prl{color:#666}
   #printReceipt .pr-row .prv{font-weight:700;text-align:right;white-space:pre-line}
   #printReceipt .pr-row.total .prv{color:#b8860b}
+  #printReceipt .checkin-passes{border-top:1px dashed #cfd3da;padding:14px 18px}
+  #printReceipt .checkin-pass{break-inside:avoid;border-color:#d8dce3;background:#fff}
   #printReceipt .pr-foot{padding:12px 18px 16px;font-size:10.5px;color:#888;letter-spacing:.5px;text-align:center;border-top:1px dashed #cfd3da}
 }
 
@@ -932,6 +939,24 @@ function qrSvg(){
   }
   return '<svg viewBox="0 0 '+(n*9)+' '+(n*9)+'" width="150" height="150" fill="#000">'+cells+'</svg>';
 }
+function checkinPayload(pass){
+  const compact={v:1,t:'v',r:pass.ref,n:pass.holder,m:pass.type,d:pass.dayIds||[],z:pass.dayIds&&pass.dayIds.length?'':(pass.zone||''),s:pass.shirt||''};
+  Object.keys(compact).forEach(k=>{if(compact[k]===''||(Array.isArray(compact[k])&&!compact[k].length))delete compact[k];});
+  const bytes=new TextEncoder().encode(JSON.stringify(compact));let binary='';bytes.forEach(b=>binary+=String.fromCharCode(b));
+  return 'SU26CHK|'+btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function checkinQrSvg(pass){
+  try{
+    const qr=qrcode(0,'M');qr.addData(checkinPayload(pass));qr.make();
+    const n=qr.getModuleCount();let cells='';
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++)if(qr.isDark(y,x))cells+='<rect x="'+x+'" y="'+y+'" width="1" height="1"/>';
+    return '<svg viewBox="-4 -4 '+(n+8)+' '+(n+8)+'" shape-rendering="crispEdges" fill="#0C142A" role="img" aria-label="VIP check-in QR"><rect x="-4" y="-4" width="'+(n+8)+'" height="'+(n+8)+'" fill="#fff"/>'+cells+'</svg>';
+  }catch(e){return '';}
+}
+function checkinPassesHTML(passes){
+  if(!passes||!passes.length)return '';
+  return '<div class="checkin-passes">'+passes.map((pass,i)=>'<div class="checkin-pass">'+checkinQrSvg(pass)+'<div><b>'+(state.lang==='th'?'QR เช็กอินบัตร VIP':'VIP Check-in QR')+(passes.length>1?' #'+(i+1):'')+'</b><span>'+(state.lang==='th'?'สแกนใหม่ในแต่ละวันที่เข้าร่วม':'Scan once on each event day')+'</span><span class="pass-ref">'+esc(pass.ref)+'</span><span>'+esc(pass.zone||'')+'</span></div></div>').join('')+'</div>';
+}
 function finishPayment(){
   const price=state.tickets.reduce((sum,ticket)=>sum+ticketPrice(ticket),0);
   const f = el('regForm');
@@ -944,7 +969,8 @@ function finishPayment(){
     pkg:state.tickets.map(ticket=>t('pkg.'+ticket.pkg)).join(' / '),
     days:state.tickets.map(ticket=>selectedDays(ticket).map(d=>d[state.lang]).join(', ')).join(' / '),
     qty:state.tickets.length,
-    amount:price
+    amount:price,
+    checkins:state.tickets.map((ticket,i)=>{const pickedDays=selectedDays(ticket);return {ref:state.tickets.length>1?ref+'-'+(i+1):ref,holder,type:t('pkg.'+ticket.pkg),zone:pickedDays.map(d=>d[state.lang]).join(', '),dayIds:pickedDays.map(d=>d.id),shirt:ticket.shirt||'-'};})
   };
   state.tickets.forEach((ticket,i)=>{
     const pickedDays=selectedDays(ticket);
@@ -972,6 +998,7 @@ function renderDone(){
        '<div class="r-row"><span class="rl">'+t('ticket.list')+'</span><span class="rv">'+t('ticket.qty').replace('{n}',r.qty||1)+'</span></div>'+
        '<div class="r-row"><span class="rl">'+t('dn.days')+'</span><span class="rv">'+esc(r.days||'-')+'</span></div>'+
        '<div class="r-row"><span class="rl">'+t('dn.amount')+'</span><span class="rv" style="color:var(--amber)">'+money(r.amount||0)+'</span></div>'+
+       checkinPassesHTML(r.checkins)+
      '</div>'+
      '<div class="done-actions">'+
        '<button type="button" class="btn btn-ghost" onclick="window.print()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg> '+t('dn.print')+'</button>'+
@@ -1000,6 +1027,7 @@ function populatePrintableReceipt(r, title){
         (r.plates?prRow(t('mem.hist.plate'), r.plates):'')+
         prRow(t('dn.amount'), money(r.amount||0), 'total')+
       '</div>'+
+      checkinPassesHTML(r.checkins)+
       '<div class="pr-foot">Souped Up VIP Village · Grand Prix International Public Company Limited'+(r.email?(' · '+esc(r.email)):'')+'</div>'+
     '</div>';
 }
@@ -1015,7 +1043,8 @@ function printHistoryReceipt(id){
     qty:order.qty||1,
     days:(order.dayIds||[]).map(dayLabel).join(', '),
     plates,
-    amount:order.amount||0
+    amount:order.amount||0,
+    checkins:[{ref:order.ref||order.id||'',holder:((order.name||'')+' '+(order.surname||'')).trim()||'-',type:t('pkg.'+order.pkg),zone:(order.dayIds||[]).map(dayLabel).join(', '),dayIds:order.dayIds||[],shirt:order.tshirt||order.shirt||'-'}]
   }, t('dn.receipt'));
   setTimeout(()=>window.print(),60);
 }

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0a0b0d" />
+<title>Check-in · Souped Up 2026</title>
+<meta name="description" content="ระบบเช็กอินนักแข่งและบัตร VIP สำหรับทีมงาน Souped Up 2026" />
+<link rel="icon" type="image/png" sizes="16x16" href="asset/favicon-16x16.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script src="asset/html5-qrcode.min.js" defer></script>
+<style>
+:root{
+  --bg:#0a0b0d;--panel:#15181e;--panel-2:#1b1f27;--line:#2a2f3a;--line-2:#363c49;
+  --txt:#f4f6f9;--dim:#aeb5c1;--faint:#747d8c;--mint:#6FFFE8;--lime:#D1FF03;--navy:#0C142A;
+  --grad:linear-gradient(115deg,#6FFFE8 0%,#9dffb0 48%,#D1FF03 100%);--green:#25c26e;--red:#ff4d45;--amber:#ffb400;
+  --font:'Rajdhani','Noto Sans Thai',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}button,input{font:inherit}
+body{background:radial-gradient(700px 420px at 0 100%,rgba(111,255,232,.08),transparent 65%),radial-gradient(640px 380px at 100% 0,rgba(209,255,3,.05),transparent 65%),var(--bg);color:var(--txt);font-family:var(--font);-webkit-font-smoothing:antialiased}
+button,a{-webkit-tap-highlight-color:transparent}.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px max(16px,env(safe-area-inset-right)) 12px max(16px,env(safe-area-inset-left));background:rgba(10,11,13,.88);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+.brand img{display:block;width:auto;height:30px}.back{display:flex;align-items:center;gap:6px;color:var(--dim);text-decoration:none;font-size:13px;font-weight:600}.back:hover{color:var(--mint)}
+.shell{width:min(1180px,100%);margin:auto;padding:26px 18px calc(32px + env(safe-area-inset-bottom))}.hero{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:20px}.eyebrow{margin:0 0 5px;color:var(--mint);font-size:11px;font-weight:700;letter-spacing:2.2px;text-transform:uppercase}.hero h1{font-size:clamp(29px,7vw,44px);line-height:1;margin:0 0 8px;letter-spacing:-.6px}.hero p{color:var(--dim);font-size:13px;line-height:1.55;margin:0}.live{display:flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid rgba(37,194,110,.25);border-radius:999px;background:rgba(37,194,110,.09);color:#7df1ad;font-size:11px;font-weight:700;white-space:nowrap}.live i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(37,194,110,.12)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;width:min(350px,100%);padding:4px;margin:0 0 16px;background:#111319;border:1px solid var(--line);border-radius:11px}.tab{min-height:42px;border:0;border-radius:8px;background:transparent;color:var(--dim);font-weight:700;cursor:pointer}.tab.active{background:var(--grad);color:var(--navy);box-shadow:0 5px 18px rgba(111,255,232,.18)}
+.layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,.85fr);gap:16px;align-items:start}.card{border:1px solid var(--line);border-radius:15px;background:rgba(21,24,30,.94);overflow:hidden;box-shadow:0 16px 45px rgba(0,0,0,.22)}.card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 17px;border-bottom:1px solid var(--line)}.card-head h2{font-size:17px;margin:0}.card-head small{color:var(--faint);font-size:11px}
+.camera{position:relative;display:grid;place-items:center;min-height:360px;background:#020303;overflow:hidden}.camera::after{content:"";position:absolute;left:10%;right:10%;top:50%;height:1px;background:linear-gradient(90deg,transparent,var(--mint),transparent);box-shadow:0 0 11px var(--mint);opacity:.75;animation:sweep 2.6s ease-in-out infinite;pointer-events:none}.camera.idle::after{display:none}@keyframes sweep{0%,100%{transform:translateY(-105px);opacity:.2}50%{transform:translateY(105px);opacity:.8}}
+#reader{width:100%;min-height:300px}#reader video{object-fit:cover!important}.camera-placeholder{position:absolute;inset:0;z-index:2;display:grid;place-items:center;text-align:center;padding:28px;background:#030404}.camera:not(.idle) .camera-placeholder{display:none}.scan-icon{width:60px;height:60px;margin:0 auto 14px;border:1px solid var(--line-2);border-radius:16px;display:grid;place-items:center;background:#111318;color:var(--mint)}.camera-placeholder strong{display:block;margin-bottom:5px}.camera-placeholder span{display:block;color:var(--faint);font-size:12px;line-height:1.5}
+.corner{position:absolute;z-index:4;width:34px;height:34px;pointer-events:none}.c1{left:18px;top:18px;border-left:3px solid #fff;border-top:3px solid #fff;border-radius:6px 0 0}.c2{right:18px;top:18px;border-right:3px solid #fff;border-top:3px solid #fff;border-radius:0 6px 0 0}.c3{left:18px;bottom:18px;border-left:3px solid #fff;border-bottom:3px solid #fff;border-radius:0 0 0 6px}.c4{right:18px;bottom:18px;border-right:3px solid #fff;border-bottom:3px solid #fff;border-radius:0 0 6px}
+.camera-actions{display:grid;grid-template-columns:1fr auto;gap:9px;padding:14px;border-top:1px solid var(--line)}.btn{min-height:44px;border-radius:10px;border:1px solid var(--line-2);padding:9px 14px;background:#1d2129;color:var(--txt);font-weight:700;cursor:pointer}.btn:disabled{opacity:.45;cursor:not-allowed}.btn-primary{border:0;background:var(--grad);color:var(--navy)}.btn-danger{border-color:rgba(255,77,69,.35);color:#ff8b85;background:rgba(255,77,69,.08)}.file-btn{position:relative;overflow:hidden}.file-btn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.manual{padding:14px;border-top:1px solid var(--line)}.manual label{display:block;color:var(--dim);font-size:12px;margin:0 0 7px}.input-row{display:grid;grid-template-columns:1fr auto;gap:8px}.input{width:100%;min-width:0;min-height:44px;border:1px solid var(--line-2);border-radius:10px;background:#0f1115;color:var(--txt);padding:10px 12px;outline:0;text-transform:none}.input:focus{border-color:var(--mint);box-shadow:0 0 0 3px rgba(111,255,232,.11)}
+.side{display:grid;gap:16px}.empty{min-height:176px;display:grid;place-items:center;padding:24px;text-align:center;color:var(--faint);font-size:13px}.result{padding:16px}.result-banner{padding:12px 13px;margin-bottom:14px;border-radius:10px;background:rgba(111,255,232,.1);border:1px solid rgba(111,255,232,.25)}.result-banner.warn{background:rgba(255,180,0,.08);border-color:rgba(255,180,0,.3)}.result-banner.bad{background:rgba(255,77,69,.08);border-color:rgba(255,77,69,.3)}.result-banner b{display:block;color:var(--mint);font-size:14px}.result-banner.warn b{color:var(--amber)}.result-banner.bad b{color:var(--red)}.result-banner span{display:block;color:var(--dim);font-size:11.5px;margin-top:3px}.info{display:grid;gap:1px;margin-bottom:14px;border:1px solid var(--line);border-radius:11px;overflow:hidden;background:var(--line)}.info-row{display:grid;grid-template-columns:94px 1fr;gap:10px;padding:10px 11px;background:var(--panel-2);font-size:12.5px}.info-row span{color:var(--faint)}.info-row strong{overflow-wrap:anywhere}.ref{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mint);letter-spacing:.3px}
+.days-label{font-size:11px;color:var(--faint);margin-bottom:7px}.days{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px}.day{border:1px solid var(--line-2);border-radius:9px;background:#111318;color:var(--dim);min-height:48px;padding:7px 4px;font-size:10.5px;font-weight:700;cursor:pointer}.day.active{border-color:var(--mint);background:rgba(111,255,232,.12);color:var(--mint)}.day.blocked{opacity:.38;text-decoration:line-through}.confirm{width:100%;min-height:49px}.next{width:100%;margin-top:8px;background:transparent}
+.recent-list{max-height:400px;overflow:auto}.recent{display:grid;grid-template-columns:35px 1fr auto;gap:10px;align-items:center;padding:12px 15px;border-bottom:1px solid var(--line)}.recent:last-child{border-bottom:0}.recent-ico{width:35px;height:35px;border-radius:10px;display:grid;place-items:center;background:rgba(111,255,232,.1);color:var(--mint);font-size:14px;font-weight:700}.recent-main{min-width:0}.recent-main b,.recent-main span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.recent-main b{font-size:12px}.recent-main span{color:var(--faint);font-size:10.5px;margin-top:2px}.recent-time{text-align:right;color:var(--dim);font-size:10.5px}.device-note{padding:10px 14px;color:var(--faint);font-size:10px;line-height:1.45;border-top:1px solid var(--line)}
+.toast{position:fixed;z-index:50;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translate(-50%,20px);max-width:calc(100% - 30px);padding:11px 15px;border:1px solid var(--line-2);border-radius:10px;background:#22262f;color:#fff;font-size:12px;box-shadow:0 15px 40px #000;opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:800px){.shell{padding-top:20px}.layout{grid-template-columns:1fr}.camera{min-height:58vh;max-height:620px}.side{grid-template-columns:1fr}.card.result-card{order:-1}.result-card:has(.empty){display:none}.hero h1{font-size:34px}}
+@media(max-width:430px){.hero{align-items:center}.hero p{max-width:260px}.camera{min-height:52vh}.camera-actions{grid-template-columns:1fr 1fr}.camera-actions #cameraBtn{grid-column:1/-1}.input-row{grid-template-columns:1fr}.input-row .btn{width:100%}.info-row{grid-template-columns:78px 1fr}.days{gap:4px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html" aria-label="กลับหน้าแรก"><img src="asset/logo-main.png" alt="Souped Up 2026" /></a>
+  <a class="back" href="index.html"><span aria-hidden="true">←</span> กลับหน้าแรก</a>
+</header>
+<main class="shell">
+  <div class="hero">
+    <div><p class="eyebrow">STAFF ACCESS</p><h1>Check-in LIVE</h1><p>สแกน QR เพื่อยืนยันการเข้างานของนักแข่งและผู้ถือบัตร VIP</p></div>
+    <div class="live"><i></i><span>LIVE</span></div>
+  </div>
+  <div class="tabs" role="tablist" aria-label="ประเภทเช็กอิน">
+    <button class="tab active" type="button" data-tab="racer" role="tab">นักแข่ง</button>
+    <button class="tab" type="button" data-tab="vip" role="tab">บัตร VIP</button>
+  </div>
+  <div class="layout">
+    <section class="card scanner-card">
+      <div class="card-head"><h2>สแกน QR Code</h2><small id="cameraStatus">กล้องยังไม่เปิด</small></div>
+      <div class="camera idle" id="camera">
+        <div id="reader"></div>
+        <div class="camera-placeholder"><div><div class="scan-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M7 12h10"/></svg></div><strong>พร้อมสแกน</strong><span>กด “เปิดกล้อง” แล้วหันกล้องหลังไปที่ QR</span></div></div>
+        <i class="corner c1"></i><i class="corner c2"></i><i class="corner c3"></i><i class="corner c4"></i>
+      </div>
+      <div class="camera-actions">
+        <button class="btn btn-primary" id="cameraBtn" type="button">เปิดกล้อง</button>
+        <label class="btn file-btn">เลือกรูป QR<input id="qrFile" type="file" accept="image/*" /></label>
+      </div>
+      <form class="manual" id="manualForm">
+        <label for="manualCode">หรือกรอกรหัสอ้างอิง / ข้อมูล QR</label>
+        <div class="input-row"><input class="input" id="manualCode" autocomplete="off" placeholder="เช่น SU26-... หรือ SUVIP-..." /><button class="btn" type="submit">ค้นหา</button></div>
+      </form>
+    </section>
+    <aside class="side">
+      <section class="card result-card">
+        <div class="card-head"><h2>ข้อมูลจาก QR</h2><small id="resultType">รอการสแกน</small></div>
+        <div id="result"><div class="empty">ข้อมูลผู้เข้าร่วมจะแสดงที่นี่หลังสแกน</div></div>
+      </section>
+      <section class="card">
+        <div class="card-head"><h2>เช็กอินล่าสุด</h2><small id="recentCount">0 รายการ</small></div>
+        <div class="recent-list" id="recentList"><div class="empty">ยังไม่มีการเช็กอิน</div></div>
+        <div class="device-note">ประวัติถูกเก็บในอุปกรณ์เครื่องนี้ เพื่อให้หน้างานใช้งานได้แม้สัญญาณไม่เสถียร</div>
+      </section>
+    </aside>
+  </div>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+'use strict';
+var STORAGE_KEY='su_checkins_v1';
+var DAYS=[{id:'d5',label:'ศุกร์ 4 ธ.ค.'},{id:'d6',label:'เสาร์ 5 ธ.ค.'},{id:'d7',label:'อาทิตย์ 6 ธ.ค.'}];
+var activeTab='racer',scanner=null,scanning=false,current=null,selectedDay=defaultDay(),scanLock=false;
+var $=function(id){return document.getElementById(id);};
+function esc(value){return String(value==null?'':value).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function toast(message){var el=$('toast');el.textContent=message;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(function(){el.classList.remove('show');},2600);}
+function readLog(){try{var value=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');return Array.isArray(value)?value:[];}catch(e){return [];}}
+function writeLog(log){localStorage.setItem(STORAGE_KEY,JSON.stringify(log.slice(0,500)));}
+function defaultDay(){var d=new Date(),day=d.getDate();return day===4?'d5':day===5?'d6':day===6?'d7':'d5';}
+function dayLabel(id){var item=DAYS.find(function(d){return d.id===id;});return item?item.label:id;}
+function decodeBase64Url(value){var b64=value.replace(/-/g,'+').replace(/_/g,'/');while(b64.length%4)b64+='=';var bin=atob(b64),bytes=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);return new TextDecoder().decode(bytes);}
+function inferType(ref){return /^(SUVIP|VIP26)/i.test(ref)?'vip':'racer';}
+function parsePayload(raw){
+  raw=String(raw||'').trim();if(!raw)throw new Error('กรุณากรอกรหัสหรือสแกน QR');
+  if(raw.indexOf('SU26CHK|')===0){
+    var data=JSON.parse(decodeBase64Url(raw.slice(8)));
+    if(!data.r)throw new Error('QR ไม่มีเลขอ้างอิง');
+    return {type:data.t==='v'?'vip':'racer',ref:String(data.r),name:data.n||'',model:data.m||'',carno:data.c||'',team:data.g||'',dayIds:Array.isArray(data.d)?data.d:[],zone:data.z||'',shirt:data.s||'',legacy:false};
+  }
+  var legacyPrefix='SOUPEDUP2026|CHECKIN|';
+  if(raw.indexOf(legacyPrefix)===0)raw=raw.slice(legacyPrefix.length);
+  if(!/^[A-Z0-9][A-Z0-9._-]{3,80}$/i.test(raw))throw new Error('ไม่พบรูปแบบ QR หรือรหัสอ้างอิงที่รองรับ');
+  return {type:inferType(raw),ref:raw,name:'',model:'',carno:'',team:'',dayIds:[],zone:'',shirt:'',legacy:true};
+}
+function recordKey(data,day){return data.type==='vip'?'vip|'+data.ref+'|'+day:'racer|'+data.ref;}
+function previousRecord(data,day){var key=recordKey(data,day);return readLog().find(function(item){return item.key===key;});}
+function formatTime(iso){return new Intl.DateTimeFormat('th-TH',{hour:'2-digit',minute:'2-digit'}).format(new Date(iso));}
+function formatDateTime(iso){return new Intl.DateTimeFormat('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}).format(new Date(iso));}
+function infoRow(label,value,cls){if(!value)return '';return '<div class="info-row"><span>'+esc(label)+'</span><strong class="'+(cls||'')+'">'+esc(value)+'</strong></div>';}
+function renderResult(){
+  if(!current){$('result').innerHTML='<div class="empty">ข้อมูลผู้เข้าร่วมจะแสดงที่นี่หลังสแกน</div>';$('resultType').textContent='รอการสแกน';return;}
+  var isVip=current.type==='vip',prior=previousRecord(current,isVip?selectedDay:null),allowed=!isVip||!current.dayIds.length||current.dayIds.indexOf(selectedDay)>-1;
+  var title=prior?'เช็กอินแล้ว':(isVip?'บัตร VIP พร้อมเช็กอิน':'นักแข่งพร้อมเช็กอิน');
+  var sub=prior?'บันทึกเมื่อ '+formatDateTime(prior.time):(isVip?'บัตร VIP ต้องเช็กอินแยกทุกวันที่เข้าร่วม':'นักแข่งเช็กอินครั้งเดียวในวันแรก');
+  var bannerClass=prior?'warn':(!allowed?'bad':'');
+  var html='<div class="result"><div class="result-banner '+bannerClass+'"><b>'+esc(!allowed?'บัตรนี้ไม่ครอบคลุมวันที่เลือก':title)+'</b><span>'+esc(!allowed?'กรุณาเลือกวันที่ตรงกับแพ็กเกจ':sub)+'</span></div><div class="info">';
+  html+=infoRow('ประเภท',isVip?'บัตรเข้างาน VIP':'นักแข่ง');
+  html+=infoRow('เลขอ้างอิง',current.ref,'ref');
+  html+=infoRow(isVip?'ชื่อผู้ถือบัตร':'ชื่อนักแข่ง',current.name||'ไม่มีข้อมูลใน QR');
+  html+=infoRow(isVip?'แพ็กเกจ':'รุ่นแข่งขัน',current.model||'ไม่มีข้อมูลใน QR');
+  if(isVip){html+=infoRow('วันที่ในบัตร',current.dayIds.length?current.dayIds.map(dayLabel).join(', '):(current.zone||'ไม่ระบุ — อนุญาตทุกวัน'));html+=infoRow('ไซซ์เสื้อ',current.shirt);}
+  else{html+=infoRow('เบอร์รถ',current.carno?('#'+current.carno):'');html+=infoRow('ทีม / อู่',current.team);}
+  html+='</div>';
+  if(isVip){html+='<div class="days-label">เลือกวันที่กำลังเช็กอิน</div><div class="days">'+DAYS.map(function(day){var blocked=current.dayIds.length&&current.dayIds.indexOf(day.id)<0;return '<button type="button" class="day '+(selectedDay===day.id?'active ':'')+(blocked?'blocked':'')+'" data-day="'+day.id+'">'+esc(day.label)+'</button>';}).join('')+'</div>';}
+  html+='<button class="btn btn-primary confirm" id="confirmBtn" type="button" '+(prior||!allowed?'disabled':'')+'>'+(prior?'เช็กอินรายการนี้แล้ว':'ยืนยันเช็กอิน')+'</button><button class="btn next" id="nextBtn" type="button">สแกนรายการถัดไป</button></div>';
+  $('result').innerHTML=html;$('resultType').textContent=isVip?'VIP · รายวัน':'RACER · ครั้งเดียว';
+  document.querySelectorAll('[data-day]').forEach(function(btn){btn.onclick=function(){selectedDay=btn.dataset.day;renderResult();};});
+  $('confirmBtn').onclick=confirmCheckin;$('nextBtn').onclick=resetResult;
+}
+function confirmCheckin(){
+  if(!current)return;var isVip=current.type==='vip',day=isVip?selectedDay:null,prior=previousRecord(current,day);if(prior){renderResult();return;}
+  if(isVip&&current.dayIds.length&&current.dayIds.indexOf(day)<0){toast('วันที่เลือกไม่อยู่ในแพ็กเกจนี้');return;}
+  var now=new Date().toISOString(),item={key:recordKey(current,day),type:current.type,ref:current.ref,name:current.name||current.ref,model:current.model||'',carno:current.carno||'',day:day,time:now};
+  var log=readLog();log.unshift(item);writeLog(log);renderResult();renderRecent();toast(isVip?'เช็กอิน VIP วันที่ '+dayLabel(day)+' สำเร็จ':'เช็กอินนักแข่งสำเร็จ');if(navigator.vibrate)navigator.vibrate(80);
+}
+function renderRecent(){
+  var log=readLog().filter(function(item){return item.type===activeTab;});$('recentCount').textContent=log.length+' รายการ';
+  if(!log.length){$('recentList').innerHTML='<div class="empty">ยังไม่มีการเช็กอิน'+(activeTab==='vip'?' VIP':'นักแข่ง')+'</div>';return;}
+  $('recentList').innerHTML=log.slice(0,20).map(function(item){var detail=item.type==='vip'?dayLabel(item.day):(item.carno?'รถ #'+item.carno:(item.model||'นักแข่ง'));return '<div class="recent"><div class="recent-ico">'+(item.type==='vip'?'V':'R')+'</div><div class="recent-main"><b>'+esc(item.name||item.ref)+'</b><span>'+esc(item.ref)+' · '+esc(detail)+'</span></div><div class="recent-time">'+esc(formatTime(item.time))+'</div></div>';}).join('');
+}
+function setTab(type){activeTab=type;document.querySelectorAll('.tab').forEach(function(btn){btn.classList.toggle('active',btn.dataset.tab===type);btn.setAttribute('aria-selected',btn.dataset.tab===type?'true':'false');});renderRecent();}
+function handleCode(raw){
+  if(scanLock)return;scanLock=true;setTimeout(function(){scanLock=false;},900);
+  try{current=parsePayload(raw);setTab(current.type);selectedDay=defaultDay();renderResult();stopCamera();window.scrollTo({top:0,behavior:'smooth'});}
+  catch(e){toast(e.message||'อ่าน QR ไม่สำเร็จ');}
+}
+function cameraReady(){return typeof Html5Qrcode!=='undefined';}
+function startCamera(){
+  if(scanning)return stopCamera();if(!cameraReady()){toast('ตัวอ่านกล้องยังโหลดไม่สำเร็จ กรุณาใช้ “เลือกรูป QR” หรือกรอกรหัส');return;}
+  scanner=scanner||new Html5Qrcode('reader');$('cameraStatus').textContent='กำลังขออนุญาตกล้อง…';$('cameraBtn').disabled=true;
+  scanner.start({facingMode:'environment'},{fps:10,qrbox:function(w,h){var size=Math.floor(Math.min(w,h)*.68);return {width:size,height:size};},aspectRatio:1},function(text){handleCode(text);},function(){}).then(function(){scanning=true;$('camera').classList.remove('idle');$('cameraBtn').disabled=false;$('cameraBtn').textContent='ปิดกล้อง';$('cameraBtn').classList.remove('btn-primary');$('cameraBtn').classList.add('btn-danger');$('cameraStatus').textContent='กล้องทำงาน · หันไปที่ QR';}).catch(function(){scanning=false;$('cameraBtn').disabled=false;$('cameraStatus').textContent='เปิดกล้องไม่ได้';toast('เปิดกล้องไม่ได้ กรุณาอนุญาตการใช้กล้อง หรือเลือกรูป QR');});
+}
+function stopCamera(){
+  if(!scanner||!scanning)return Promise.resolve();return scanner.stop().catch(function(){}).then(function(){scanning=false;$('camera').classList.add('idle');$('cameraBtn').textContent='เปิดกล้อง';$('cameraBtn').classList.add('btn-primary');$('cameraBtn').classList.remove('btn-danger');$('cameraBtn').disabled=false;$('cameraStatus').textContent='กล้องหยุดแล้ว';});
+}
+function resetResult(){current=null;renderResult();startCamera();}
+document.querySelectorAll('.tab').forEach(function(btn){btn.onclick=function(){setTab(btn.dataset.tab);};});
+$('cameraBtn').onclick=startCamera;
+$('manualForm').onsubmit=function(e){e.preventDefault();handleCode($('manualCode').value);};
+$('qrFile').onchange=function(e){
+  var file=e.target.files&&e.target.files[0];if(!file)return;if(!cameraReady()){toast('ตัวอ่าน QR ยังโหลดไม่สำเร็จ');return;}
+  stopCamera().then(function(){scanner=scanner||new Html5Qrcode('reader');return scanner.scanFile(file,true);}).then(handleCode).catch(function(){toast('ไม่พบ QR ที่อ่านได้ในรูปนี้');}).finally(function(){e.target.value='';});
+};
+window.addEventListener('beforeunload',function(){if(scanner&&scanning)scanner.stop().catch(function(){});});
+setTab('racer');renderResult();
+})();
+</script>
+</body>
+</html>
