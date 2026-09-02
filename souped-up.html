@@ -1202,6 +1202,7 @@ SCREENS.choose = function(){
 SCREEN_INIT.choose = function(){
   el('screen').querySelectorAll('[data-choose]').forEach(b=>b.onclick=()=>{
     const target=b.dataset.choose;
+    if(target==='vip'){ startVipPurchase('choose'); return; }
     if(!hasPersonalInfo()){ toast(t('ch.needinfo')); state.pendingChoice=target; go('onboard'); return; }
     openChosenAction(target);
   });
@@ -2133,7 +2134,7 @@ SCREEN_INIT.vipDone=function(){el('vipReceipt').onclick=()=>openPdfDoc(vipReceip
 /* Use the original SUVIP document for the visible purchase experience. */
 function embeddedVipMember(){
   const a=state.applicant||{},acc=state.account||{};
-  return {lang:state.lang,username:acc.username||'',name:a.a_name||'',surname:a.a_surname||'',phone:a.a_phone||acc.phone||'',email:a.a_email||acc.email||'',line:a.chan_line||''};
+  return {lang:state.lang,username:acc.username||'',name:a.a_name||acc.username||'',surname:a.a_surname||'',phone:a.a_phone||acc.phone||'',email:a.a_email||acc.email||'',line:a.chan_line||''};
 }
 function saveEmbeddedVipPurchase(rec){
   if(!rec||!rec.ref)return;
@@ -2143,7 +2144,7 @@ function saveEmbeddedVipPurchase(rec){
   state.profile.applicant=Object.assign({},state.applicant);
   state.vip.result=rec;
 }
-SCREENS.vip=function(){return `<iframe id="suvipFrame" src="vip.html?v=20260902f" title="Souped Up VIP Village"></iframe>`;};
+SCREENS.vip=function(){return `<iframe id="suvipFrame" src="vip.html?v=20260902g" title="Souped Up VIP Village"></iframe>`;};
 SCREEN_INIT.vip=function(){
   const frame=el('suvipFrame');
   frame.onload=()=>frame.contentWindow.postMessage({type:'su:member',member:embeddedVipMember()},'*');

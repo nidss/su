@@ -179,14 +179,20 @@ h2.sec-title{font-size:clamp(19px,3.4vw,25px);margin:0 0 4px;font-weight:700;let
 .opt.opt-disabled:hover{border-color:var(--line-2)}
 .opt.opt-disabled .day-pick{display:none}
 .opt.opt-disabled .opt-price{color:var(--txt-faint)}
-.ticket-add{margin-top:22px;border:1px solid var(--line-2);border-radius:12px;padding:16px 18px;background:var(--panel)}
-.ticket-add-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
-.ticket-add-title{font-size:14px;font-weight:800}
-.ticket-chips{display:flex;flex-wrap:wrap;gap:8px}
-.ticket-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 11px;border:1px solid var(--line-2);border-radius:8px;background:var(--panel-2);font-size:13px;font-weight:700}
-.ticket-chip button{display:grid;place-items:center;width:20px;height:20px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.08);color:var(--txt-dim);cursor:pointer;font-size:15px;line-height:1}
-.ticket-chip button:hover{background:rgba(225,6,0,.2);color:#fff}
-.ticket-add-btn{width:100%;margin-top:12px;justify-content:center}
+.ticket-card{margin-bottom:18px;border:1px solid var(--line-2);border-radius:14px;background:var(--panel);overflow:hidden}
+.ticket-card-head{width:100%;display:flex;align-items:center;gap:12px;padding:17px 20px;border:0;border-bottom:1px solid var(--line-2);background:var(--panel-2);color:var(--txt);font:inherit;text-align:left}
+.ticket-card-head.can-toggle{cursor:pointer}
+.ticket-card-head:not(.can-toggle){cursor:default}
+.ticket-card-title{font-size:17px;font-weight:850;flex:1}
+.ticket-card-summary{font-size:12.5px;color:var(--txt-dim);font-weight:650}
+.ticket-card-chevron{width:22px;height:22px;display:grid;place-items:center;color:var(--mint);font-size:18px;transition:.18s}
+.ticket-card.collapsed .ticket-card-chevron{transform:rotate(-90deg)}
+.ticket-card.collapsed .ticket-card-body{display:none}
+.ticket-card-body{padding:4px 20px 20px}
+.ticket-part{padding:22px 0;border-bottom:1px solid var(--line)}
+.ticket-part:last-child{border-bottom:0;padding-bottom:2px}
+.ticket-remove{border:0;background:transparent;color:var(--red-2);font:inherit;font-size:12px;font-weight:800;cursor:pointer;padding:6px 8px}
+.ticket-add-btn{width:100%;margin:0 0 6px;justify-content:center}
 
 /* ---------- Radio group (tshirt / consent) ---------- */
 .radio-row{display:flex;flex-wrap:wrap;gap:12px}
@@ -499,60 +505,8 @@ h2.sec-title{font-size:clamp(19px,3.4vw,25px);margin:0 0 4px;font-weight:700;let
   <input type="hidden" name="phone">
   <input type="hidden" name="email">
 
-  <!-- 5. PACKAGE -->
-  <div class="card">
-    <div class="card-pad">
-      <h2 class="sec-title" data-i18n="pkg.title">ประเภทแพ็กเกจ VIP Village</h2>
-      <p class="sec-sub" data-i18n="pkg.sub">VIP Village Package</p>
-      <div class="pkg-list" id="pkgList"></div>
-    </div>
-  </div>
-
-  <!-- 6. PARKING -->
-  <div class="card">
-    <div class="card-pad">
-      <h2 class="sec-title" data-i18n="park.title">สำรองพื้นที่จอดรถ</h2>
-      <p class="sec-sub" data-i18n="park.sub">Reserve Parking</p>
-      <div class="info-box">
-        <span class="ico">ⓘ</span>
-        <span data-i18n="park.info">สงวนสิทธิ์ให้จอดเฉพาะเลขทะเบียนที่ลงทะเบียนไว้เท่านั้น / Reserved parking for registered license plates only</span>
-      </div>
-      <div id="parkFields" style="margin-top:14px"></div>
-    </div>
-  </div>
-
-  <!-- 7. T-SHIRT -->
-  <div class="card">
-    <div class="card-pad">
-      <h2 class="sec-title" data-i18n="shirt.title">ไซส์เสื้อ</h2>
-      <p class="sec-sub" data-i18n="shirt.label">โปรดระบุไซส์เสื้อ (T-Shirt Size)</p>
-      <div class="radio-row">
-        <label class="radio-opt"><input type="radio" name="shirt" value="L"><span data-i18n="shirt.l">L - รอบอก 44" (Chest 44")</span></label>
-        <label class="radio-opt"><input type="radio" name="shirt" value="XL"><span data-i18n="shirt.xl">XL - รอบอก 48" (Chest 48")</span></label>
-      </div>
-    </div>
-  </div>
-
-  <!-- 8. BUFFET -->
-  <div class="card">
-    <div class="card-pad">
-      <h2 class="sec-title" data-i18n="buffet.title">อาหารบุฟเฟต์</h2>
-      <p class="sec-sub" data-i18n="buffet.sub">Buffet Catering</p>
-      <div class="buffet-img">
-        <img src="asset/vip-buffet.png" alt="Buffet Catering" width="2560" height="650" loading="lazy">
-      </div>
-      <div class="grid">
-        <div class="field full">
-          <label data-i18n="buffet.avoid">ท่านไม่รับประทานอาหารประเภทใด (What kind of food do you not eat?)</label>
-          <input class="control" name="foodAvoid" data-i18n-ph="buffet.avoid.ph" placeholder="ระบุรายการ หรือเว้นว่าง">
-        </div>
-        <div class="field full">
-          <label data-i18n="buffet.allergy">หากแพ้อาหารประเภทใดโปรดระบุ (If you are allergic to any type of food, please specify.)</label>
-          <input class="control" name="foodAllergy" data-i18n-ph="buffet.allergy.ph" placeholder="ระบุรายการ หรือเว้นว่าง">
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- 5–8. ONE INDEPENDENT CARD PER ADMISSION TICKET -->
+  <div id="ticketSections"></div>
 
   <!-- 9. CONSENT -->
   <div class="card">
@@ -571,11 +525,7 @@ h2.sec-title{font-size:clamp(19px,3.4vw,25px);margin:0 0 4px;font-weight:700;let
   </div>
 
   <!-- 10. SUBMIT -->
-  <div class="ticket-add">
-    <div class="ticket-add-head"><div class="ticket-add-title" data-i18n="ticket.list">รายการบัตรเข้างาน</div><strong id="ticketQtyText"></strong></div>
-    <div class="ticket-chips" id="ticketChips"></div>
-    <button type="button" class="btn btn-ghost ticket-add-btn" id="addTicket" data-i18n="ticket.add">+ เพิ่มบัตรเข้างาน</button>
-  </div>
+  <button type="button" class="btn btn-ghost ticket-add-btn" id="addTicket" data-i18n="ticket.add">+ เพิ่มบัตรเข้างาน</button>
   <div class="actions">
     <button type="button" class="btn btn-ghost" id="regBack" data-i18n="btn.back">ย้อนกลับ</button>
     <div class="spacer"></div>
@@ -614,7 +564,8 @@ h2.sec-title{font-size:clamp(19px,3.4vw,25px);margin:0 0 4px;font-weight:700;let
 
 <script>
 /* ================= State ================= */
-const state = { lang:'th', tab:'early', pkg:null, days:{}, plate:'', hasCar:null, ticketQty:1, payMethod:'card', tax:false, result:null, dashPage:1 };
+function newTicket(){return {pkg:null,days:{},hasCar:null,plate:'',shirt:'',foodAvoid:'',foodAllergy:'',collapsed:false};}
+const state = { lang:'th', tab:'early', tickets:[newTicket()], payMethod:'card', tax:false, result:null, dashPage:1 };
 const PAGE_SIZE = 30;
 const el = id => document.getElementById(id);
 const esc = s => String(s==null?'':s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -666,7 +617,7 @@ const L = {
     'park.choice':'ท่านนำรถมาหรือไม่','park.yes':'มีรถ','park.no':'ไม่มีรถ',
     'park.plate':'โปรดระบุทะเบียนรถ (Please Provide License Plate)','park.plate.ph':'ระบุเลขทะเบียนรถ',
     'park.empty':'กรุณาเลือกวันที่จะเข้าร่วมในหัวข้อแพ็กเกจก่อน',
-    'ticket.list':'รายการบัตรเข้างาน','ticket.add':'+ เพิ่มบัตรเข้างาน','ticket.item':'บัตรเข้างานใบที่ {n}','ticket.qty':'จำนวน {n} ใบ',
+    'ticket.list':'รายการบัตรเข้างาน','ticket.add':'+ เพิ่มบัตรเข้างาน','ticket.item':'บัตรเข้างานใบที่ {n}','ticket.qty':'จำนวน {n} ใบ','ticket.empty':'ยังไม่ได้เลือกแพ็กเกจ','ticket.remove':'ลบบัตร',
     'buffet.title':'อาหารบุฟเฟต์','buffet.sub':'Buffet Catering','buffet.ph':'ภาพอาหารบุฟเฟต์',
     'buffet.avoid':'ท่านไม่รับประทานอาหารประเภทใด (What kind of food do you not eat?)','buffet.avoid.ph':'ระบุรายการ หรือเว้นว่าง',
     'buffet.allergy':'หากแพ้อาหารประเภทใดโปรดระบุ (If you are allergic to any type of food, please specify.)','buffet.allergy.ph':'ระบุรายการ หรือเว้นว่าง',
@@ -742,7 +693,7 @@ const L = {
     'park.choice':'Will you bring a car?','park.yes':'Car','park.no':'No car',
     'park.plate':'Please Provide License Plate (โปรดระบุทะเบียนรถ)','park.plate.ph':'Enter license plate',
     'park.empty':'Please select your attendance day(s) in the Package section first.',
-    'ticket.list':'Admission Tickets','ticket.add':'+ Add admission ticket','ticket.item':'Admission ticket {n}','ticket.qty':'{n} ticket(s)',
+    'ticket.list':'Admission Tickets','ticket.add':'+ Add admission ticket','ticket.item':'Admission ticket {n}','ticket.qty':'{n} ticket(s)','ticket.empty':'No package selected','ticket.remove':'Remove',
     'buffet.title':'Buffet Catering','buffet.sub':'อาหารบุฟเฟต์','buffet.ph':'Buffet Catering image',
     'buffet.avoid':'What kind of food do you not eat? (ท่านไม่รับประทานอาหารประเภทใด)','buffet.avoid.ph':'Specify items or leave blank',
     'buffet.allergy':'If you are allergic to any type of food, please specify. (หากแพ้อาหารประเภทใดโปรดระบุ)','buffet.allergy.ph':'Specify items or leave blank',
@@ -840,108 +791,57 @@ function card(name, price, unitKey){
     '<div class="pc-unit">'+t(unitKey)+'</div></div>';
 }
 
-/* ================= Package block ================= */
-function renderPackages(){
-  const p = PRICES[state.tab];
-  const list = document.getElementById('pkgList');
-  if(state.pkg && !pkgAvailable(state.pkg)){
-    state.days[state.pkg] = {};
-    state.pkg = null;
-  }
-  const defs = [
-    { id:'p1', key:'pkg.p1', price:p.p1 },
-    { id:'p2', key:'pkg.p2', price:p.p2 },
-    { id:'p3', key:'pkg.p3', price:p.p3 }
-  ];
-  const dayTag = id => { const s=dayStatus(id); return s==='full' ? ' <em class="d-full">'+t('day.full')+'</em>' : (s==='near' ? ' <em class="d-near">'+t('day.near')+'</em>' : ''); };
-  list.innerHTML = defs.map(d=>{
-    const maxN = PKG_DAYS[d.id];
-    const avail = pkgAvailable(d.id);
-    const badge = avail ? '' : '<span class="pkg-badge-full">'+t('pkg.full')+'</span>';
-    let dayPick = '';
-    if(d.id === 'p3'){
-      // 3-day = all event days; no day picker, license plates appear in the parking section
-      dayPick = '<div class="day-pick"><div class="dp-note">'+t('pkg.p3.note')+'</div></div>';
-    } else {
-      const inputType = maxN === 1 ? 'radio' : 'checkbox';
-      const daysHtml = DAYS.map(day=>{
-        const st = dayStatus(day.id);
-        const full = st==='full';
-        const on = state.days[d.id] && state.days[d.id][day.id];
-        return '<label class="day-chip'+(on?' on':'')+(full?' disabled':'')+'">'+
-          '<input type="'+inputType+'" name="day-'+d.id+'" data-day="'+d.id+':'+day.id+'"'+(on?' checked':'')+(full?' disabled':'')+'>'+
-          '<span>'+day[state.lang]+dayTag(day.id)+'</span></label>';
+/* ================= Admission ticket cards ================= */
+function selectedDays(ticket){
+  if(!ticket||!ticket.pkg||!ticket.days[ticket.pkg])return [];
+  return DAYS.filter(d=>ticket.days[ticket.pkg][d.id]);
+}
+function ticketPrice(ticket){return ticket&&ticket.pkg?(PRICES[state.tab][ticket.pkg]||0):0;}
+function ticketSummary(ticket){
+  if(!ticket.pkg)return t('ticket.empty');
+  return t('pkg.'+ticket.pkg)+' · '+selectedDays(ticket).map(d=>d[state.lang]).join(', ');
+}
+function packageOptions(ticket,index){
+  const defs=['p1','p2','p3'];
+  const dayTag=id=>{const s=dayStatus(id);return s==='full'?' <em class="d-full">'+t('day.full')+'</em>':(s==='near'?' <em class="d-near">'+t('day.near')+'</em>':'');};
+  return defs.map(pid=>{
+    const avail=pkgAvailable(pid),on=ticket.pkg===pid,maxN=PKG_DAYS[pid];
+    const badge=avail?'':'<span class="pkg-badge-full">'+t('pkg.full')+'</span>';
+    let dayPick='';
+    if(pid==='p3')dayPick='<div class="day-pick"><div class="dp-note">'+t('pkg.p3.note')+'</div></div>';
+    else{
+      const daysHtml=DAYS.map(day=>{
+        const full=dayStatus(day.id)==='full',dayOn=!!(ticket.days[pid]&&ticket.days[pid][day.id]);
+        return '<label class="day-chip'+(dayOn?' on':'')+(full?' disabled':'')+'"><input type="'+(maxN===1?'radio':'checkbox')+'" name="day-'+index+'-'+pid+'" data-ticket-day="'+index+':'+pid+':'+day.id+'"'+(dayOn?' checked':'')+(full?' disabled':'')+'><span>'+day[state.lang]+dayTag(day.id)+'</span></label>';
       }).join('');
-      dayPick = '<div class="day-pick"><div class="dp-label">'+t('pkg.days.label').replace('{n}', maxN)+'</div>'+
-        '<div class="day-grid">'+daysHtml+'</div></div>';
+      dayPick='<div class="day-pick"><div class="dp-label">'+t('pkg.days.label').replace('{n}',maxN)+'</div><div class="day-grid">'+daysHtml+'</div></div>';
     }
-    return '<label class="opt'+(state.pkg===d.id?' sel':'')+(avail?'':' opt-disabled')+'" data-pkg="'+d.id+'">'+
-      '<div class="opt-top">'+
-        '<input type="radio" name="pkg" value="'+d.id+'"'+(state.pkg===d.id?' checked':'')+(avail?'':' disabled')+'>'+
-        '<span class="opt-name">'+t(d.key)+badge+'</span>'+
-        '<span class="opt-price">'+fmt(d.price)+' <small>'+t('baht')+'</small></span>'+
-      '</div>'+
-      dayPick+
-    '</label>';
+    return '<label class="opt'+(on?' sel':'')+(avail?'':' opt-disabled')+'"><div class="opt-top"><input type="radio" name="pkg-'+index+'" value="'+pid+'" data-ticket-pkg="'+index+'"'+(on?' checked':'')+(avail?'':' disabled')+'><span class="opt-name">'+t('pkg.'+pid)+badge+'</span><span class="opt-price">'+fmt(PRICES[state.tab][pid])+' <small>'+t('baht')+'</small></span></div>'+dayPick+'</label>';
   }).join('');
-
-  // wire radios
-  list.querySelectorAll('input[name="pkg"]').forEach(r=>{
-    r.addEventListener('change', ()=>{
-      state.pkg = r.value;
-      if(r.value === 'p3'){ state.days.p3 = { d5:true, d6:true, d7:true }; } // auto-select all 3 event days
-      renderPackages(); renderParking();
-    });
-  });
-  // wire day checkboxes with max-day + capacity enforcement
-  list.querySelectorAll('input[data-day]').forEach(c=>{
-    c.addEventListener('change', ()=>{
-      const [pid, did] = c.dataset.day.split(':');
-      if(dayStatus(did)==='full'){ c.checked = false; return; }
-      const maxN = PKG_DAYS[pid];
-      if(maxN === 1){
-        state.days[pid] = {}; state.days[pid][did] = true;
-      } else {
-        state.days[pid] = state.days[pid] || {};
-        const chosen = Object.keys(state.days[pid]).filter(k=>state.days[pid][k]).length;
-        if(c.checked && chosen >= maxN){
-          c.checked = false;
-          toast(t('toast.days'));
-          return;
-        }
-        state.days[pid][did] = c.checked;
-      }
-      renderPackages();
-      renderParking();
-    });
-  });
 }
-
-/* ================= Parking block ================= */
-function selectedDays(){
-  if(!state.pkg || !state.days[state.pkg]) return [];
-  return DAYS.filter(d=>state.days[state.pkg][d.id]);
-}
-function renderParking(){
-  const box = document.getElementById('parkFields');
-  box.innerHTML = '<div class="field full"><label>'+t('park.choice')+'<span class="req">*</span></label>'+
-    '<div class="radio-row">'+
-      '<label class="radio-opt'+(state.hasCar===true?' sel':'')+'"><input type="radio" name="parkChoice" value="yes"'+(state.hasCar===true?' checked':'')+'><span>'+t('park.yes')+'</span></label>'+
-      '<label class="radio-opt'+(state.hasCar===false?' sel':'')+'"><input type="radio" name="parkChoice" value="no"'+(state.hasCar===false?' checked':'')+'><span>'+t('park.no')+'</span></label>'+
-    '</div></div>'+
-    (state.hasCar===true?'<div class="field full" style="margin-top:14px"><label>'+t('park.plate')+'<span class="req">*</span></label><input class="control" id="vehiclePlate" placeholder="'+t('park.plate.ph')+'" required aria-required="true" value="'+esc(state.plate)+'"></div>':'');
-  box.querySelectorAll('input[name="parkChoice"]').forEach(r=>r.onchange=()=>{
-    state.hasCar=r.value==='yes';
-    if(!state.hasCar)state.plate='';
-    renderParking();
-  });
-  const plate=el('vehiclePlate');if(plate)plate.oninput=()=>{state.plate=plate.value;plate.closest('.field').classList.remove('invalid');};
+function ticketCardHTML(ticket,index){
+  const multi=state.tickets.length>1;
+  return '<section class="ticket-card'+(ticket.collapsed?' collapsed':'')+'" data-ticket-card="'+index+'">'+
+    '<button type="button" class="ticket-card-head'+(multi?' can-toggle':'')+'" data-ticket-toggle="'+index+'"'+(multi?'':' disabled')+'><span class="ticket-card-title">'+t('ticket.item').replace('{n}',index+1)+'</span><span class="ticket-card-summary">'+esc(ticketSummary(ticket))+'</span>'+(multi&&index?'<span class="ticket-remove" data-ticket-remove="'+index+'">'+t('ticket.remove')+'</span>':'')+'<span class="ticket-card-chevron">⌄</span></button>'+
+    '<div class="ticket-card-body">'+
+      '<div class="ticket-part"><h2 class="sec-title">'+t('pkg.title')+'</h2><p class="sec-sub">'+t('pkg.sub')+'</p><div class="pkg-list">'+packageOptions(ticket,index)+'</div></div>'+
+      '<div class="ticket-part"><h2 class="sec-title">'+t('park.title')+'</h2><p class="sec-sub">'+t('park.sub')+'</p><div class="info-box"><span class="ico">ⓘ</span><span>'+t('park.info')+'</span></div><div style="margin-top:14px"><div class="field full"><label>'+t('park.choice')+'<span class="req">*</span></label><div class="radio-row"><label class="radio-opt'+(ticket.hasCar===true?' sel':'')+'"><input type="radio" name="parkChoice-'+index+'" value="yes" data-ticket-car="'+index+'"'+(ticket.hasCar===true?' checked':'')+'><span>'+t('park.yes')+'</span></label><label class="radio-opt'+(ticket.hasCar===false?' sel':'')+'"><input type="radio" name="parkChoice-'+index+'" value="no" data-ticket-car="'+index+'"'+(ticket.hasCar===false?' checked':'')+'><span>'+t('park.no')+'</span></label></div></div>'+(ticket.hasCar===true?'<div class="field full" style="margin-top:14px"><label>'+t('park.plate')+'<span class="req">*</span></label><input class="control" data-ticket-plate="'+index+'" placeholder="'+t('park.plate.ph')+'" value="'+esc(ticket.plate)+'"></div>':'')+'</div></div>'+
+      '<div class="ticket-part"><h2 class="sec-title">'+t('shirt.title')+'</h2><p class="sec-sub">'+t('shirt.label')+'</p><div class="radio-row"><label class="radio-opt'+(ticket.shirt==='L'?' sel':'')+'"><input type="radio" name="shirt-'+index+'" value="L" data-ticket-shirt="'+index+'"'+(ticket.shirt==='L'?' checked':'')+'><span>'+t('shirt.l')+'</span></label><label class="radio-opt'+(ticket.shirt==='XL'?' sel':'')+'"><input type="radio" name="shirt-'+index+'" value="XL" data-ticket-shirt="'+index+'"'+(ticket.shirt==='XL'?' checked':'')+'><span>'+t('shirt.xl')+'</span></label></div></div>'+
+      '<div class="ticket-part"><h2 class="sec-title">'+t('buffet.title')+'</h2><p class="sec-sub">'+t('buffet.sub')+'</p><div class="buffet-img"><img src="asset/vip-buffet.png" alt="Buffet Catering" width="2560" height="650" loading="lazy"></div><div class="grid"><div class="field full"><label>'+t('buffet.avoid')+'</label><input class="control" data-ticket-food="avoid:'+index+'" placeholder="'+t('buffet.avoid.ph')+'" value="'+esc(ticket.foodAvoid)+'"></div><div class="field full"><label>'+t('buffet.allergy')+'</label><input class="control" data-ticket-food="allergy:'+index+'" placeholder="'+t('buffet.allergy.ph')+'" value="'+esc(ticket.foodAllergy)+'"></div></div></div>'+
+    '</div></section>';
 }
 function renderTickets(){
-  const chips=el('ticketChips'),qty=el('ticketQtyText');if(!chips||!qty)return;
-  qty.textContent=t('ticket.qty').replace('{n}',state.ticketQty);
-  chips.innerHTML=Array.from({length:state.ticketQty},(_,i)=>'<span class="ticket-chip">'+t('ticket.item').replace('{n}',i+1)+(i?'<button type="button" data-remove-ticket="'+i+'" aria-label="Remove">×</button>':'')+'</span>').join('');
-  chips.querySelectorAll('[data-remove-ticket]').forEach(b=>b.onclick=()=>{if(state.ticketQty>1){state.ticketQty--;renderTickets();}});
+  const box=el('ticketSections');if(!box)return;
+  state.tickets.forEach(ticket=>{if(ticket.pkg&&!pkgAvailable(ticket.pkg)){ticket.pkg=null;ticket.days={};}});
+  box.innerHTML=state.tickets.map(ticketCardHTML).join('');
+  box.querySelectorAll('[data-ticket-toggle]').forEach(b=>b.onclick=e=>{if(e.target.closest('[data-ticket-remove]'))return;if(state.tickets.length>1){const ticket=state.tickets[+b.dataset.ticketToggle];ticket.collapsed=!ticket.collapsed;renderTickets();}});
+  box.querySelectorAll('[data-ticket-remove]').forEach(b=>b.onclick=e=>{e.stopPropagation();state.tickets.splice(+b.dataset.ticketRemove,1);if(state.tickets.length===1)state.tickets[0].collapsed=false;renderTickets();});
+  box.querySelectorAll('[data-ticket-pkg]').forEach(r=>r.onchange=()=>{const ticket=state.tickets[+r.dataset.ticketPkg];ticket.pkg=r.value;ticket.days[r.value]=r.value==='p3'?{d5:true,d6:true,d7:true}:{};renderTickets();});
+  box.querySelectorAll('[data-ticket-day]').forEach(c=>c.onchange=()=>{const [idx,pid,did]=c.dataset.ticketDay.split(':'),ticket=state.tickets[+idx],maxN=PKG_DAYS[pid];ticket.days[pid]=ticket.days[pid]||{};if(maxN===1)ticket.days[pid]={[did]:true};else{const chosen=Object.keys(ticket.days[pid]).filter(k=>ticket.days[pid][k]).length;if(c.checked&&chosen>=maxN){toast(t('toast.days'));return;}ticket.days[pid][did]=c.checked;}renderTickets();});
+  box.querySelectorAll('[data-ticket-car]').forEach(r=>r.onchange=()=>{const ticket=state.tickets[+r.dataset.ticketCar];ticket.hasCar=r.value==='yes';if(!ticket.hasCar)ticket.plate='';renderTickets();});
+  box.querySelectorAll('[data-ticket-plate]').forEach(i=>i.oninput=()=>{state.tickets[+i.dataset.ticketPlate].plate=i.value;i.closest('.field').classList.remove('invalid');});
+  box.querySelectorAll('[data-ticket-shirt]').forEach(r=>r.onchange=()=>{state.tickets[+r.dataset.ticketShirt].shirt=r.value;r.closest('.radio-row').querySelectorAll('.radio-opt').forEach(o=>o.classList.toggle('sel',o.contains(r)));});
+  box.querySelectorAll('[data-ticket-food]').forEach(i=>i.oninput=()=>{const [kind,idx]=i.dataset.ticketFood.split(':'),ticket=state.tickets[+idx];ticket[kind==='avoid'?'foodAvoid':'foodAllergy']=i.value;});
 }
 
 /* ================= Language ================= */
@@ -953,8 +853,6 @@ function applyLang(){
   document.querySelectorAll('[data-i18n-html]').forEach(n=>{ n.innerHTML = t(n.dataset.i18nHtml); });
   document.querySelectorAll('[data-i18n-ph]').forEach(n=>{ n.placeholder = t(n.dataset.i18nPh); });
   renderContent();
-  renderPackages();
-  renderParking();
   renderTickets();
   if(el('payView') && !el('payView').hidden) renderPay();
   if(el('doneView') && !el('doneView').hidden) renderDone();
@@ -971,16 +869,15 @@ function showView(v){
 
 /* ================= Payment ================= */
 function renderPay(){
-  const unitPrice = PRICES[state.tab][state.pkg],price=unitPrice*state.ticketQty;
-  const days = selectedDays().map(d=>d[state.lang]).join(', ');
+  const price=state.tickets.reduce((sum,ticket)=>sum+ticketPrice(ticket),0);
+  const ticketLines=state.tickets.map((ticket,i)=>'<div class="sum-line"><span class="lab">'+t('ticket.item').replace('{n}',i+1)+' · '+t('pkg.'+ticket.pkg)+'<small style="display:block;color:var(--txt-dim);margin-top:3px">'+esc(selectedDays(ticket).map(d=>d[state.lang]).join(', '))+'</small></span><span class="val">'+money(ticketPrice(ticket))+'</span></div>').join('');
   const isCard = state.payMethod==='card';
   el('payScreen').innerHTML =
    '<p class="eyebrow">'+t('py.eyebrow')+'</p>'+
    '<h1 class="page-title">'+t('py.title')+'</h1>'+
    '<p class="page-sub">'+t('py.sub')+'</p>'+
-   '<div class="sum-line"><span class="lab">'+t('pkg.'+state.pkg)+'</span><span class="val">'+money(unitPrice)+'</span></div>'+
-   '<div class="sum-line"><span class="lab">'+t('ticket.list')+'</span><span class="val">'+t('ticket.qty').replace('{n}',state.ticketQty)+'</span></div>'+
-   '<div class="sum-line"><span class="lab">'+t('py.days')+'</span><span class="val">'+esc(days)+'</span></div>'+
+   ticketLines+
+   '<div class="sum-line"><span class="lab">'+t('ticket.list')+'</span><span class="val">'+t('ticket.qty').replace('{n}',state.tickets.length)+'</span></div>'+
    '<div class="sum-line"><span class="lab">'+t('py.pricetab')+'</span><span class="val">'+t('tab.'+state.tab)+'</span></div>'+
    '<div class="sum-line total"><span class="lab">'+t('sm.total')+'</span><span class="val">'+money(price)+'</span></div>'+
    '<div class="pay-methods" style="margin-top:20px">'+
@@ -1036,25 +933,28 @@ function qrSvg(){
   return '<svg viewBox="0 0 '+(n*9)+' '+(n*9)+'" width="150" height="150" fill="#000">'+cells+'</svg>';
 }
 function finishPayment(){
-  const price = PRICES[state.tab][state.pkg]*state.ticketQty;
+  const price=state.tickets.reduce((sum,ticket)=>sum+ticketPrice(ticket),0);
   const f = el('regForm');
   const ref = 'SUVIP-'+Math.random().toString(36).slice(2,7).toUpperCase()+'-'+Math.floor(1000+Math.random()*9000);
+  const holder=(f.name.value+' '+f.surname.value).trim()||(hostMember&&hostMember.username)||'-';
   state.result = {
     ref,
-    name:(f.name.value+' '+f.surname.value).trim(),
+    name:holder,
     email:f.email.value.trim(),
-    pkg:t('pkg.'+state.pkg),
-    days:selectedDays().map(d=>d[state.lang]).join(', '),
-    qty:state.ticketQty,
+    pkg:state.tickets.map(ticket=>t('pkg.'+ticket.pkg)).join(' / '),
+    days:state.tickets.map(ticket=>selectedDays(ticket).map(d=>d[state.lang]).join(', ')).join(' / '),
+    qty:state.tickets.length,
     amount:price
   };
-  const pickedDays=selectedDays();
-  window.parent.postMessage({type:'suvip:complete',record:{
-    ref:state.result.ref,holder:state.result.name,type:state.result.pkg,zone:state.result.days,qty:state.ticketQty,
-    date:new Date().toISOString().slice(0,10),amount:price,shirt:(f.querySelector('input[name="shirt"]:checked')||{}).value||'-',
-    plates:state.hasCar?pickedDays.map(d=>({day:d.id,plate:state.plate})):[],foodAvoid:f.foodAvoid.value.trim(),
-    foodAllergy:f.foodAllergy.value.trim(),priceTab:state.tab,pkg:state.pkg,dayIds:pickedDays.map(d=>d.id),email:state.result.email
-  }},'*');
+  state.tickets.forEach((ticket,i)=>{
+    const pickedDays=selectedDays(ticket);
+    window.parent.postMessage({type:'suvip:complete',record:{
+      ref:state.tickets.length>1?ref+'-'+(i+1):ref,holder,type:t('pkg.'+ticket.pkg),zone:pickedDays.map(d=>d[state.lang]).join(', '),qty:1,
+      date:new Date().toISOString().slice(0,10),amount:ticketPrice(ticket),shirt:ticket.shirt||'-',
+      plates:ticket.hasCar?pickedDays.map(d=>({day:d.id,plate:ticket.plate})):[],foodAvoid:ticket.foodAvoid,
+      foodAllergy:ticket.foodAllergy,priceTab:state.tab,pkg:ticket.pkg,dayIds:pickedDays.map(d=>d.id),email:state.result.email
+    }},'*');
+  });
   showView('done'); renderDone();
 }
 function renderDone(){
@@ -1120,7 +1020,7 @@ function printHistoryReceipt(id){
   setTimeout(()=>window.print(),60);
 }
 function resetAll(){
-  state.pkg=null; state.days={}; state.plate=''; state.hasCar=null; state.ticketQty=1; state.payMethod='card'; state.tax=false; state.result=null;
+  state.tickets=[newTicket()];state.payMethod='card';state.tax=false;state.result=null;
   const f = el('regForm'); if(f) f.reset();
   document.querySelectorAll('.radio-opt').forEach(o=>o.classList.remove('sel'));
   document.querySelectorAll('input[data-chan]').forEach(c=>{
@@ -1128,7 +1028,7 @@ function resetAll(){
     if(inp){ inp.style.display='none'; inp.value=''; }
   });
   document.querySelectorAll('.field.invalid').forEach(x=>x.classList.remove('invalid'));
-  renderPackages(); renderParking(); renderTickets();
+  renderTickets();
   showView('reg');
 }
 
@@ -1137,7 +1037,7 @@ function setTab(tab){
   state.tab = tab;
   document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
   renderContent();
-  renderPackages();
+  renderTickets();
 }
 
 /* ================= Toast ================= */
@@ -1173,22 +1073,22 @@ document.querySelectorAll('.radio-opt input').forEach(r=>{
 /* ================= Tab / lang buttons ================= */
 document.querySelectorAll('[data-setlang]').forEach(b=>b.onclick=()=>{ state.lang=b.dataset.setlang; applyLang(); });
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
-el('addTicket').onclick=()=>{state.ticketQty++;renderTickets();};
+el('addTicket').onclick=()=>{state.tickets.forEach(ticket=>ticket.collapsed=true);state.tickets.push(newTicket());renderTickets();setTimeout(()=>el('ticketSections').lastElementChild.scrollIntoView({behavior:'smooth',block:'start'}),0);};
 el('brandHome').addEventListener('click', e=>{ e.preventDefault(); showView('reg'); window.scrollTo(0,0); });
 
 /* ================= Submit ================= */
 document.getElementById('regForm').addEventListener('submit', e=>{
   e.preventDefault();
   const form = e.target;
-  if(['name','surname','phone','email'].some(n=>!form.elements[n].value.trim())){toast(t('toast.fill'));return;}
-  if(!state.pkg){ toast(t('toast.pkg')); return; }
-  const days = selectedDays();
-  if(days.length !== PKG_DAYS[state.pkg]){ toast(t('toast.days')); return; }
-  if(state.hasCar===null){toast(t('toast.fill'));el('parkFields').scrollIntoView({behavior:'smooth',block:'center'});return;}
-  if(state.hasCar && !String(state.plate||'').trim()){
-    const input=el('vehiclePlate');
-    if(input){ input.closest('.field').classList.add('invalid'); input.focus(); input.scrollIntoView({behavior:'smooth',block:'center'}); }
-    toast(t('toast.fill')); return;
+  if(['phone','email'].some(n=>!form.elements[n].value.trim())){toast(t('toast.fill'));return;}
+  for(let i=0;i<state.tickets.length;i++){
+    const ticket=state.tickets[i],days=selectedDays(ticket);
+    let message='';
+    if(!ticket.pkg)message=t('toast.pkg');
+    else if(days.length!==PKG_DAYS[ticket.pkg])message=t('toast.days');
+    else if(ticket.hasCar===null)message=t('toast.fill');
+    else if(ticket.hasCar&&!String(ticket.plate||'').trim())message=t('toast.fill');
+    if(message){ticket.collapsed=false;renderTickets();const card=el('ticketSections').querySelector('[data-ticket-card="'+i+'"]');if(card)card.scrollIntoView({behavior:'smooth',block:'start'});toast(message);return;}
   }
   if(!form.querySelector('input[name="consent"]:checked')){ toast(t('toast.consent')); return; }
 
@@ -1197,48 +1097,25 @@ document.getElementById('regForm').addEventListener('submit', e=>{
     const v = document.querySelector('input[data-chan-input="'+c.dataset.chan+'"]').value.trim();
     chans.push(c.dataset.chan + (v?': '+v:''));
   });
-  const shirt = (form.querySelector('input[name="shirt"]:checked')||{}).value || '-';
-
+  const buyerName=form.name.value.trim()||(hostMember&&hostMember.username)||'';
   const payload = {
     priceTab: state.tab,
-    name: form.name.value.trim(),
+    name: buyerName,
     surname: form.surname.value.trim(),
     phone: form.phone.value.trim(),
     email: form.email.value.trim(),
     contacts: chans,
-    package: state.pkg,
-    price: PRICES[state.tab][state.pkg]*state.ticketQty,
-    qty: state.ticketQty,
-    days: days.map(d=>d.en),
-    tshirt: shirt,
-    plates: state.hasCar?days.map(d=>({ day:d.en, plate: state.plate })):[],
-    foodAvoid: form.foodAvoid.value.trim(),
-    foodAllergy: form.foodAllergy.value.trim(),
+    tickets: state.tickets.map(ticket=>{const days=selectedDays(ticket);return {package:ticket.pkg,price:ticketPrice(ticket),days:days.map(d=>d.en),tshirt:ticket.shirt||'-',plates:ticket.hasCar?days.map(d=>({day:d.en,plate:ticket.plate})):[],foodAvoid:ticket.foodAvoid,foodAllergy:ticket.foodAllergy};}),
     consent: true
   };
   console.log('Registration payload:', payload);
 
-  // persist for dashboard
-  addReg({
-    id: 'r'+Date.now()+Math.floor(Math.random()*1000),
-    ts: Date.now(),
-    priceTab: state.tab,
-    name: payload.name,
-    surname: payload.surname,
-    phone: payload.phone,
-    email: payload.email,
-    contacts: chans,
-    pkg: state.pkg,
-    dayIds: days.map(d=>d.id),
-    amount: PRICES[state.tab][state.pkg]*state.ticketQty,
-    qty: state.ticketQty,
-    tshirt: shirt,
-    plates: state.hasCar?days.map(d=>({ day:d.id, plate: state.plate })):[],
-    foodAvoid: payload.foodAvoid,
-    foodAllergy: payload.foodAllergy,
-    consent: true,
-    member: hostMember ? (hostMember.username || hostMember.email || '') : ''
-  });
+  // Persist one dashboard/profile record per admission ticket.
+  state.tickets.forEach((ticket,i)=>{const days=selectedDays(ticket);addReg({
+    id:'r'+Date.now()+i+Math.floor(Math.random()*1000),ts:Date.now(),priceTab:state.tab,name:payload.name,surname:payload.surname,phone:payload.phone,email:payload.email,contacts:chans,
+    pkg:ticket.pkg,dayIds:days.map(d=>d.id),amount:ticketPrice(ticket),qty:1,tshirt:ticket.shirt||'-',plates:ticket.hasCar?days.map(d=>({day:d.id,plate:ticket.plate})):[],foodAvoid:ticket.foodAvoid,foodAllergy:ticket.foodAllergy,consent:true,
+    member:hostMember?(hostMember.username||hostMember.email||''):''
+  });});
 
   showView('pay');
   renderPay();
