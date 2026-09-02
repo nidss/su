@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-**Souped Up 2026** — a dark, racing-themed, bilingual (Thai default / English) car-racing competition registration web app. It is a **single self-contained `index.html`**: no build step, no framework, no dependencies to install. All media (logo, backgrounds, ID/racer photos, favicon fallback) are embedded as base64/SVG data URIs so the one file runs anywhere. Palette: mint `#6FFFE8`, lime `#D1FF03`, navy `#0C142A`.
+**Souped Up 2026** — a dark, racing-themed, bilingual (Thai default / English) car-racing competition registration web app. The main app is a **self-contained `index.html`**: no build step, no framework, no dependencies to install. All media (logo, backgrounds, ID/racer photos, favicon fallback) are embedded as base64/SVG data URIs so the one file runs anywhere. Palette: mint `#6FFFE8`, lime `#D1FF03`, navy `#0C142A`.
+
+Two companion pages (`vip.html`, `vip-dashboard.html`) are **separate standalone HTML apps** that `index.html` embeds in same-origin iframes (see "Companion iframe apps" below) — they are not part of `index.html` and have their own `<script>`, `state`, and i18n.
 
 ## The two output files — keep them in sync
 
@@ -23,6 +25,15 @@ fs.writeFileSync("souped-up.html",s);'
 ```
 
 This drops lines 1–9 (`<!DOCTYPE>` … `<link rel="icon">`), the standalone `</head>` and `<body>`, and the trailing `</body></html>`, keeping everything from the first `<link rel="preconnect">` through the closing `</script>`.
+
+## Companion iframe apps
+
+`index.html` embeds two independent same-origin apps by iframe `src` with a cache-busting query — **bump that `?v=` string whenever you edit the embedded file**, or the deployed iframe serves a stale copy:
+
+- **`vip.html`** (`SCREENS.vip`, `vip.html?v=YYYYMMDDx`) — the buyer-facing VIP Village purchase flow. `index.html` prefills it and reads results back via `postMessage`; purchases land in `state.profile.vips`.
+- **`vip-dashboard.html`** (admin VIP tab, `vip-dashboard.html?v=YYYYMMDDx`) — a **complete second app** (its own `state`, i18n `L.th`/`L.en`, `el`/`esc`/`t`/`money`, and an admin dashboard). The VIP buyer table and its filter bar live here, **not** in `index.html`'s `DASH`. Registrations are read from the shared `suvip_regs` localStorage key. `renderDashboard()` builds the table from `filteredRegs()`; `seedMockIfEmpty()` seeds demo rows on first load.
+
+Each embedded file carries its own `?v=` suffix (they differ), so bump only the one you changed, in **both** `index.html` and `souped-up.html`.
 
 ## Architecture (all inside `index.html`, one `<script>`)
 
@@ -73,13 +84,16 @@ node -e '(async()=>{
 
 Always assert `pageerror` is empty and screenshot the affected screen.
 
+To test a companion app in isolation, `goto` its file directly and drive its own globals — e.g. `vip-dashboard.html` opens the admin table with `page.evaluate(()=>{ seedMockIfEmpty(); openDashboard(); })`. Playwright's Node module lives at `/opt/node22/lib/node_modules/playwright` and Chromium at `/opt/pw-browsers/chromium`.
+
 ## Deploy loop
 
-Development happens on branch `claude/souped-up-registration-system-bnxppt` and is mirrored to `main`.
+Work happens on a session-specific `claude/…` feature branch and is mirrored to `main` (which GitHub Pages serves).
 
-1. Edit `index.html`; regenerate `souped-up.html` (command above).
-2. Verify with Playwright.
-3. Commit `index.html` **and** `souped-up.html` together.
-4. `git push origin HEAD:main` and `git push -u origin HEAD:claude/souped-up-registration-system-bnxppt`.
+1. Edit `index.html` (and/or `vip.html` / `vip-dashboard.html`). When you touch a companion file, bump its `?v=` in `index.html` (see "Companion iframe apps").
+2. If `index.html` changed, regenerate `souped-up.html` (command above). Editing only a companion file does not require regenerating `souped-up.html`, but the `?v=` bump must be applied there too.
+3. Verify with Playwright; assert no `pageerror`.
+4. Commit the edited files together (include `souped-up.html` whenever `index.html` changed).
+5. Push to both the feature branch and `main` (`git push origin HEAD:main`).
    - The user often uploads new `asset/` images directly to GitHub, so `main` may be ahead: `git fetch origin main` then `git merge origin/main` before pushing, and re-embed any new asset as base64.
-5. Republish the Artifact from `souped-up.html` to the URL above.
+6. Optionally republish the Artifact from `souped-up.html`.
