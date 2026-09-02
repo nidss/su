@@ -651,7 +651,7 @@ const L = {
     'py.confirm':'ยืนยันชำระเงิน','btn.back':'ย้อนกลับ',
     'dn.title':'ชำระเงินสำเร็จ!','dn.sub':'เราได้ส่งอีเมลยืนยันการลงทะเบียนให้คุณแล้ว','dn.email':'ส่งไปที่',
     'dn.ref':'หมายเลขอ้างอิง','dn.name':'ชื่อผู้สมัคร','dn.pkg':'แพ็กเกจ','dn.days':'วันที่เข้าร่วม','dn.amount':'ยอดที่ชำระ',
-    'dn.new':'ลงทะเบียนรายการใหม่','dn.print':'พิมพ์ใบเสร็จ (PDF)','dn.receipt':'ใบเสร็จรับเงิน · OFFICIAL RECEIPT',
+    'dn.new':'ลงทะเบียนรายการใหม่','dn.print':'พิมพ์ใบเสร็จ (PDF)','dn.receipt':'ใบเสร็จรับเงินชั่วคราว · PROVISIONAL RECEIPT',
     'dash.title':'แดชบอร์ดผู้สมัคร<small>SOUPED UP VIP VILLAGE · DASHBOARD</small>',
     'dash.count':'จำนวนผู้สมัคร','dash.total':'จำนวนเงินรวม','dash.hint':'กด Ctrl+Shift+Z เพื่อปิด',
     'dash.rows':'รายการ','dash.empty':'ยังไม่มีข้อมูลผู้สมัคร',
@@ -727,7 +727,7 @@ const L = {
     'py.confirm':'Confirm Payment','btn.back':'Back',
     'dn.title':'Payment Successful!','dn.sub':'A confirmation email has been sent to you.','dn.email':'Sent to',
     'dn.ref':'Reference No.','dn.name':'Applicant','dn.pkg':'Package','dn.days':'Attendance day(s)','dn.amount':'Amount Paid',
-    'dn.new':'Register another entry','dn.print':'Print receipt (PDF)','dn.receipt':'OFFICIAL RECEIPT · ใบเสร็จรับเงิน',
+    'dn.new':'Register another entry','dn.print':'Print receipt (PDF)','dn.receipt':'PROVISIONAL RECEIPT · ใบเสร็จรับเงินชั่วคราว',
     'dash.title':'Applicants Dashboard<small>SOUPED UP VIP VILLAGE · DASHBOARD</small>',
     'dash.count':'Applicants','dash.total':'Total Amount','dash.hint':'Press Ctrl+Shift+Z to close',
     'dash.rows':'record(s)','dash.empty':'No applicants yet',
@@ -991,7 +991,7 @@ function renderDone(){
      '<h1 class="page-title">'+t('dn.title')+'</h1>'+
      '<p class="page-sub">'+t('dn.sub')+(r.email?(' · '+t('dn.email')+' '+esc(r.email)):'')+'</p>'+
      '<div class="receipt">'+
-       '<div class="r-head">SOUPED UP · VIP VILLAGE · OFFICIAL RECEIPT</div>'+
+       '<div class="r-head">SOUPED UP · VIP VILLAGE · PROVISIONAL RECEIPT</div>'+
        '<div class="r-row"><span class="rl">'+t('dn.ref')+'</span><span class="rv ref-num">'+esc(r.ref)+'</span></div>'+
        '<div class="r-row"><span class="rl">'+t('dn.name')+'</span><span class="rv">'+esc(r.name||'-')+'</span></div>'+
        '<div class="r-row"><span class="rl">'+t('dn.pkg')+'</span><span class="rv">'+esc(r.pkg||'-')+'</span></div>'+
