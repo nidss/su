@@ -829,7 +829,7 @@ const L = {
     'dash.count':'จำนวนผู้สมัคร','dash.total':'จำนวนเงินรวม','dash.hint':'กด Ctrl+Shift+Z เพื่อปิด',
     'dash.rows':'รายการ','dash.empty':'ยังไม่มีข้อมูลผู้สมัคร',
     'dash.edit':'แก้ไขข้อมูลผู้สมัคร','dash.save':'บันทึก','dash.saved':'บันทึกข้อมูลแล้ว ✓','dash.cancel':'ยกเลิก',
-    'dash.h.no':'#','dash.h.name':'ชื่อ','dash.h.surname':'นามสกุล','dash.h.phone':'เบอร์โทร','dash.h.email':'อีเมล','dash.h.pricetab':'ประเภทราคา','dash.h.pkg':'แพ็กเกจ','dash.h.days':'วันที่มา','dash.h.tshirt':'ไซส์เสื้อ','dash.h.contacts':'ช่องทางติดต่อ','dash.h.plates':'ทะเบียนรถ','dash.h.avoid':'อาหารที่ไม่ทาน','dash.h.allergy':'อาหารที่แพ้','dash.h.amount':'ยอดชำระ','dash.h.action':'จัดการ',
+    'dash.h.no':'#','dash.h.username':'ชื่อผู้ใช้','dash.h.phone':'เบอร์โทร','dash.h.email':'อีเมล','dash.h.pricetab':'ประเภทราคา','dash.h.pkg':'แพ็กเกจ','dash.h.days':'วันที่มา','dash.h.tshirt':'ไซส์เสื้อ','dash.h.contacts':'ช่องทางติดต่อ','dash.h.plates':'ทะเบียนรถ','dash.h.avoid':'อาหารที่ไม่ทาน','dash.h.allergy':'อาหารที่แพ้','dash.h.amount':'ยอดชำระ','dash.h.action':'จัดการ',
     'dash.showing':'แสดง {a}-{b} จาก {n} รายการ','dash.prev':'ก่อนหน้า','dash.next':'ถัดไป','dash.export':'ส่งออก CSV','dash.exportEmpty':'ยังไม่มีข้อมูลให้ส่งออก','dash.logout':'ออกจากระบบ',
     'login.eyebrow':'ADMIN','login.title':'เข้าสู่ระบบผู้ดูแลระบบ','login.sub':'Admin Login','login.user':'ชื่อผู้ใช้ (Username)','login.user.ph':'กรอกชื่อผู้ใช้','login.pass':'รหัสผ่าน (Password)','login.pass.ph':'กรอกรหัสผ่าน','login.btn':'เข้าสู่ระบบ','login.err':'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง','login.hint':'* เดโม: ใส่อะไรก็ได้เพื่อเข้าสู่ระบบ',
     'mem.login':'เข้าสู่ระบบ','mem.account':'บัญชีของฉัน',
@@ -903,7 +903,7 @@ const L = {
     'dash.count':'Applicants','dash.total':'Total Amount','dash.hint':'Press Ctrl+Shift+Z to close',
     'dash.rows':'record(s)','dash.empty':'No applicants yet',
     'dash.edit':'Edit applicant','dash.save':'Save','dash.saved':'Saved ✓','dash.cancel':'Cancel',
-    'dash.h.no':'#','dash.h.name':'Name','dash.h.surname':'Surname','dash.h.phone':'Phone','dash.h.email':'Email','dash.h.pricetab':'Price type','dash.h.pkg':'Package','dash.h.days':'Days','dash.h.tshirt':'T-Shirt','dash.h.contacts':'Contacts','dash.h.plates':'License plate','dash.h.avoid':'Food avoided','dash.h.allergy':'Allergies','dash.h.amount':'Amount','dash.h.action':'Manage',
+    'dash.h.no':'#','dash.h.username':'Username','dash.h.phone':'Phone','dash.h.email':'Email','dash.h.pricetab':'Price type','dash.h.pkg':'Package','dash.h.days':'Days','dash.h.tshirt':'T-Shirt','dash.h.contacts':'Contacts','dash.h.plates':'License plate','dash.h.avoid':'Food avoided','dash.h.allergy':'Allergies','dash.h.amount':'Amount','dash.h.action':'Manage',
     'dash.showing':'Showing {a}-{b} of {n}','dash.prev':'Prev','dash.next':'Next','dash.export':'Export CSV','dash.exportEmpty':'No data to export','dash.logout':'Log out',
     'login.eyebrow':'ADMIN','login.title':'Admin Login','login.sub':'เข้าสู่ระบบผู้ดูแลระบบ','login.user':'Username (ชื่อผู้ใช้)','login.user.ph':'Enter username','login.pass':'Password (รหัสผ่าน)','login.pass.ph':'Enter password','login.btn':'Sign In','login.err':'Invalid username or password','login.hint':'* Demo: enter anything to sign in',
     'mem.login':'Sign In','mem.account':'My Account',
@@ -1387,6 +1387,7 @@ function seedMockIfEmpty(){
       id:'mock'+i+'-'+Math.floor(Math.random()*100000),
       ts: Date.now()-i*3600000,
       priceTab: tab,
+      member: 'vip_user_'+String(1000+i),
       name: fn, surname: ln,
       phone: '0'+(6+Math.floor(Math.random()*3))+String(Math.floor(10000000+Math.random()*89999999)),
       email: 'user'+(1000+i)+'@example.com',
@@ -1438,6 +1439,13 @@ function seedMemberHistory(m){
 
 const EDIT_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg>';
 
+function dashboardUsername(r){
+  if(r.member) return r.member;
+  if(r.username) return r.username;
+  if(r.email) return String(r.email).split('@')[0];
+  return '-';
+}
+
 function renderDashboard(){
   const regs = loadRegs();
   el('kpiCount').textContent = fmt(regs.length);
@@ -1450,12 +1458,12 @@ function renderDashboard(){
   const start = (state.dashPage-1) * PAGE_SIZE;
   const pageRegs = regs.slice(start, start + PAGE_SIZE);
 
-  const heads = ['no','name','surname','phone','email','pricetab','pkg','days','tshirt','contacts','plates','avoid','allergy','amount','action']
+  const heads = ['no','username','phone','email','pricetab','pkg','days','tshirt','contacts','plates','avoid','allergy','amount','action']
     .map(h=>'<th>'+t('dash.h.'+h)+'</th>').join('');
 
   let body;
   if(regs.length===0){
-    body = '<tr class="empty-row"><td colspan="15">'+t('dash.empty')+'</td></tr>';
+    body = '<tr class="empty-row"><td colspan="14">'+t('dash.empty')+'</td></tr>';
   } else {
     body = pageRegs.map((r,idx)=>{
       const i = start + idx;
@@ -1465,8 +1473,7 @@ function renderDashboard(){
       const tabBadge = '<span class="badge-tab '+(r.priceTab==='early'?'early':'')+'">'+t('tab.'+r.priceTab)+'</span>';
       return '<tr>'+
         '<td>'+(i+1)+'</td>'+
-        '<td>'+esc(r.name)+'</td>'+
-        '<td>'+esc(r.surname)+'</td>'+
+        '<td>'+esc(dashboardUsername(r))+'</td>'+
         '<td>'+esc(r.phone)+'</td>'+
         '<td class="trunc" title="'+esc(r.email)+'">'+esc(r.email)+'</td>'+
         '<td>'+tabBadge+'</td>'+
@@ -1531,13 +1538,13 @@ function openEdit(id){
   const contacts = {}; (r.contacts||[]).forEach(c=>{ const i=String(c).indexOf(':'); const k=(i>=0?c.slice(0,i):c).trim(); const v=(i>=0?c.slice(i+1):'').trim(); if(k) contacts[k]=v; });
   editState = {
     id: r.id, tab: r.priceTab||'early', pkg: r.pkg||'p1', days, plates, contacts,
-    tshirt: r.tshirt||'', name: r.name||'', surname: r.surname||'', phone: r.phone||'', email: r.email||'',
+    tshirt: r.tshirt||'', username: dashboardUsername(r), phone: r.phone||'', email: r.email||'',
     foodAvoid: r.foodAvoid||'', foodAllergy: r.foodAllergy||''
   };
   el('dmBack').classList.add('open');
   renderEditModal();
 }
-function edField(id,label,val,full){ return '<div class="field'+(full?' full':'')+'"><label>'+label+'</label><input class="control" id="'+id+'" value="'+esc(val||'')+'"></div>'; }
+function edField(id,label,val,full,disabled){ return '<div class="field'+(full?' full':'')+'"><label>'+label+'</label><input class="control" id="'+id+'" value="'+esc(val||'')+'"'+(disabled?' disabled':'')+'></div>'; }
 function edContactRow(k){
   const on = editState.contacts[k]!==undefined;
   return '<div style="margin-bottom:8px">'+
@@ -1551,8 +1558,7 @@ function renderEditModal(){
   el('dmBody').innerHTML =
     '<h3>'+t('dash.edit')+'</h3>'+
     '<div class="grid">'+
-      edField('e_name', t('ap.name'), es.name)+
-      edField('e_surname', t('ap.surname'), es.surname)+
+      edField('e_username', t('dash.h.username'), es.username, false, true)+
       edField('e_phone', t('ap.phone'), es.phone)+
       edField('e_email', t('ap.email'), es.email)+
     '</div>'+
@@ -1569,7 +1575,7 @@ function renderEditModal(){
     '</div>'+
     '<div class="actions"><button type="button" class="btn btn-ghost" id="e_cancel">'+t('dash.cancel')+'</button><div class="spacer"></div><button type="button" class="btn btn-primary" id="e_save">'+t('dash.save')+'</button></div>';
   // static text bindings
-  [['e_name','name'],['e_surname','surname'],['e_phone','phone'],['e_email','email'],['e_avoid','foodAvoid'],['e_allergy','foodAllergy']]
+  [['e_phone','phone'],['e_email','email'],['e_avoid','foodAvoid'],['e_allergy','foodAllergy']]
     .forEach(([id,key])=>{ const e=el(id); if(e) e.oninput=()=>{ es[key]=e.value; }; });
   // contacts
   ['Line','WeChat','WhatsApp'].forEach(k=>{
@@ -1643,7 +1649,7 @@ function saveEdit(){
   const regs = loadRegs();
   const r = regs.find(x=>x.id===es.id);
   if(!r){ closeEdit(); return; }
-  r.name = es.name.trim(); r.surname = es.surname.trim(); r.phone = es.phone.trim(); r.email = es.email.trim();
+  r.phone = es.phone.trim(); r.email = es.email.trim();
   r.priceTab = es.tab; r.pkg = es.pkg;
   r.dayIds = selDays;
   r.plates = selDays.map(d=>({ day:d, plate:(es.plates[d]||'').trim() }));
@@ -1665,12 +1671,12 @@ function exportCSV(){
   const regs = loadRegs();
   if(!regs.length){ toast(t('dash.exportEmpty')); return; }
   const dayEn = id => { const d = DAYS.find(x=>x.id===id); return d ? d.en : id; };
-  const cols = ['no','name','surname','phone','email','pricetab','pkg','days','tshirt','contacts','plates','avoid','allergy','amount'];
+  const cols = ['no','username','phone','email','pricetab','pkg','days','tshirt','contacts','plates','avoid','allergy','amount'];
   const header = cols.map(c=>t('dash.h.'+c));
   const q = v => '"'+String(v==null?'':v).replace(/"/g,'""')+'"';
   const rows = regs.map((r,i)=>[
     i+1,
-    r.name||'', r.surname||'', r.phone||'', r.email||'',
+    dashboardUsername(r), r.phone||'', r.email||'',
     (r.priceTab==='early'?'Early Bird':'Normal Price'),
     'pkg '+(r.pkg||'').replace('p','')+' day',
     (r.dayIds||[]).map(dayEn).join(' | '),
