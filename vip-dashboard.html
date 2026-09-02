@@ -739,10 +739,9 @@ html,body{height:auto;min-height:0;overflow:visible}
       <div class="table-tools">
         <span class="tt-count" id="dashCount"></span>
         <div class="tt-right">
-          <span class="tt-hint" data-i18n="dash.hint">กด Ctrl+Shift+Z เพื่อปิด</span>
           <button type="button" class="btn-export" id="dashExport">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-            <span data-i18n="dash.export">ส่งออก CSV</span>
+            <span data-i18n="dash.export">Export CSV</span>
           </button>
         </div>
       </div>
@@ -844,14 +843,14 @@ const L = {
     'dn.ref':'หมายเลขอ้างอิง','dn.name':'ชื่อผู้สมัคร','dn.pkg':'แพ็กเกจ','dn.days':'วันที่เข้าร่วม','dn.amount':'ยอดที่ชำระ',
     'dn.new':'ลงทะเบียนรายการใหม่','dn.print':'พิมพ์ใบเสร็จ (PDF)','dn.receipt':'ใบเสร็จรับเงิน · OFFICIAL RECEIPT',
     'dash.title':'แดชบอร์ดผู้สมัคร<small>SOUPED UP VIP VILLAGE · DASHBOARD</small>',
-    'dash.count':'จำนวนผู้สมัคร','dash.total':'จำนวนเงินรวม','dash.hint':'กด Ctrl+Shift+Z เพื่อปิด',
+    'dash.count':'จำนวนผู้สมัคร','dash.total':'จำนวนเงินรวม',
     'dash.rows':'รายการ','dash.empty':'ยังไม่มีข้อมูลผู้สมัคร',
     'dash.edit':'แก้ไขข้อมูลผู้สมัคร','dash.save':'บันทึก','dash.saved':'บันทึกข้อมูลแล้ว ✓','dash.cancel':'ยกเลิก',
     'dash.h.no':'#','dash.h.username':'ชื่อผู้ใช้','dash.h.name':'ชื่อ','dash.h.surname':'นามสกุล','dash.h.phone':'เบอร์โทร','dash.h.email':'อีเมล','dash.h.pricetab':'ประเภทราคา','dash.h.pkg':'แพ็กเกจ','dash.h.days':'วันที่มา','dash.h.tshirt':'ไซส์เสื้อ','dash.h.contacts':'ช่องทางติดต่อ','dash.h.plates':'ทะเบียนรถ','dash.h.avoid':'อาหารที่ไม่ทาน','dash.h.allergy':'อาหารที่แพ้','dash.h.amount':'ยอดชำระ','dash.h.paydate':'วันที่ชำระเงิน','dash.h.status':'สถานะ','dash.h.action':'จัดการ',
     'dash.st.paid':'ชำระแล้ว','dash.st.pending':'รอชำระเงิน','dash.st.refunded':'คืนเงินแล้ว',
     'dash.search.none':'ไม่พบข้อมูลที่ค้นหา','dash.f.all':'ทั้งหมด','dash.f.clear':'ล้างตัวกรอง',
     'dash.f.name':'ชื่อ-นามสกุล','dash.f.name.ph':'ค้นหาชื่อ/นามสกุล','dash.f.phone':'เบอร์โทร','dash.f.phone.ph':'เช่น 08x','dash.f.email':'อีเมล','dash.f.email.ph':'เช่น name@email.com','dash.f.pricetab':'ประเภทราคา','dash.f.pkg':'แพ็กเกจ','dash.f.plate':'ทะเบียนรถ','dash.f.plate.ph':'ค้นหาทะเบียน','dash.f.status':'สถานะการชำระเงิน',
-    'dash.showing':'แสดง {a}-{b} จาก {n} รายการ','dash.prev':'ก่อนหน้า','dash.next':'ถัดไป','dash.export':'ส่งออก CSV','dash.exportEmpty':'ยังไม่มีข้อมูลให้ส่งออก','dash.logout':'ออกจากระบบ',
+    'dash.showing':'แสดง {a}-{b} จาก {n} รายการ','dash.prev':'ก่อนหน้า','dash.next':'ถัดไป','dash.export':'Export CSV','dash.exportEmpty':'ยังไม่มีข้อมูลให้ส่งออก','dash.logout':'ออกจากระบบ',
     'login.eyebrow':'ADMIN','login.title':'เข้าสู่ระบบผู้ดูแลระบบ','login.sub':'Admin Login','login.user':'ชื่อผู้ใช้ (Username)','login.user.ph':'กรอกชื่อผู้ใช้','login.pass':'รหัสผ่าน (Password)','login.pass.ph':'กรอกรหัสผ่าน','login.btn':'เข้าสู่ระบบ','login.err':'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง','login.hint':'* เดโม: ใส่อะไรก็ได้เพื่อเข้าสู่ระบบ',
     'mem.login':'เข้าสู่ระบบ','mem.account':'บัญชีของฉัน',
     'mem.tab.register':'สมัครสมาชิก','mem.tab.login':'เข้าสู่ระบบ',
@@ -921,7 +920,7 @@ const L = {
     'dn.ref':'Reference No.','dn.name':'Applicant','dn.pkg':'Package','dn.days':'Attendance day(s)','dn.amount':'Amount Paid',
     'dn.new':'Register another entry','dn.print':'Print receipt (PDF)','dn.receipt':'OFFICIAL RECEIPT · ใบเสร็จรับเงิน',
     'dash.title':'Applicants Dashboard<small>SOUPED UP VIP VILLAGE · DASHBOARD</small>',
-    'dash.count':'Applicants','dash.total':'Total Amount','dash.hint':'Press Ctrl+Shift+Z to close',
+    'dash.count':'Applicants','dash.total':'Total Amount',
     'dash.rows':'record(s)','dash.empty':'No applicants yet',
     'dash.edit':'Edit applicant','dash.save':'Save','dash.saved':'Saved ✓','dash.cancel':'Cancel',
     'dash.h.no':'#','dash.h.username':'Username','dash.h.name':'Name','dash.h.surname':'Surname','dash.h.phone':'Phone','dash.h.email':'Email','dash.h.pricetab':'Price type','dash.h.pkg':'Package','dash.h.days':'Days','dash.h.tshirt':'T-Shirt','dash.h.contacts':'Contacts','dash.h.plates':'License plate','dash.h.avoid':'Food avoided','dash.h.allergy':'Allergies','dash.h.amount':'Amount','dash.h.paydate':'Payment date','dash.h.status':'Status','dash.h.action':'Manage',
