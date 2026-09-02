@@ -1999,6 +1999,12 @@ SCREEN_INIT.summary = function(){
 };
 
 /* ---- PAYMENT ---- */
+/* ชื่อผู้ชำระเงินสำหรับ pre-fill: นิติบุคคลใช้ชื่อบริษัท, บุคคลธรรมดาใช้ชื่อ+นามสกุล */
+function payerName(){
+  const a=state.applicant||{};
+  if(a.a_type==='company')return a.a_company||'';
+  return ((a.a_name||'')+' '+(a.a_surname||'')).trim();
+}
 SCREENS.pay = function(){
   const c=calcTotal();
   const isCard=state.payMethod==='card';
@@ -2017,7 +2023,7 @@ SCREENS.pay = function(){
 
   <label class="checkbox" style="margin:18px 0 4px"><input type="checkbox" id="taxCb" ${state.tax?'checked':''}/> ${esc(t('py.tax'))}</label>
   <div id="taxFields" class="${state.tax?'':'hidden'}">
-    <div class="field full"><label>${esc(t('py.tax.name'))}</label><input class="control" id="tax_name"/></div>
+    <div class="field full"><label>${esc(t('py.tax.name'))}</label><input class="control" id="tax_name" value="${esc(payerName())}"/></div>
     <div class="field full"><label>${esc(t('py.tax.taxid'))}</label><input class="control" id="tax_id"/></div>
     <div class="field full"><label>${esc(t('py.tax.addr'))}</label><input class="control" id="tax_addr"/></div>
   </div>
@@ -2053,7 +2059,7 @@ function renderPayDetail(){
         <div class="field"><label>${esc(t('py.card.exp'))}</label><input class="control" placeholder="MM/YY"/></div>
         <div class="field"><label>${esc(t('py.card.cvv'))}</label><input class="control" placeholder="123" inputmode="numeric"/></div>
       </div>
-      <div class="field full"><label>${esc(t('py.card.holder'))}</label><input class="control" placeholder="NAME SURNAME"/></div>`;
+      <div class="field full"><label>${esc(t('py.card.holder'))}</label><input class="control" placeholder="NAME SURNAME" value="${esc(payerName())}"/></div>`;
   } else {
     box.innerHTML=`<div class="qr-box">
       <div class="qr-img">${qrSvg()}</div>
@@ -2553,7 +2559,7 @@ function buildDashData(){
     const applicantRegDate=dIsoDate(i);
     const racerRegDate=dIsoDate(i+1);
     const statusSlot=i%10;
-    const paymentStatus=statusSlot<8?'ชำระแล้ว':statusSlot===8?'รอตรวจสอบ':'ยังไม่ชำระ';
+    const paymentStatus=statusSlot<8?'ชำระแล้ว':'ยังไม่ชำระ';
     const paidDate=paymentStatus==='ยังไม่ชำระ'?'-':dIsoDate(i+2);
     const addr=(10+Math.floor(Math.random()*990))+' หมู่ '+(1+Math.floor(Math.random()*15))+' จ.'+dRnd(D_PROV);
     const phone='08'+(1+Math.floor(Math.random()*8))+'-'+dPad(Math.floor(Math.random()*1000))+'-'+dPad(Math.floor(Math.random()*10000));
@@ -2887,7 +2893,7 @@ function openDashEdit(tab,idx){
       return `<div class="field"><label>${esc(lab)}</label><select class="control" data-ek="${k}">${opts}</select></div>`;
     }
     if(type==='payment-status'){
-      const opts=['ชำระแล้ว','รอตรวจสอบ','ยังไม่ชำระ'].map(v=>`<option ${v===r[k]?'selected':''}>${v}</option>`).join('');
+      const opts=['ชำระแล้ว','ยังไม่ชำระ'].map(v=>`<option ${v===r[k]?'selected':''}>${v}</option>`).join('');
       return `<div class="field"><label>${esc(lab)}</label><select class="control" data-ek="${k}">${opts}</select></div>`;
     }
     return `<div class="field"><label>${esc(lab)}</label><input class="control" data-ek="${k}" type="${type||'text'}" value="${esc(r[k])}"/></div>`;
