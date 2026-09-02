@@ -179,6 +179,14 @@ h2.sec-title{font-size:clamp(19px,3.4vw,25px);margin:0 0 4px;font-weight:700;let
 .opt.opt-disabled:hover{border-color:var(--line-2)}
 .opt.opt-disabled .day-pick{display:none}
 .opt.opt-disabled .opt-price{color:var(--txt-faint)}
+.ticket-add{margin-top:22px;border:1px solid var(--line-2);border-radius:12px;padding:16px 18px;background:var(--panel)}
+.ticket-add-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.ticket-add-title{font-size:14px;font-weight:800}
+.ticket-chips{display:flex;flex-wrap:wrap;gap:8px}
+.ticket-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 11px;border:1px solid var(--line-2);border-radius:8px;background:var(--panel-2);font-size:13px;font-weight:700}
+.ticket-chip button{display:grid;place-items:center;width:20px;height:20px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.08);color:var(--txt-dim);cursor:pointer;font-size:15px;line-height:1}
+.ticket-chip button:hover{background:rgba(225,6,0,.2);color:#fff}
+.ticket-add-btn{width:100%;margin-top:12px;justify-content:center}
 
 /* ---------- Radio group (tshirt / consent) ---------- */
 .radio-row{display:flex;flex-wrap:wrap;gap:12px}
@@ -563,6 +571,11 @@ h2.sec-title{font-size:clamp(19px,3.4vw,25px);margin:0 0 4px;font-weight:700;let
   </div>
 
   <!-- 10. SUBMIT -->
+  <div class="ticket-add">
+    <div class="ticket-add-head"><div class="ticket-add-title" data-i18n="ticket.list">รายการบัตรเข้างาน</div><strong id="ticketQtyText"></strong></div>
+    <div class="ticket-chips" id="ticketChips"></div>
+    <button type="button" class="btn btn-ghost ticket-add-btn" id="addTicket" data-i18n="ticket.add">+ เพิ่มบัตรเข้างาน</button>
+  </div>
   <div class="actions">
     <button type="button" class="btn btn-ghost" id="regBack" data-i18n="btn.back">ย้อนกลับ</button>
     <div class="spacer"></div>
@@ -601,7 +614,7 @@ h2.sec-title{font-size:clamp(19px,3.4vw,25px);margin:0 0 4px;font-weight:700;let
 
 <script>
 /* ================= State ================= */
-const state = { lang:'th', tab:'early', pkg:null, days:{}, plates:{}, payMethod:'card', tax:false, result:null, dashPage:1 };
+const state = { lang:'th', tab:'early', pkg:null, days:{}, plate:'', hasCar:null, ticketQty:1, payMethod:'card', tax:false, result:null, dashPage:1 };
 const PAGE_SIZE = 30;
 const el = id => document.getElementById(id);
 const esc = s => String(s==null?'':s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -650,8 +663,10 @@ const L = {
     'shirt.l':'L - รอบอก 44" (Chest 44")','shirt.xl':'XL - รอบอก 48" (Chest 48")',
     'park.title':'สำรองพื้นที่จอดรถ','park.sub':'Reserve Parking',
     'park.info':'สงวนสิทธิ์ให้จอดเฉพาะเลขทะเบียนที่ลงทะเบียนไว้เท่านั้น / Reserved parking for registered license plates only',
+    'park.choice':'ท่านนำรถมาหรือไม่','park.yes':'มีรถ','park.no':'ไม่มีรถ',
     'park.plate':'โปรดระบุทะเบียนรถ (Please Provide License Plate)','park.plate.ph':'ระบุเลขทะเบียนรถ',
     'park.empty':'กรุณาเลือกวันที่จะเข้าร่วมในหัวข้อแพ็กเกจก่อน',
+    'ticket.list':'รายการบัตรเข้างาน','ticket.add':'+ เพิ่มบัตรเข้างาน','ticket.item':'บัตรเข้างานใบที่ {n}','ticket.qty':'จำนวน {n} ใบ',
     'buffet.title':'อาหารบุฟเฟต์','buffet.sub':'Buffet Catering','buffet.ph':'ภาพอาหารบุฟเฟต์',
     'buffet.avoid':'ท่านไม่รับประทานอาหารประเภทใด (What kind of food do you not eat?)','buffet.avoid.ph':'ระบุรายการ หรือเว้นว่าง',
     'buffet.allergy':'หากแพ้อาหารประเภทใดโปรดระบุ (If you are allergic to any type of food, please specify.)','buffet.allergy.ph':'ระบุรายการ หรือเว้นว่าง',
@@ -724,8 +739,10 @@ const L = {
     'shirt.l':'L - Chest 44" (รอบอก 44")','shirt.xl':'XL - Chest 48" (รอบอก 48")',
     'park.title':'Reserve Parking','park.sub':'สำรองพื้นที่จอดรถ',
     'park.info':'Reserved parking for registered license plates only / สงวนสิทธิ์ให้จอดเฉพาะเลขทะเบียนที่ลงทะเบียนไว้เท่านั้น',
+    'park.choice':'Will you bring a car?','park.yes':'Car','park.no':'No car',
     'park.plate':'Please Provide License Plate (โปรดระบุทะเบียนรถ)','park.plate.ph':'Enter license plate',
     'park.empty':'Please select your attendance day(s) in the Package section first.',
+    'ticket.list':'Admission Tickets','ticket.add':'+ Add admission ticket','ticket.item':'Admission ticket {n}','ticket.qty':'{n} ticket(s)',
     'buffet.title':'Buffet Catering','buffet.sub':'อาหารบุฟเฟต์','buffet.ph':'Buffet Catering image',
     'buffet.avoid':'What kind of food do you not eat? (ท่านไม่รับประทานอาหารประเภทใด)','buffet.avoid.ph':'Specify items or leave blank',
     'buffet.allergy':'If you are allergic to any type of food, please specify. (หากแพ้อาหารประเภทใดโปรดระบุ)','buffet.allergy.ph':'Specify items or leave blank',
@@ -907,21 +924,24 @@ function selectedDays(){
 }
 function renderParking(){
   const box = document.getElementById('parkFields');
-  const days = selectedDays();
-  if(days.length===0){
-    box.innerHTML = '<div class="park-empty">'+t('park.empty')+'</div>';
-    return;
-  }
-  box.innerHTML = days.map(d=>{
-    const val = state.plates[d.id] ? ' value="'+state.plates[d.id].replace(/"/g,'&quot;')+'"' : '';
-    return '<div class="field">'+
-      '<label>'+t('park.plate')+' — <b style="color:var(--mint)">'+d[state.lang]+'</b><span class="req">*</span></label>'+
-      '<input class="control" data-plate="'+d.id+'" placeholder="'+t('park.plate.ph')+'" required aria-required="true"'+val+'>'+
-    '</div>';
-  }).join('');
-  box.querySelectorAll('input[data-plate]').forEach(i=>{
-    i.addEventListener('input', ()=>{ state.plates[i.dataset.plate] = i.value; });
+  box.innerHTML = '<div class="field full"><label>'+t('park.choice')+'<span class="req">*</span></label>'+
+    '<div class="radio-row">'+
+      '<label class="radio-opt'+(state.hasCar===true?' sel':'')+'"><input type="radio" name="parkChoice" value="yes"'+(state.hasCar===true?' checked':'')+'><span>'+t('park.yes')+'</span></label>'+
+      '<label class="radio-opt'+(state.hasCar===false?' sel':'')+'"><input type="radio" name="parkChoice" value="no"'+(state.hasCar===false?' checked':'')+'><span>'+t('park.no')+'</span></label>'+
+    '</div></div>'+
+    (state.hasCar===true?'<div class="field full" style="margin-top:14px"><label>'+t('park.plate')+'<span class="req">*</span></label><input class="control" id="vehiclePlate" placeholder="'+t('park.plate.ph')+'" required aria-required="true" value="'+esc(state.plate)+'"></div>':'');
+  box.querySelectorAll('input[name="parkChoice"]').forEach(r=>r.onchange=()=>{
+    state.hasCar=r.value==='yes';
+    if(!state.hasCar)state.plate='';
+    renderParking();
   });
+  const plate=el('vehiclePlate');if(plate)plate.oninput=()=>{state.plate=plate.value;plate.closest('.field').classList.remove('invalid');};
+}
+function renderTickets(){
+  const chips=el('ticketChips'),qty=el('ticketQtyText');if(!chips||!qty)return;
+  qty.textContent=t('ticket.qty').replace('{n}',state.ticketQty);
+  chips.innerHTML=Array.from({length:state.ticketQty},(_,i)=>'<span class="ticket-chip">'+t('ticket.item').replace('{n}',i+1)+(i?'<button type="button" data-remove-ticket="'+i+'" aria-label="Remove">×</button>':'')+'</span>').join('');
+  chips.querySelectorAll('[data-remove-ticket]').forEach(b=>b.onclick=()=>{if(state.ticketQty>1){state.ticketQty--;renderTickets();}});
 }
 
 /* ================= Language ================= */
@@ -935,6 +955,7 @@ function applyLang(){
   renderContent();
   renderPackages();
   renderParking();
+  renderTickets();
   if(el('payView') && !el('payView').hidden) renderPay();
   if(el('doneView') && !el('doneView').hidden) renderDone();
 }
@@ -950,14 +971,15 @@ function showView(v){
 
 /* ================= Payment ================= */
 function renderPay(){
-  const price = PRICES[state.tab][state.pkg];
+  const unitPrice = PRICES[state.tab][state.pkg],price=unitPrice*state.ticketQty;
   const days = selectedDays().map(d=>d[state.lang]).join(', ');
   const isCard = state.payMethod==='card';
   el('payScreen').innerHTML =
    '<p class="eyebrow">'+t('py.eyebrow')+'</p>'+
    '<h1 class="page-title">'+t('py.title')+'</h1>'+
    '<p class="page-sub">'+t('py.sub')+'</p>'+
-   '<div class="sum-line"><span class="lab">'+t('pkg.'+state.pkg)+'</span><span class="val">'+money(price)+'</span></div>'+
+   '<div class="sum-line"><span class="lab">'+t('pkg.'+state.pkg)+'</span><span class="val">'+money(unitPrice)+'</span></div>'+
+   '<div class="sum-line"><span class="lab">'+t('ticket.list')+'</span><span class="val">'+t('ticket.qty').replace('{n}',state.ticketQty)+'</span></div>'+
    '<div class="sum-line"><span class="lab">'+t('py.days')+'</span><span class="val">'+esc(days)+'</span></div>'+
    '<div class="sum-line"><span class="lab">'+t('py.pricetab')+'</span><span class="val">'+t('tab.'+state.tab)+'</span></div>'+
    '<div class="sum-line total"><span class="lab">'+t('sm.total')+'</span><span class="val">'+money(price)+'</span></div>'+
@@ -1014,7 +1036,7 @@ function qrSvg(){
   return '<svg viewBox="0 0 '+(n*9)+' '+(n*9)+'" width="150" height="150" fill="#000">'+cells+'</svg>';
 }
 function finishPayment(){
-  const price = PRICES[state.tab][state.pkg];
+  const price = PRICES[state.tab][state.pkg]*state.ticketQty;
   const f = el('regForm');
   const ref = 'SUVIP-'+Math.random().toString(36).slice(2,7).toUpperCase()+'-'+Math.floor(1000+Math.random()*9000);
   state.result = {
@@ -1023,13 +1045,14 @@ function finishPayment(){
     email:f.email.value.trim(),
     pkg:t('pkg.'+state.pkg),
     days:selectedDays().map(d=>d[state.lang]).join(', '),
+    qty:state.ticketQty,
     amount:price
   };
   const pickedDays=selectedDays();
   window.parent.postMessage({type:'suvip:complete',record:{
-    ref:state.result.ref,holder:state.result.name,type:state.result.pkg,zone:state.result.days,qty:1,
+    ref:state.result.ref,holder:state.result.name,type:state.result.pkg,zone:state.result.days,qty:state.ticketQty,
     date:new Date().toISOString().slice(0,10),amount:price,shirt:(f.querySelector('input[name="shirt"]:checked')||{}).value||'-',
-    plates:pickedDays.map(d=>({day:d.id,plate:state.plates[d.id]||''})),foodAvoid:f.foodAvoid.value.trim(),
+    plates:state.hasCar?pickedDays.map(d=>({day:d.id,plate:state.plate})):[],foodAvoid:f.foodAvoid.value.trim(),
     foodAllergy:f.foodAllergy.value.trim(),priceTab:state.tab,pkg:state.pkg,dayIds:pickedDays.map(d=>d.id),email:state.result.email
   }},'*');
   showView('done'); renderDone();
@@ -1046,6 +1069,7 @@ function renderDone(){
        '<div class="r-row"><span class="rl">'+t('dn.ref')+'</span><span class="rv ref-num">'+esc(r.ref)+'</span></div>'+
        '<div class="r-row"><span class="rl">'+t('dn.name')+'</span><span class="rv">'+esc(r.name||'-')+'</span></div>'+
        '<div class="r-row"><span class="rl">'+t('dn.pkg')+'</span><span class="rv">'+esc(r.pkg||'-')+'</span></div>'+
+       '<div class="r-row"><span class="rl">'+t('ticket.list')+'</span><span class="rv">'+t('ticket.qty').replace('{n}',r.qty||1)+'</span></div>'+
        '<div class="r-row"><span class="rl">'+t('dn.days')+'</span><span class="rv">'+esc(r.days||'-')+'</span></div>'+
        '<div class="r-row"><span class="rl">'+t('dn.amount')+'</span><span class="rv" style="color:var(--amber)">'+money(r.amount||0)+'</span></div>'+
      '</div>'+
@@ -1071,6 +1095,7 @@ function populatePrintableReceipt(r, title){
         prRow(t('dn.ref'), r.ref)+
         prRow(t('dn.name'), r.name)+
         prRow(t('dn.pkg'), r.pkg)+
+        prRow(t('ticket.list'), t('ticket.qty').replace('{n}',r.qty||1))+
         prRow(t('dn.days'), r.days)+
         (r.plates?prRow(t('mem.hist.plate'), r.plates):'')+
         prRow(t('dn.amount'), money(r.amount||0), 'total')+
@@ -1087,6 +1112,7 @@ function printHistoryReceipt(id){
     name:((order.name||'')+' '+(order.surname||'')).trim()||'-',
     email:order.email||'',
     pkg:t('pkg.'+order.pkg),
+    qty:order.qty||1,
     days:(order.dayIds||[]).map(dayLabel).join(', '),
     plates,
     amount:order.amount||0
@@ -1094,7 +1120,7 @@ function printHistoryReceipt(id){
   setTimeout(()=>window.print(),60);
 }
 function resetAll(){
-  state.pkg=null; state.days={}; state.plates={}; state.payMethod='card'; state.tax=false; state.result=null;
+  state.pkg=null; state.days={}; state.plate=''; state.hasCar=null; state.ticketQty=1; state.payMethod='card'; state.tax=false; state.result=null;
   const f = el('regForm'); if(f) f.reset();
   document.querySelectorAll('.radio-opt').forEach(o=>o.classList.remove('sel'));
   document.querySelectorAll('input[data-chan]').forEach(c=>{
@@ -1102,7 +1128,7 @@ function resetAll(){
     if(inp){ inp.style.display='none'; inp.value=''; }
   });
   document.querySelectorAll('.field.invalid').forEach(x=>x.classList.remove('invalid'));
-  renderPackages(); renderParking();
+  renderPackages(); renderParking(); renderTickets();
   showView('reg');
 }
 
@@ -1147,6 +1173,7 @@ document.querySelectorAll('.radio-opt input').forEach(r=>{
 /* ================= Tab / lang buttons ================= */
 document.querySelectorAll('[data-setlang]').forEach(b=>b.onclick=()=>{ state.lang=b.dataset.setlang; applyLang(); });
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+el('addTicket').onclick=()=>{state.ticketQty++;renderTickets();};
 el('brandHome').addEventListener('click', e=>{ e.preventDefault(); showView('reg'); window.scrollTo(0,0); });
 
 /* ================= Submit ================= */
@@ -1157,9 +1184,9 @@ document.getElementById('regForm').addEventListener('submit', e=>{
   if(!state.pkg){ toast(t('toast.pkg')); return; }
   const days = selectedDays();
   if(days.length !== PKG_DAYS[state.pkg]){ toast(t('toast.days')); return; }
-  const missingPlate=days.find(d=>!String(state.plates[d.id]||'').trim());
-  if(missingPlate){
-    const input=form.querySelector('[data-plate="'+missingPlate.id+'"]');
+  if(state.hasCar===null){toast(t('toast.fill'));el('parkFields').scrollIntoView({behavior:'smooth',block:'center'});return;}
+  if(state.hasCar && !String(state.plate||'').trim()){
+    const input=el('vehiclePlate');
     if(input){ input.closest('.field').classList.add('invalid'); input.focus(); input.scrollIntoView({behavior:'smooth',block:'center'}); }
     toast(t('toast.fill')); return;
   }
@@ -1180,10 +1207,11 @@ document.getElementById('regForm').addEventListener('submit', e=>{
     email: form.email.value.trim(),
     contacts: chans,
     package: state.pkg,
-    price: PRICES[state.tab][state.pkg],
+    price: PRICES[state.tab][state.pkg]*state.ticketQty,
+    qty: state.ticketQty,
     days: days.map(d=>d.en),
     tshirt: shirt,
-    plates: days.map(d=>({ day:d.en, plate: state.plates[d.id]||'' })),
+    plates: state.hasCar?days.map(d=>({ day:d.en, plate: state.plate })):[],
     foodAvoid: form.foodAvoid.value.trim(),
     foodAllergy: form.foodAllergy.value.trim(),
     consent: true
@@ -1202,9 +1230,10 @@ document.getElementById('regForm').addEventListener('submit', e=>{
     contacts: chans,
     pkg: state.pkg,
     dayIds: days.map(d=>d.id),
-    amount: PRICES[state.tab][state.pkg],
+    amount: PRICES[state.tab][state.pkg]*state.ticketQty,
+    qty: state.ticketQty,
     tshirt: shirt,
-    plates: days.map(d=>({ day:d.id, plate: state.plates[d.id]||'' })),
+    plates: state.hasCar?days.map(d=>({ day:d.id, plate: state.plate })):[],
     foodAvoid: payload.foodAvoid,
     foodAllergy: payload.foodAllergy,
     consent: true,
