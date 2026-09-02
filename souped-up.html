@@ -3063,10 +3063,6 @@ function racerPdfHTML(idx){
         </div>
       </div>
     </div>
-    <div class="ad-sign">
-      <div class="s"><div class="line"></div><div class="lab">ลายมือชื่อผู้สมัคร / นักแข่ง</div></div>
-      <div class="s"><div class="line"></div><div class="lab">ลายมือชื่อเจ้าหน้าที่รับสมัคร</div></div>
-    </div>
     <div class="ad-foot">
       <span>Souped Up 2026 · ระบบลงทะเบียนการแข่งขัน · NIDSS</span>
       <span class="ad-demo">เอกสารตัวอย่าง (DEMO)</span>
@@ -3074,14 +3070,14 @@ function racerPdfHTML(idx){
   </div></div>`;
 }
 let PDF_HTML='';
-function openPdfDoc(html, tabLabel){
+function openPdfDoc(html, tabLabel, printLabel){
   PDF_HTML=html;
   el('pdfBody').innerHTML=html;
-  el('pdfPrint').innerHTML=D_ICON.printer+' <span>'+esc(t('dn.receipt'))+'</span>';
+  el('pdfPrint').innerHTML=D_ICON.printer+' <span>'+esc(printLabel||t('dn.receipt'))+'</span>';
   const tt=document.querySelector('.pdf-tt'); if(tt&&tabLabel)tt.textContent=tabLabel;
   el('pdfBack').classList.add('open');
 }
-function openRacerPdf(idx){ openPdfDoc(racerPdfHTML(idx), 'ใบสมัครนักแข่ง · Racer Application'); }
+function openRacerPdf(idx){ openPdfDoc(racerPdfHTML(idx), 'ใบสมัครนักแข่ง · Racer Application', state.lang==='th'?'พิมพ์ใบสมัครนักแข่ง':'Print Racer Application'); }
 function openReceiptPdf(){ openPdfDoc(receiptPdfHTML(), 'ใบเสร็จรับเงินชั่วคราว · Provisional Receipt'); }
 function closeRacerPdf(){ el('pdfBack').classList.remove('open'); el('pdfBody').innerHTML=''; }
 function printRacerPdf(){ if(!PDF_HTML)return; el('pdfPrintRoot').innerHTML=PDF_HTML; window.print(); }
