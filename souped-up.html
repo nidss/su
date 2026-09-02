@@ -495,6 +495,10 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .rc-badge{background:var(--mint-soft);color:var(--mint);font-weight:700;font-size:12.5px;padding:4px 13px;border-radius:999px}
 .rc-imgs{display:flex;gap:8px}
 .prof-empty{color:var(--txt-dim);text-align:center;padding:26px;font-size:14px}
+.home-banner{display:block;margin-top:18px;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 12px 34px -20px rgba(0,0,0,.7);line-height:0;transition:transform .16s,border-color .16s,box-shadow .16s}
+.home-banner:hover{transform:translateY(-2px);border-color:var(--mint);box-shadow:0 18px 40px -20px var(--mint-soft)}
+.home-banner img{display:block;width:100%;height:auto}
+.home-banner[hidden]{display:none}
 .choose-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:26px}
 @media(max-width:640px){.choose-grid{grid-template-columns:1fr}}
 .choose-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;background:var(--panel-2);border:1px solid var(--line);border-radius:18px;padding:40px 26px;cursor:pointer;transition:transform .16s,border-color .16s,box-shadow .16s;color:var(--txt);font-family:inherit}
@@ -616,6 +620,10 @@ body.vip-frame-mode>.wrap>.foot{display:none}
     <div class="speed-line"></div>
     <div class="card-pad" id="screen"></div>
   </div>
+  <!-- แบนเนอร์ VIP Village (แสดงเฉพาะหน้าแรก) ลิงก์ไปหน้า suvip เปิดแท็บใหม่ -->
+  <a id="homeBanner" class="home-banner" href="https://nidss.github.io/suvip/" target="_blank" rel="noopener" hidden>
+    <img src="asset/ticket.png" alt="Souped Up VIP Village" onerror="this.closest('#homeBanner').hidden=true"/>
+  </a>
   <div class="foot">© 2026 NIDSS · <span data-i18n="foot.rights">All rights reserved</span></div>
 </div>
 
@@ -977,6 +985,7 @@ function render(){
   renderStepper();
   document.body.classList.toggle('vip-frame-mode',state.step==='vip');
   el('stepper').classList.toggle('hidden', state.step==='profile' || state.step==='auth' || state.step==='choose' || state.step==='onboard' || state.step==='vip' || state.step==='vipPay' || state.step==='vipDone');
+  const hb=el('homeBanner'); if(hb) hb.hidden = state.step!=='auth';
   const s=el("screen");
   s.innerHTML = SCREENS[state.step]();
   window.scrollTo({top:0,behavior:"smooth"});
@@ -1154,7 +1163,7 @@ SCREEN_INIT.auth = function(){
       state.applicant.a_email=state.account.email;
       state.applicant.a_phone=state.account.phone;
       toast(t('t.registered'));
-      go('choose');
+      enterPostAuth();
     } else {
       const rec=DEMO_USERS[el('l_id').value], pw=el('l_password').value;
       clearMemberRegistrationData();
@@ -1162,7 +1171,7 @@ SCREEN_INIT.auth = function(){
       if(rec.kind==='new'){
         state.profile=emptyMemberProfile();
         toast(t('t.loginok'));
-        go('choose');
+        enterPostAuth();
       }else{
         state.profile=buildProfile(state.account);
         state.applicant=Object.assign({},state.profile.applicant);
@@ -1176,6 +1185,8 @@ SCREEN_INIT.auth = function(){
 function markField(id,msg){const f=el(id).closest('.field');f.classList.add('invalid');const em=f.querySelector('.err-msg');if(em)em.textContent=msg;f.scrollIntoView({behavior:'smooth',block:'center'});}
 
 /* ---- CHOOSE (shown before onboarding for new/incomplete accounts) ---- */
+/* ซ่อนหน้า "คุณต้องการทำอะไร?" ไว้ก่อน (เผื่อเปิดกลับมาในอนาคต ให้ตั้งเป็น true) */
+const CHOOSE_ENABLED=false;
 function hasPersonalInfo(){
   const a=state.applicant||{};
   return !!(a.a_name && a.a_surname && a.a_phone && a.a_email && a.a_idaddr);
@@ -1184,6 +1195,14 @@ function hasRefundAccount(){
   const b=state.bank||{};
   return !!(b.rf_bank && b.rf_accno && b.rf_accname && (b.rf_bank!=='__other__'||b.rf_bankother));
 }
+/* ปลายทางหลังสมัคร/เข้าสู่ระบบ (บัญชีใหม่): ถ้าซ่อน choose ให้เข้าสู่การลงทะเบียนนักแข่งตรงๆ */
+function enterPostAuth(){
+  if(CHOOSE_ENABLED){ go('choose'); return; }
+  if(!hasPersonalInfo()){ state.pendingChoice='racer'; go('onboard'); }
+  else openChosenAction('racer');
+}
+/* ปลายทางเมื่อจะย้อนกลับไปหน้า choose ที่ถูกซ่อน */
+function chooseBackTarget(){ return CHOOSE_ENABLED?'choose':'auth'; }
 SCREENS.choose = function(){
   return `
   <p class="eyebrow">${esc(t('ch.eyebrow'))}</p>
@@ -1253,7 +1272,7 @@ SCREEN_INIT.onboard = function(){
     const pc=state.pendingChoice; state.pendingChoice=null;
     if(pc==='racer-profile')startRacerRegistration('profile');
     else if(pc)openChosenAction(pc);
-    else go('choose');
+    else go(chooseBackTarget());
   };
 };
 
@@ -1288,7 +1307,7 @@ SCREEN_INIT.terms = function(){
   el('screen').querySelectorAll('[data-doc]').forEach(b=>b.onclick=()=>openDoc(b.dataset.doc));
   el('screen').querySelector('[data-back]').onclick=()=>{
     if(state.racerEntryBack==='profile'){state.profileTab='racers';go('profile');}
-    else go('choose');
+    else go(chooseBackTarget());
   };
   const nx=el('termsNext'); nx.onclick=()=>{ if(Object.values(state.terms).every(Boolean)) go('racer'); else toast(t('t.acceptall')); };
 };
@@ -2088,7 +2107,7 @@ function vipPackageLabel(pkg){return t('vipx.'+(pkg||'p1'));}
 function vipDayLabels(days){return VIP_DAYS.filter(d=>(days||[]).includes(d.id)).map(d=>t(d.key));}
 function vipPrice(){const v=state.vip||freshVipState();return v.pkg?(VIP_PRICES[v.priceTab][v.pkg]||0):0;}
 function startVipPurchase(backTarget){state.vip=freshVipState(backTarget||'choose');go('vip');}
-function vipBackTarget(){return state.vip&&state.vip.back==='profile'?'profile':'choose';}
+function vipBackTarget(){return state.vip&&state.vip.back==='profile'?'profile':chooseBackTarget();}
 
 SCREENS.vip=function(){
   const v=state.vip||(state.vip=freshVipState('choose'));
