@@ -399,6 +399,21 @@ h2.sec-title{font-size:clamp(19px,3.4vw,25px);margin:0 0 4px;font-weight:700;let
 .dtable .empty-row td{text-align:center;color:var(--txt-faint);padding:34px;font-style:italic}
 .badge-tab{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.3px;padding:3px 8px;border-radius:999px;border:1px solid var(--line-2);color:var(--txt-dim)}
 .badge-tab.early{color:var(--lime);border-color:rgba(209,255,3,.4)}
+/* payment status badge */
+.badge-st{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.3px;padding:3px 9px;border-radius:999px;border:1px solid var(--line-2);color:var(--txt-dim);white-space:nowrap}
+.badge-st::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex:0 0 auto}
+.badge-st.paid{color:var(--green);border-color:rgba(37,194,110,.4);background:rgba(37,194,110,.08)}
+.badge-st.pending{color:var(--amber);border-color:rgba(255,180,0,.4);background:rgba(255,180,0,.08)}
+.badge-st.refunded{color:var(--red-2);border-color:rgba(255,43,28,.4);background:rgba(255,43,28,.08)}
+/* dashboard search */
+.dash-search{position:relative;flex:1 1 260px;min-width:200px;max-width:360px}
+.dash-search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--txt-faint);pointer-events:none}
+.dash-search input{width:100%;background:var(--bg);border:1px solid var(--line-2);color:var(--txt);border-radius:9px;padding:9px 34px 9px 34px;font-size:13px;outline:none;transition:.15s}
+.dash-search input::placeholder{color:#5a616e}
+.dash-search input:focus{border-color:var(--mint);box-shadow:0 0 0 3px var(--mint-soft)}
+.dash-search .ds-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:transparent;border:0;color:var(--txt-faint);cursor:pointer;font-size:18px;line-height:1;padding:2px 4px;display:none}
+.dash-search .ds-clear:hover{color:var(--txt)}
+.dash-search.has-val .ds-clear{display:block}
 .ico-btn{background:transparent;border:1px solid var(--line-2);border-radius:7px;width:32px;height:32px;color:var(--amber);cursor:pointer;display:inline-grid;place-items:center;vertical-align:middle}
 .ico-btn:hover{background:rgba(255,180,0,.12);border-color:var(--amber)}
 .ico-btn svg{width:16px;height:16px}
@@ -722,6 +737,11 @@ html,body{height:auto;min-height:0;overflow:visible}
     <div class="table-card">
       <div class="table-tools">
         <span class="tt-count" id="dashCount"></span>
+        <div class="dash-search" id="dashSearchBox">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="search" id="dashSearch" autocomplete="off" data-i18n-ph="dash.search.ph" placeholder="ค้นหา...">
+          <button type="button" class="ds-clear" id="dashSearchClear" aria-label="clear">×</button>
+        </div>
         <div class="tt-right">
           <span class="tt-hint" data-i18n="dash.hint">กด Ctrl+Shift+Z เพื่อปิด</span>
           <button type="button" class="btn-export" id="dashExport">
@@ -748,7 +768,7 @@ html,body{height:auto;min-height:0;overflow:visible}
 
 <script>
 /* ================= State ================= */
-const state = { lang:'th', tab:'early', pkg:null, days:{}, plates:{}, payMethod:'card', tax:false, result:null, dashPage:1 };
+const state = { lang:'th', tab:'early', pkg:null, days:{}, plates:{}, payMethod:'card', tax:false, result:null, dashPage:1, dashSearch:'' };
 const PAGE_SIZE = 30;
 const el = id => document.getElementById(id);
 const esc = s => String(s==null?'':s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -829,7 +849,9 @@ const L = {
     'dash.count':'จำนวนผู้สมัคร','dash.total':'จำนวนเงินรวม','dash.hint':'กด Ctrl+Shift+Z เพื่อปิด',
     'dash.rows':'รายการ','dash.empty':'ยังไม่มีข้อมูลผู้สมัคร',
     'dash.edit':'แก้ไขข้อมูลผู้สมัคร','dash.save':'บันทึก','dash.saved':'บันทึกข้อมูลแล้ว ✓','dash.cancel':'ยกเลิก',
-    'dash.h.no':'#','dash.h.username':'ชื่อผู้ใช้','dash.h.phone':'เบอร์โทร','dash.h.email':'อีเมล','dash.h.pricetab':'ประเภทราคา','dash.h.pkg':'แพ็กเกจ','dash.h.days':'วันที่มา','dash.h.tshirt':'ไซส์เสื้อ','dash.h.contacts':'ช่องทางติดต่อ','dash.h.plates':'ทะเบียนรถ','dash.h.avoid':'อาหารที่ไม่ทาน','dash.h.allergy':'อาหารที่แพ้','dash.h.amount':'ยอดชำระ','dash.h.action':'จัดการ',
+    'dash.h.no':'#','dash.h.username':'ชื่อผู้ใช้','dash.h.name':'ชื่อ','dash.h.surname':'นามสกุล','dash.h.phone':'เบอร์โทร','dash.h.email':'อีเมล','dash.h.pricetab':'ประเภทราคา','dash.h.pkg':'แพ็กเกจ','dash.h.days':'วันที่มา','dash.h.tshirt':'ไซส์เสื้อ','dash.h.contacts':'ช่องทางติดต่อ','dash.h.plates':'ทะเบียนรถ','dash.h.avoid':'อาหารที่ไม่ทาน','dash.h.allergy':'อาหารที่แพ้','dash.h.amount':'ยอดชำระ','dash.h.paydate':'วันที่ชำระเงิน','dash.h.status':'สถานะ','dash.h.action':'จัดการ',
+    'dash.st.paid':'ชำระแล้ว','dash.st.pending':'รอชำระเงิน','dash.st.refunded':'คืนเงินแล้ว',
+    'dash.search.ph':'ค้นหา ชื่อ, นามสกุล, เบอร์โทร, อีเมล, ทะเบียนรถ...','dash.search.none':'ไม่พบข้อมูลที่ค้นหา',
     'dash.showing':'แสดง {a}-{b} จาก {n} รายการ','dash.prev':'ก่อนหน้า','dash.next':'ถัดไป','dash.export':'ส่งออก CSV','dash.exportEmpty':'ยังไม่มีข้อมูลให้ส่งออก','dash.logout':'ออกจากระบบ',
     'login.eyebrow':'ADMIN','login.title':'เข้าสู่ระบบผู้ดูแลระบบ','login.sub':'Admin Login','login.user':'ชื่อผู้ใช้ (Username)','login.user.ph':'กรอกชื่อผู้ใช้','login.pass':'รหัสผ่าน (Password)','login.pass.ph':'กรอกรหัสผ่าน','login.btn':'เข้าสู่ระบบ','login.err':'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง','login.hint':'* เดโม: ใส่อะไรก็ได้เพื่อเข้าสู่ระบบ',
     'mem.login':'เข้าสู่ระบบ','mem.account':'บัญชีของฉัน',
@@ -903,7 +925,9 @@ const L = {
     'dash.count':'Applicants','dash.total':'Total Amount','dash.hint':'Press Ctrl+Shift+Z to close',
     'dash.rows':'record(s)','dash.empty':'No applicants yet',
     'dash.edit':'Edit applicant','dash.save':'Save','dash.saved':'Saved ✓','dash.cancel':'Cancel',
-    'dash.h.no':'#','dash.h.username':'Username','dash.h.phone':'Phone','dash.h.email':'Email','dash.h.pricetab':'Price type','dash.h.pkg':'Package','dash.h.days':'Days','dash.h.tshirt':'T-Shirt','dash.h.contacts':'Contacts','dash.h.plates':'License plate','dash.h.avoid':'Food avoided','dash.h.allergy':'Allergies','dash.h.amount':'Amount','dash.h.action':'Manage',
+    'dash.h.no':'#','dash.h.username':'Username','dash.h.name':'Name','dash.h.surname':'Surname','dash.h.phone':'Phone','dash.h.email':'Email','dash.h.pricetab':'Price type','dash.h.pkg':'Package','dash.h.days':'Days','dash.h.tshirt':'T-Shirt','dash.h.contacts':'Contacts','dash.h.plates':'License plate','dash.h.avoid':'Food avoided','dash.h.allergy':'Allergies','dash.h.amount':'Amount','dash.h.paydate':'Payment date','dash.h.status':'Status','dash.h.action':'Manage',
+    'dash.st.paid':'Paid','dash.st.pending':'Pending','dash.st.refunded':'Refunded',
+    'dash.search.ph':'Search name, surname, phone, email, plate...','dash.search.none':'No matching records',
     'dash.showing':'Showing {a}-{b} of {n}','dash.prev':'Prev','dash.next':'Next','dash.export':'Export CSV','dash.exportEmpty':'No data to export','dash.logout':'Log out',
     'login.eyebrow':'ADMIN','login.title':'Admin Login','login.sub':'เข้าสู่ระบบผู้ดูแลระบบ','login.user':'Username (ชื่อผู้ใช้)','login.user.ph':'Enter username','login.pass':'Password (รหัสผ่าน)','login.pass.ph':'Enter password','login.btn':'Sign In','login.err':'Invalid username or password','login.hint':'* Demo: enter anything to sign in',
     'mem.login':'Sign In','mem.account':'My Account',
@@ -1347,6 +1371,7 @@ document.getElementById('regForm').addEventListener('submit', e=>{
     plates: days.map(d=>({ day:d.id, plate: state.plates[d.id]||'' })),
     foodAvoid: payload.foodAvoid,
     foodAllergy: payload.foodAllergy,
+    status: 'paid',
     consent: true,
     member: (loadMember() ? (loadMember().username || loadMember().email || '') : '')
   });
@@ -1373,6 +1398,8 @@ function seedMockIfEmpty(){
   const tabs = ['early','normal'];
   const pkgs = ['p1','p2','p3'];
   const platePrefix = ['กก','ขข','คค','งง','จจ','ฉฉ','ชช','ญญ'];
+  // สถานะการชำระเงิน (เน้นชำระแล้วเป็นหลัก มีรอชำระ/คืนเงินบ้าง)
+  const statusPool = ['paid','paid','paid','paid','paid','paid','pending','pending','refunded'];
   const pick = a => a[Math.floor(Math.random()*a.length)];
   const N = 68;
   const regs = [];
@@ -1399,6 +1426,7 @@ function seedMockIfEmpty(){
       plates: dayIds.map(d=>({day:d, plate: pick(platePrefix)+' '+String(1000+Math.floor(Math.random()*8999))})),
       foodAvoid: pick(foods),
       foodAllergy: pick(allergies),
+      status: pick(statusPool),
       consent: true
     });
   }
@@ -1431,7 +1459,7 @@ function seedMemberHistory(m){
     name:m.name||'สมาชิก', surname:m.surname||'',
     phone:m.phone||'', email:m.email||'', contacts:[],
     pkg:s.pkg, dayIds:s.dayIds, amount:s.amount,
-    tshirt:'XL', plates:s.dayIds.map(day=>({day,plate:'กท 2026'})), foodAvoid:'', foodAllergy:'', consent:true,
+    tshirt:'XL', plates:s.dayIds.map(day=>({day,plate:'กท 2026'})), foodAvoid:'', foodAllergy:'', status:'paid', consent:true,
     member:memberId, ref:s.ref, mockMemberHistory:true
   }));
   saveRegs(regs);
@@ -1446,11 +1474,53 @@ function dashboardUsername(r){
   return '-';
 }
 
+/* สถานะการชำระเงิน — ค่าเริ่มต้น 'paid' สำหรับข้อมูลเดิมที่ไม่มีฟิลด์นี้ */
+function regStatus(r){
+  const s = (r && r.status) ? String(r.status) : 'paid';
+  return ['paid','pending','refunded'].includes(s) ? s : 'paid';
+}
+function statusBadge(r){
+  const s = regStatus(r);
+  return '<span class="badge-st '+s+'">'+t('dash.st.'+s)+'</span>';
+}
+/* วันที่ชำระเงิน — จาก timestamp ของรายการ */
+function payDate(r){
+  if(!r || !r.ts) return '-';
+  const d = new Date(r.ts);
+  if(isNaN(d)) return '-';
+  const loc = state.lang==='th' ? 'th-TH' : 'en-US';
+  const date = d.toLocaleDateString(loc, { year:'numeric', month:'short', day:'numeric' });
+  const time = d.toLocaleTimeString(loc, { hour:'2-digit', minute:'2-digit' });
+  return date+' '+time;
+}
+/* กรองรายการตามคำค้นหา (ชื่อ, นามสกุล, เบอร์, อีเมล, ทะเบียนรถ, ช่องทางติดต่อ) */
+function filteredRegs(){
+  const all = loadRegs();
+  const q = (state.dashSearch||'').trim().toLowerCase();
+  if(!q) return all;
+  return all.filter(r=>{
+    const plates = (r.plates||[]).map(p=>p&&p.plate?p.plate:'').join(' ');
+    const hay = [
+      r.name, r.surname, r.phone, r.email,
+      (r.contacts||[]).join(' '), plates,
+      t('dash.st.'+regStatus(r))
+    ].join(' ').toLowerCase();
+    return hay.indexOf(q) !== -1;
+  });
+}
+
+const DASH_COLS = ['no','name','surname','phone','email','pricetab','pkg','days','tshirt','contacts','plates','avoid','allergy','amount','paydate','status','action'];
+
 function renderDashboard(){
-  const regs = loadRegs();
-  el('kpiCount').textContent = fmt(regs.length);
-  el('kpiTotal').textContent = money(regs.reduce((s,r)=>s+(r.amount||0),0));
+  const allRegs = loadRegs();
+  // KPI แสดงยอดรวมทั้งหมดเสมอ ไม่ขึ้นกับการค้นหา
+  el('kpiCount').textContent = fmt(allRegs.length);
+  el('kpiTotal').textContent = money(allRegs.reduce((s,r)=>s+(r.amount||0),0));
+
+  const regs = filteredRegs();
+  const searching = (state.dashSearch||'').trim() !== '';
   el('dashCount').textContent = fmt(regs.length)+' '+t('dash.rows');
+  syncSearchBox();
 
   const totalPages = Math.max(1, Math.ceil(regs.length / PAGE_SIZE));
   if(state.dashPage > totalPages) state.dashPage = totalPages;
@@ -1458,12 +1528,12 @@ function renderDashboard(){
   const start = (state.dashPage-1) * PAGE_SIZE;
   const pageRegs = regs.slice(start, start + PAGE_SIZE);
 
-  const heads = ['no','username','phone','email','pricetab','pkg','days','tshirt','contacts','plates','avoid','allergy','amount','action']
-    .map(h=>'<th>'+t('dash.h.'+h)+'</th>').join('');
+  const heads = DASH_COLS.map(h=>'<th>'+t('dash.h.'+h)+'</th>').join('');
 
   let body;
   if(regs.length===0){
-    body = '<tr class="empty-row"><td colspan="14">'+t('dash.empty')+'</td></tr>';
+    const msg = searching ? t('dash.search.none') : t('dash.empty');
+    body = '<tr class="empty-row"><td colspan="'+DASH_COLS.length+'">'+msg+'</td></tr>';
   } else {
     body = pageRegs.map((r,idx)=>{
       const i = start + idx;
@@ -1473,7 +1543,8 @@ function renderDashboard(){
       const tabBadge = '<span class="badge-tab '+(r.priceTab==='early'?'early':'')+'">'+t('tab.'+r.priceTab)+'</span>';
       return '<tr>'+
         '<td>'+(i+1)+'</td>'+
-        '<td>'+esc(dashboardUsername(r))+'</td>'+
+        '<td>'+(esc(r.name)||'-')+'</td>'+
+        '<td>'+(esc(r.surname)||'-')+'</td>'+
         '<td>'+esc(r.phone)+'</td>'+
         '<td class="trunc" title="'+esc(r.email)+'">'+esc(r.email)+'</td>'+
         '<td>'+tabBadge+'</td>'+
@@ -1485,6 +1556,8 @@ function renderDashboard(){
         '<td class="trunc" title="'+esc(r.foodAvoid||'')+'">'+(esc(r.foodAvoid)||'-')+'</td>'+
         '<td class="trunc" title="'+esc(r.foodAllergy||'')+'">'+(esc(r.foodAllergy)||'-')+'</td>'+
         '<td class="amt">'+money(r.amount||0)+'</td>'+
+        '<td>'+esc(payDate(r))+'</td>'+
+        '<td>'+statusBadge(r)+'</td>'+
         '<td><button class="ico-btn" data-edit="'+r.id+'" title="'+t('dash.edit')+'">'+EDIT_ICON+'</button></td>'+
       '</tr>';
     }).join('');
@@ -1493,6 +1566,13 @@ function renderDashboard(){
   el('dashTable').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openEdit(b.dataset.edit));
 
   renderPager(regs.length, totalPages, start, pageRegs.length);
+}
+/* ให้ค่าในช่องค้นหาตรงกับ state และแสดงปุ่มล้างเมื่อมีข้อความ */
+function syncSearchBox(){
+  const inp = el('dashSearch'), box = el('dashSearchBox');
+  if(!inp || !box) return;
+  if(document.activeElement !== inp) inp.value = state.dashSearch || '';
+  box.classList.toggle('has-val', (state.dashSearch||'') !== '');
 }
 function renderPager(total, totalPages, start, shown){
   const pager = el('dashPager');
@@ -1668,15 +1748,15 @@ function openDashboard(){ renderDashboard(); el('dashBack').classList.add('open'
 function closeDashboard(){ el('dashBack').classList.remove('open'); document.body.style.overflow=''; }
 
 function exportCSV(){
-  const regs = loadRegs();
+  const regs = filteredRegs();
   if(!regs.length){ toast(t('dash.exportEmpty')); return; }
   const dayEn = id => { const d = DAYS.find(x=>x.id===id); return d ? d.en : id; };
-  const cols = ['no','username','phone','email','pricetab','pkg','days','tshirt','contacts','plates','avoid','allergy','amount'];
+  const cols = ['no','name','surname','phone','email','pricetab','pkg','days','tshirt','contacts','plates','avoid','allergy','amount','paydate','status'];
   const header = cols.map(c=>t('dash.h.'+c));
   const q = v => '"'+String(v==null?'':v).replace(/"/g,'""')+'"';
   const rows = regs.map((r,i)=>[
     i+1,
-    dashboardUsername(r), r.phone||'', r.email||'',
+    r.name||'', r.surname||'', r.phone||'', r.email||'',
     (r.priceTab==='early'?'Early Bird':'Normal Price'),
     'pkg '+(r.pkg||'').replace('p','')+' day',
     (r.dayIds||[]).map(dayEn).join(' | '),
@@ -1684,7 +1764,9 @@ function exportCSV(){
     (r.contacts||[]).join(' | '),
     (r.plates||[]).filter(p=>p&&p.plate).map(p=>dayEn(p.day)+': '+p.plate).join(' | '),
     r.foodAvoid||'', r.foodAllergy||'',
-    r.amount||0
+    r.amount||0,
+    payDate(r),
+    t('dash.st.'+regStatus(r))
   ].map(q).join(','));
   const csv = '﻿' + [header.map(q).join(','), ...rows].join('\r\n');
   const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
@@ -1729,6 +1811,18 @@ function reportSharedDashboardHeight(){
 
 el('dashClose').onclick = returnToSharedDashboard;
 el('dashExport').onclick = exportCSV;
+// ค้นหาในตาราง — กรองแบบเรียลไทม์ พร้อมรีเซ็ตไปหน้าแรก
+el('dashSearch').addEventListener('input', e=>{
+  state.dashSearch = e.target.value;
+  state.dashPage = 1;
+  renderDashboard();
+});
+el('dashSearchClear').onclick = ()=>{
+  state.dashSearch = '';
+  state.dashPage = 1;
+  const inp = el('dashSearch'); if(inp){ inp.value=''; inp.focus(); }
+  renderDashboard();
+};
 el('dashLogout').onclick = returnToSharedDashboard;
 el('dmX').onclick = closeEdit;
 el('dmBack').addEventListener('click', e=>{ if(e.target===el('dmBack')) closeEdit(); });
