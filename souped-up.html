@@ -371,6 +371,10 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .dtable td.trunc{max-width:220px;overflow:hidden;text-overflow:ellipsis}
 .dtable .grp-th{text-align:center;border-left:1px solid var(--line-2);border-right:1px solid var(--line-2);font-size:11px;letter-spacing:.5px;color:var(--txt-faint)}
 .dtable .sub-th{font-size:12px}
+.pay-status{display:inline-flex;align-items:center;border:1px solid var(--line-2);border-radius:999px;padding:3px 9px;font-size:11.5px;font-weight:700}
+.pay-status.paid{color:var(--green);background:rgba(37,194,110,.12);border-color:rgba(37,194,110,.4)}
+.pay-status.pending{color:var(--amber);background:rgba(255,180,0,.1);border-color:rgba(255,180,0,.4)}
+.pay-status.unpaid{color:var(--txt-dim);background:rgba(255,255,255,.04)}
 .ico-btn{background:transparent;border:1px solid var(--line-2);border-radius:7px;width:30px;height:30px;color:var(--mint);cursor:pointer;display:inline-grid;place-items:center;vertical-align:middle}
 .ico-btn:hover{background:var(--mint-soft);border-color:var(--mint)}
 .ico-btn svg{width:16px;height:16px}
@@ -2461,6 +2465,8 @@ const D_VEH=['Toyota Supra 2JZ-GTE','Honda Civic K20A','Nissan GT-R RB26DETT','M
 const D_PROV=['กรุงเทพฯ','นนทบุรี','ปทุมธานี','ชลบุรี','ระยอง','เชียงใหม่','ขอนแก่น','นครราชสีมา','ภูเก็ต','สงขลา'];
 function dRnd(a){return a[Math.floor(Math.random()*a.length)];}
 function dPad(n){return n<10?'0'+n:''+n;}
+function dIsoDate(offset){const v=new Date(Date.UTC(2026,6,1+offset));return v.getUTCFullYear()+'-'+dPad(v.getUTCMonth()+1)+'-'+dPad(v.getUTCDate());}
+function paymentStatusClass(status){return status==='ชำระแล้ว'?'paid':status==='รอตรวจสอบ'?'pending':'unpaid';}
 function dImg(title,name,accent){
   const nm=String(name).replace(/[<>&]/g,'');
   const svg="<svg xmlns='http://www.w3.org/2000/svg' width='540' height='340'>"
@@ -2492,12 +2498,16 @@ function buildDashData(){
   const N=43, applicants=[], racers=[];
   for(let i=0;i<N;i++){
     const fn=dRnd(D_FIRST), ln=dRnd(D_LAST), rfn=dRnd(D_FIRST), rln=dRnd(D_LAST);
-    const y=1980+Math.floor(Math.random()*26), m=1+Math.floor(Math.random()*12), d=1+Math.floor(Math.random()*28);
+    const applicantRegDate=dIsoDate(i);
+    const racerRegDate=dIsoDate(i+1);
+    const statusSlot=i%10;
+    const paymentStatus=statusSlot<8?'ชำระแล้ว':statusSlot===8?'รอตรวจสอบ':'ยังไม่ชำระ';
+    const paidDate=paymentStatus==='ยังไม่ชำระ'?'-':dIsoDate(i+2);
     const addr=(10+Math.floor(Math.random()*990))+' หมู่ '+(1+Math.floor(Math.random()*15))+' จ.'+dRnd(D_PROV);
     const phone='08'+(1+Math.floor(Math.random()*8))+'-'+dPad(Math.floor(Math.random()*1000))+'-'+dPad(Math.floor(Math.random()*10000));
     const hasL=Math.random()>.35, hasW=Math.random()>.6, hasA=Math.random()>.7;
     applicants.push({
-      date:y+'-'+dPad(m)+'-'+dPad(d), name:fn, surname:ln, idAddr:addr,
+      date:applicantRegDate, name:fn, surname:ln, idAddr:addr,
       deliAddr:Math.random()>.5?addr:(100+i)+' คอนโด จ.'+dRnd(D_PROV),
       phone, email:'user'+(i+1)+'@email.com',
       line:hasL?'line_'+fn.slice(0,3)+i:'-', wechat:hasW?'wc'+i:'-', whatsapp:hasA?phone:'-',
@@ -2507,6 +2517,7 @@ function buildDashData(){
     racers.push({
       rname:rfn, rsurname:rln, idAddr:addr, vehicle:dRnd(D_VEH),
       model:dRnd(MODELS.th), team:dRnd(D_TEAM), carno:String(carno),
+      registrationDate:racerRegDate, paidDate, paymentStatus,
       idImg:IMG_IDCARD,
       photo:IMG_RACER
     });
@@ -2644,7 +2655,7 @@ function paintDashTable(){
   if(tab==='applicant'){
     thead=`<thead>
       <tr>
-        <th rowspan="2">วัน/เดือน/ปี</th><th rowspan="2">ชื่อ</th><th rowspan="2">นามสกุล</th>
+        <th rowspan="2">วันที่ลงทะเบียน</th><th rowspan="2">ชื่อ</th><th rowspan="2">นามสกุล</th>
         <th rowspan="2">ที่อยู่ตามบัตรฯ</th><th rowspan="2">ที่อยู่จัดส่ง</th><th rowspan="2">เบอร์โทรศัพท์</th><th rowspan="2">อีเมล</th>
         <th colspan="3" class="grp-th">ช่องทางติดต่อเพิ่มเติม</th>
         <th rowspan="2">บัตรฯ ผู้สมัคร</th><th rowspan="2">แก้ไข</th>
@@ -2662,10 +2673,11 @@ function paintDashTable(){
     </tr>`).join('');
   } else {
     thead=`<thead><tr>
-      <th>ชื่อนักแข่ง</th><th>นามสกุลนักแข่ง</th><th>ที่อยู่ตามบัตรฯ</th><th>รถยนต์ รุ่น/รหัสเครื่อง</th>
+      <th>วันที่ลงทะเบียน</th><th>วันที่ชำระเงิน</th><th>Status</th><th>ชื่อนักแข่ง</th><th>นามสกุลนักแข่ง</th><th>ที่อยู่ตามบัตรฯ</th><th>รถยนต์ รุ่น/รหัสเครื่อง</th>
       <th>รุ่นการแข่งขัน</th><th>ทีมแข่ง/อู่</th><th>เบอร์รถแข่ง</th><th>บัตรฯ นักแข่ง</th><th>รูปนักแข่ง</th><th>ใบสมัครนักแข่ง</th><th>แก้ไข</th>
     </tr></thead>`;
     tbody=pageRows.map(({r,idx})=>`<tr>
+      <td>${esc(r.registrationDate||'-')}</td><td>${esc(r.paidDate||'-')}</td><td><span class="pay-status ${paymentStatusClass(r.paymentStatus)}">${esc(r.paymentStatus||'-')}</span></td>
       <td>${esc(r.rname)}</td><td>${esc(r.rsurname)}</td>
       <td class="trunc" title="${esc(r.idAddr)}">${esc(r.idAddr)}</td>
       <td class="trunc" title="${esc(r.vehicle)}">${esc(r.vehicle)}</td>
@@ -2676,7 +2688,7 @@ function paintDashTable(){
       <td><button class="ico-btn edit" data-edit="${idx}" title="แก้ไขข้อมูล">${D_ICON.edit}</button></td>
     </tr>`).join('');
   }
-  const colspan = tab==='applicant'?12:11;
+  const colspan = tab==='applicant'?12:14;
   const from=n?start+1:0, to=Math.min(start+PS,n);
   const empty = tab==='racer'&&racerFilterActive()?'ไม่พบรายการที่ตรงกับตัวกรอง':'ไม่มีข้อมูล';
   el('dashTableWrap').innerHTML=`
@@ -2722,15 +2734,16 @@ function racerPdfHTML(idx){
       <div class="ad-meta">
         <div>เลขที่ใบสมัคร</div>
         <div class="ad-ref">${esc(ref)}</div>
-        <div style="margin-top:8px">วันที่ยื่น <b>${esc(today)}</b></div>
-        <div>สถานะ <b>ชำระเงินแล้ว</b></div>
+        <div style="margin-top:8px">วันที่ยื่น <b>${esc(r.registrationDate||today)}</b></div>
+        <div>วันที่ชำระเงิน <b>${esc(r.paidDate||'-')}</b></div>
+        <div>สถานะ <b>${esc(r.paymentStatus||'-')}</b></div>
       </div>
     </div>
     <div class="ad-sec">
       <div class="ad-sec-h">ข้อมูลผู้สมัคร</div>
       <div class="ad-grid">
         ${row('ชื่อ-นามสกุล',(a.name||'')+' '+(a.surname||''))}
-        ${row('วัน/เดือน/ปีเกิด',a.date)}
+        ${row('วันที่ลงทะเบียนผู้สมัคร',a.date)}
         ${rowFull('ที่อยู่ตามบัตรฯ',a.idAddr)}
         ${row('เบอร์โทรศัพท์',a.phone)}
         ${row('อีเมล',a.email)}
@@ -2809,16 +2822,20 @@ function openDashEdit(tab,idx){
   const r=DASH.data[tab][idx];
   let fields, imgs;
   if(tab==='applicant'){
-    fields=[['date','วัน/เดือน/ปี','date'],['name','ชื่อ'],['surname','นามสกุล'],['idAddr','ที่อยู่ตามบัตรฯ'],['deliAddr','ที่อยู่จัดส่ง'],['phone','เบอร์โทรศัพท์'],['email','อีเมล','email'],['line','Line'],['wechat','WeChat'],['whatsapp','WhatsApp']];
+    fields=[['date','วันที่ลงทะเบียน','date'],['name','ชื่อ'],['surname','นามสกุล'],['idAddr','ที่อยู่ตามบัตรฯ'],['deliAddr','ที่อยู่จัดส่ง'],['phone','เบอร์โทรศัพท์'],['email','อีเมล','email'],['line','Line'],['wechat','WeChat'],['whatsapp','WhatsApp']];
     imgs=[['idImg','รูปบัตรประชาชนผู้สมัคร']];
   } else {
-    fields=[['rname','ชื่อนักแข่ง'],['rsurname','นามสกุลนักแข่ง'],['idAddr','ที่อยู่ตามบัตรฯ'],['vehicle','รถยนต์ รุ่น/รหัสเครื่อง'],['model','รุ่นการแข่งขัน','select'],['team','ทีมแข่ง/อู่'],['carno','เบอร์รถแข่ง','number']];
+    fields=[['registrationDate','วันที่ลงทะเบียน','date'],['paidDate','วันที่ชำระเงิน','date'],['paymentStatus','Status','payment-status'],['rname','ชื่อนักแข่ง'],['rsurname','นามสกุลนักแข่ง'],['idAddr','ที่อยู่ตามบัตรฯ'],['vehicle','รถยนต์ รุ่น/รหัสเครื่อง'],['model','รุ่นการแข่งขัน','select'],['team','ทีมแข่ง/อู่'],['carno','เบอร์รถแข่ง','number']];
     imgs=[['idImg','บัตรประชาชนนักแข่ง'],['photo','รูปนักแข่ง (หน้าตรง)']];
   }
   const temp={}; imgs.forEach(([k])=>temp[k]=r[k]||'');
   const body=fields.map(([k,lab,type])=>{
     if(type==='select'){
       const opts=MODELS.th.map(m=>`<option ${m===r[k]?'selected':''}>${esc(m)}</option>`).join('');
+      return `<div class="field"><label>${esc(lab)}</label><select class="control" data-ek="${k}">${opts}</select></div>`;
+    }
+    if(type==='payment-status'){
+      const opts=['ชำระแล้ว','รอตรวจสอบ','ยังไม่ชำระ'].map(v=>`<option ${v===r[k]?'selected':''}>${v}</option>`).join('');
       return `<div class="field"><label>${esc(lab)}</label><select class="control" data-ek="${k}">${opts}</select></div>`;
     }
     return `<div class="field"><label>${esc(lab)}</label><input class="control" data-ek="${k}" type="${type||'text'}" value="${esc(r[k])}"/></div>`;
@@ -2856,11 +2873,11 @@ function exportDash(tab){
   const rows=DASH.data[tab]; let head, lines;
   const q=v=>{v=String(v==null?'':v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
   if(tab==='applicant'){
-    head=['วัน/เดือน/ปี','ชื่อ','นามสกุล','ที่อยู่ตามบัตรฯ','ที่อยู่จัดส่ง','เบอร์โทรศัพท์','อีเมล','Line','WeChat','WhatsApp'];
+    head=['วันที่ลงทะเบียน','ชื่อ','นามสกุล','ที่อยู่ตามบัตรฯ','ที่อยู่จัดส่ง','เบอร์โทรศัพท์','อีเมล','Line','WeChat','WhatsApp'];
     lines=rows.map(r=>[r.date,r.name,r.surname,r.idAddr,r.deliAddr,r.phone,r.email,r.line,r.wechat,r.whatsapp].map(q).join(','));
   } else {
-    head=['ชื่อนักแข่ง','นามสกุลนักแข่ง','ที่อยู่ตามบัตรฯ','รถยนต์ รุ่น/รหัสเครื่อง','รุ่นการแข่งขัน','ทีมแข่ง/อู่','เบอร์รถแข่ง'];
-    lines=rows.map(r=>[r.rname,r.rsurname,r.idAddr,r.vehicle,r.model,r.team,r.carno].map(q).join(','));
+    head=['วันที่ลงทะเบียน','วันที่ชำระเงิน','Status','ชื่อนักแข่ง','นามสกุลนักแข่ง','ที่อยู่ตามบัตรฯ','รถยนต์ รุ่น/รหัสเครื่อง','รุ่นการแข่งขัน','ทีมแข่ง/อู่','เบอร์รถแข่ง'];
+    lines=rows.map(r=>[r.registrationDate,r.paidDate,r.paymentStatus,r.rname,r.rsurname,r.idAddr,r.vehicle,r.model,r.team,r.carno].map(q).join(','));
   }
   const csv='﻿'+[head.map(q).join(','),...lines].join('\r\n');
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
