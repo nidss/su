@@ -1323,13 +1323,28 @@ const DOC_BODY={
 };
 
 /* ---- APPLICANT ---- */
+/* ชื่อ/นามสกุลบัญชีคืนเงินมัดจำ — ดึงจากชื่อ-นามสกุลที่กรอกในข้อมูลผู้สมัคร (อ่านอย่างเดียว) */
+function refundAccName(){
+  const a=state.applicant;
+  if((a.a_type||'person')==='company') return a.a_contact_name||a.a_name||'';
+  return a.a_person_name||a.a_name||'';
+}
+function refundAccSurname(){
+  const a=state.applicant;
+  if((a.a_type||'person')==='company') return a.a_contact_surname||a.a_surname||'';
+  return a.a_person_surname||a.a_surname||'';
+}
 function bankAccountFields(prefix){
   const b=state.bank;
   const bankOpts=BANKS[state.lang].map(x=>({v:x,l:x})).concat([{v:'__other__',l:t('bank.other')}]);
   const other=b[prefix+'_bank']==='__other__';
   const prize=prefix==='pz';
-  const surnameField=fieldText({id:prefix+'_accsur',labelKey:'f.accsur',req:true,value:b[prefix+'_accsur']||'',readonly:prize});
   const adaptiveSurname=prefix==='rf';
+  // บัญชีคืนเงินมัดจำ (rf) ล็อกชื่อ/นามสกุลตามข้อมูลผู้สมัคร แก้ไขไม่ได้
+  const lockName=prize||adaptiveSurname;
+  const nameVal=adaptiveSurname?refundAccName():(b[prefix+'_accname']||'');
+  const surVal=adaptiveSurname?refundAccSurname():(b[prefix+'_accsur']||'');
+  const surnameField=fieldText({id:prefix+'_accsur',labelKey:'f.accsur',req:true,value:surVal,readonly:lockName});
   const hideSurname=adaptiveSurname&&state.applicant.a_type==='company';
   return `
     ${fieldSelect({id:prefix+'_bank',labelKey:'f.bank',req:true,options:bankOpts,placeholderKey:'opt.bank',value:b[prefix+'_bank']||'',full:true})}
@@ -1340,7 +1355,7 @@ function bankAccountFields(prefix){
     </div>
     ${fieldText({id:prefix+'_accno',labelKey:'f.accno',req:true,value:b[prefix+'_accno']||'',full:true})}
     <div class="grid">
-      ${fieldText({id:prefix+'_accname',labelKey:'f.accname',req:true,value:b[prefix+'_accname']||'',readonly:prize})}
+      ${fieldText({id:prefix+'_accname',labelKey:'f.accname',req:true,value:nameVal,readonly:lockName})}
       ${adaptiveSurname?`<div data-refund-surname class="${hideSurname?'hidden':''}">${surnameField}</div>`:surnameField}
     </div>`;
 }
@@ -1434,6 +1449,7 @@ function bindApplicantForm(form){
       if(hide){refundSurnameInput.removeAttribute('data-req');refundSurnameInput.closest('.field').classList.remove('invalid');}
       else refundSurnameInput.setAttribute('data-req','');
     }
+    syncRefundName();
     const upload=el('a_idcard');
     if(upload){
       upload.accept=type==='company'?'.pdf,.jpg,.jpeg,.png,application/pdf,image/png,image/jpeg':'.jpg,.jpeg,.png,image/png,image/jpeg';
@@ -1451,6 +1467,18 @@ function bindApplicantForm(form){
     wrap.classList.toggle('hidden',!required);
     if(required)input.setAttribute('data-req','');else{input.removeAttribute('data-req');wrap.classList.remove('invalid');}
   };
+  // ซิงก์ชื่อ-นามสกุลผู้สมัคร -> บัญชีคืนเงินมัดจำ (อ่านอย่างเดียว) แบบเรียลไทม์
+  const syncRefundName=()=>{
+    const type=(form.querySelector('input[name="a_type"]:checked')||{}).value||'person';
+    const nameInp=type==='company'?el('a_contact_name'):el('a_person_name');
+    const surInp=type==='company'?el('a_contact_surname'):el('a_person_surname');
+    const rfName=el('rf_accname'), rfSur=el('rf_accsur');
+    if(rfName){ rfName.value=nameInp?nameInp.value:''; rfName.closest('.field').classList.remove('invalid'); }
+    if(rfSur){ rfSur.value=surInp?surInp.value:''; rfSur.closest('.field').classList.remove('invalid'); }
+  };
+  ['a_person_name','a_person_surname','a_contact_name','a_contact_surname'].forEach(id=>{
+    const inp=el(id); if(inp)inp.addEventListener('input',syncRefundName);
+  });
   form.querySelectorAll('input[name="a_type"]').forEach(radio=>radio.onchange=applyApplicantType);
   const branch=el('a_branch');if(branch)branch.onchange=applyBranchRequirement;
   applyApplicantType();
@@ -1663,7 +1691,7 @@ SCREEN_INIT.racer = function(){
 };
 
 /* ---- PARKING ---- */
-const PARK_BOOKED = s => (s>=1&&s<=16)||(s>=137&&s<=152);
+const PARK_BOOKED = s => (s>=1&&s<=16)||(s>=137&&s<=152)||s===70||s===71;
 function pkSeq(a,b){const r=[];if(a<=b){for(let i=a;i<=b;i++)r.push(i);}else{for(let i=a;i>=b;i--)r.push(i);}return r;}
 function pkTent(n,a,b,c){return {n,spots:pkSeq(a,b),c:c||'green'};}
 function pkRows(){return [
