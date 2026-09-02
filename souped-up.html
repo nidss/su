@@ -1997,7 +1997,7 @@ SCREENS.summary = function(){
 
   <label class="checkbox" style="margin:18px 0 4px"><input type="checkbox" id="taxCb" ${state.tax?'checked':''}/> ${esc(t('py.tax'))}</label>
   <div id="taxFields" class="${state.tax?'':'hidden'}">
-    <div class="field full"><label>${esc(t('py.tax.name'))}</label><input class="control" id="tax_name" value="${esc((state.taxInfo&&state.taxInfo.name)||payerName())}"/></div>
+    <div class="field full"><label>${esc(t('py.tax.name'))}</label><input class="control" id="tax_name" value="${esc(payerName())}" readonly/></div>
     <div class="field full"><label>${esc(t('py.tax.taxid'))}</label><input class="control" id="tax_id" value="${esc((state.taxInfo&&state.taxInfo.id)||'')}"/></div>
     <div class="field full"><label>${esc(t('py.tax.addr'))}</label><input class="control" id="tax_addr" value="${esc((state.taxInfo&&state.taxInfo.addr)||'')}"/></div>
   </div>
