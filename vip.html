@@ -624,8 +624,9 @@ function dayRemain(id){ return Math.max(0, DAY_CAP - (DAY_BOOKED[id]||0)); }
 function dayStatus(id){ const r = dayRemain(id); return r<=0 ? 'full' : (r<=NEAR_LEFT ? 'near' : 'ok'); }
 function availableDayIds(){ return DAYS.filter(d=>dayStatus(d.id)!=='full').map(d=>d.id); }
 function pkgAvailable(pid){
-  if(pid==='p3') return true; // 3-day is the fixed full-event bundle
-  return availableDayIds().length >= PKG_DAYS[pid]; // 1-/2-day need enough open days
+  // Every day included in a package must still have a seat. This also disables
+  // the fixed 3-day bundle as soon as any one of the event days is full.
+  return availableDayIds().length >= PKG_DAYS[pid];
 }
 
 /* ================= i18n ================= */
@@ -826,6 +827,10 @@ function card(name, price, unitKey){
 function renderPackages(){
   const p = PRICES[state.tab];
   const list = document.getElementById('pkgList');
+  if(state.pkg && !pkgAvailable(state.pkg)){
+    state.days[state.pkg] = {};
+    state.pkg = null;
+  }
   const defs = [
     { id:'p1', key:'pkg.p1', price:p.p1 },
     { id:'p2', key:'pkg.p2', price:p.p2 },

@@ -2143,7 +2143,7 @@ function saveEmbeddedVipPurchase(rec){
   state.profile.applicant=Object.assign({},state.applicant);
   state.vip.result=rec;
 }
-SCREENS.vip=function(){return `<iframe id="suvipFrame" src="vip.html?v=20260902c" title="Souped Up VIP Village"></iframe>`;};
+SCREENS.vip=function(){return `<iframe id="suvipFrame" src="vip.html?v=20260902d" title="Souped Up VIP Village"></iframe>`;};
 SCREEN_INIT.vip=function(){
   const frame=el('suvipFrame');
   frame.onload=()=>frame.contentWindow.postMessage({type:'su:member',member:embeddedVipMember()},'*');
