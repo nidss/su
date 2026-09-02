@@ -405,15 +405,16 @@ h2.sec-title{font-size:clamp(19px,3.4vw,25px);margin:0 0 4px;font-weight:700;let
 .badge-st.paid{color:var(--green);border-color:rgba(37,194,110,.4);background:rgba(37,194,110,.08)}
 .badge-st.pending{color:var(--amber);border-color:rgba(255,180,0,.4);background:rgba(255,180,0,.08)}
 .badge-st.refunded{color:var(--red-2);border-color:rgba(255,43,28,.4);background:rgba(255,43,28,.08)}
-/* dashboard search */
-.dash-search{position:relative;flex:1 1 260px;min-width:200px;max-width:360px}
-.dash-search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--txt-faint);pointer-events:none}
-.dash-search input{width:100%;background:var(--bg);border:1px solid var(--line-2);color:var(--txt);border-radius:9px;padding:9px 34px 9px 34px;font-size:13px;outline:none;transition:.15s}
-.dash-search input::placeholder{color:#5a616e}
-.dash-search input:focus{border-color:var(--mint);box-shadow:0 0 0 3px var(--mint-soft)}
-.dash-search .ds-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:transparent;border:0;color:var(--txt-faint);cursor:pointer;font-size:18px;line-height:1;padding:2px 4px;display:none}
-.dash-search .ds-clear:hover{color:var(--txt)}
-.dash-search.has-val .ds-clear{display:block}
+/* dashboard filter bar (ค้นหาแบบแยกฟิลด์ตาม criteria) */
+.dash-filterbar{padding:12px 16px;border-bottom:1px solid var(--line)}
+.dfilter{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.dfilter .df-field{display:flex;flex-direction:column;gap:4px}
+.dfilter label{font-size:11px;color:var(--txt-faint);letter-spacing:.3px}
+.dfilter input,.dfilter select{height:34px;background:var(--bg);border:1px solid var(--line-2);color:var(--txt);border-radius:8px;padding:0 10px;font-size:13px;min-width:150px;font-family:inherit}
+.dfilter input:focus,.dfilter select:focus{outline:none;border-color:var(--mint);box-shadow:0 0 0 2px var(--mint-soft)}
+.dfilter .df-clear{height:34px;padding:0 12px;border:1px solid var(--line-2);background:var(--panel-2);color:var(--txt-dim);border-radius:8px;cursor:pointer;font-size:12.5px;font-weight:600;display:inline-flex;align-items:center;gap:6px;font-family:inherit}
+.dfilter .df-clear:hover{border-color:var(--mint);color:var(--txt)}
+.dfilter .df-clear svg{width:15px;height:15px}
 .ico-btn{background:transparent;border:1px solid var(--line-2);border-radius:7px;width:32px;height:32px;color:var(--amber);cursor:pointer;display:inline-grid;place-items:center;vertical-align:middle}
 .ico-btn:hover{background:rgba(255,180,0,.12);border-color:var(--amber)}
 .ico-btn svg{width:16px;height:16px}
@@ -737,11 +738,6 @@ html,body{height:auto;min-height:0;overflow:visible}
     <div class="table-card">
       <div class="table-tools">
         <span class="tt-count" id="dashCount"></span>
-        <div class="dash-search" id="dashSearchBox">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          <input type="search" id="dashSearch" autocomplete="off" data-i18n-ph="dash.search.ph" placeholder="ค้นหา...">
-          <button type="button" class="ds-clear" id="dashSearchClear" aria-label="clear">×</button>
-        </div>
         <div class="tt-right">
           <span class="tt-hint" data-i18n="dash.hint">กด Ctrl+Shift+Z เพื่อปิด</span>
           <button type="button" class="btn-export" id="dashExport">
@@ -750,6 +746,7 @@ html,body{height:auto;min-height:0;overflow:visible}
           </button>
         </div>
       </div>
+      <div class="dash-filterbar" id="dashFilterBar"></div>
       <div class="table-scroll">
         <table class="dtable" id="dashTable"></table>
       </div>
@@ -768,7 +765,8 @@ html,body{height:auto;min-height:0;overflow:visible}
 
 <script>
 /* ================= State ================= */
-const state = { lang:'th', tab:'early', pkg:null, days:{}, plates:{}, payMethod:'card', tax:false, result:null, dashPage:1, dashSearch:'' };
+const state = { lang:'th', tab:'early', pkg:null, days:{}, plates:{}, payMethod:'card', tax:false, result:null, dashPage:1,
+  dashFilter:{ name:'', phone:'', email:'', priceTab:'', pkg:'', plate:'', status:'' } };
 const PAGE_SIZE = 30;
 const el = id => document.getElementById(id);
 const esc = s => String(s==null?'':s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -851,7 +849,8 @@ const L = {
     'dash.edit':'แก้ไขข้อมูลผู้สมัคร','dash.save':'บันทึก','dash.saved':'บันทึกข้อมูลแล้ว ✓','dash.cancel':'ยกเลิก',
     'dash.h.no':'#','dash.h.username':'ชื่อผู้ใช้','dash.h.name':'ชื่อ','dash.h.surname':'นามสกุล','dash.h.phone':'เบอร์โทร','dash.h.email':'อีเมล','dash.h.pricetab':'ประเภทราคา','dash.h.pkg':'แพ็กเกจ','dash.h.days':'วันที่มา','dash.h.tshirt':'ไซส์เสื้อ','dash.h.contacts':'ช่องทางติดต่อ','dash.h.plates':'ทะเบียนรถ','dash.h.avoid':'อาหารที่ไม่ทาน','dash.h.allergy':'อาหารที่แพ้','dash.h.amount':'ยอดชำระ','dash.h.paydate':'วันที่ชำระเงิน','dash.h.status':'สถานะ','dash.h.action':'จัดการ',
     'dash.st.paid':'ชำระแล้ว','dash.st.pending':'รอชำระเงิน','dash.st.refunded':'คืนเงินแล้ว',
-    'dash.search.ph':'ค้นหา ชื่อ, นามสกุล, เบอร์โทร, อีเมล, ทะเบียนรถ...','dash.search.none':'ไม่พบข้อมูลที่ค้นหา',
+    'dash.search.none':'ไม่พบข้อมูลที่ค้นหา','dash.f.all':'ทั้งหมด','dash.f.clear':'ล้างตัวกรอง',
+    'dash.f.name':'ชื่อ-นามสกุล','dash.f.name.ph':'ค้นหาชื่อ/นามสกุล','dash.f.phone':'เบอร์โทร','dash.f.phone.ph':'เช่น 08x','dash.f.email':'อีเมล','dash.f.email.ph':'เช่น name@email.com','dash.f.pricetab':'ประเภทราคา','dash.f.pkg':'แพ็กเกจ','dash.f.plate':'ทะเบียนรถ','dash.f.plate.ph':'ค้นหาทะเบียน','dash.f.status':'สถานะการชำระเงิน',
     'dash.showing':'แสดง {a}-{b} จาก {n} รายการ','dash.prev':'ก่อนหน้า','dash.next':'ถัดไป','dash.export':'ส่งออก CSV','dash.exportEmpty':'ยังไม่มีข้อมูลให้ส่งออก','dash.logout':'ออกจากระบบ',
     'login.eyebrow':'ADMIN','login.title':'เข้าสู่ระบบผู้ดูแลระบบ','login.sub':'Admin Login','login.user':'ชื่อผู้ใช้ (Username)','login.user.ph':'กรอกชื่อผู้ใช้','login.pass':'รหัสผ่าน (Password)','login.pass.ph':'กรอกรหัสผ่าน','login.btn':'เข้าสู่ระบบ','login.err':'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง','login.hint':'* เดโม: ใส่อะไรก็ได้เพื่อเข้าสู่ระบบ',
     'mem.login':'เข้าสู่ระบบ','mem.account':'บัญชีของฉัน',
@@ -927,7 +926,8 @@ const L = {
     'dash.edit':'Edit applicant','dash.save':'Save','dash.saved':'Saved ✓','dash.cancel':'Cancel',
     'dash.h.no':'#','dash.h.username':'Username','dash.h.name':'Name','dash.h.surname':'Surname','dash.h.phone':'Phone','dash.h.email':'Email','dash.h.pricetab':'Price type','dash.h.pkg':'Package','dash.h.days':'Days','dash.h.tshirt':'T-Shirt','dash.h.contacts':'Contacts','dash.h.plates':'License plate','dash.h.avoid':'Food avoided','dash.h.allergy':'Allergies','dash.h.amount':'Amount','dash.h.paydate':'Payment date','dash.h.status':'Status','dash.h.action':'Manage',
     'dash.st.paid':'Paid','dash.st.pending':'Pending','dash.st.refunded':'Refunded',
-    'dash.search.ph':'Search name, surname, phone, email, plate...','dash.search.none':'No matching records',
+    'dash.search.none':'No matching records','dash.f.all':'All','dash.f.clear':'Clear filters',
+    'dash.f.name':'Name-Surname','dash.f.name.ph':'Search name/surname','dash.f.phone':'Phone','dash.f.phone.ph':'e.g. 08x','dash.f.email':'Email','dash.f.email.ph':'e.g. name@email.com','dash.f.pricetab':'Price type','dash.f.pkg':'Package','dash.f.plate':'License plate','dash.f.plate.ph':'Search plate','dash.f.status':'Payment status',
     'dash.showing':'Showing {a}-{b} of {n}','dash.prev':'Prev','dash.next':'Next','dash.export':'Export CSV','dash.exportEmpty':'No data to export','dash.logout':'Log out',
     'login.eyebrow':'ADMIN','login.title':'Admin Login','login.sub':'เข้าสู่ระบบผู้ดูแลระบบ','login.user':'Username (ชื่อผู้ใช้)','login.user.ph':'Enter username','login.pass':'Password (รหัสผ่าน)','login.pass.ph':'Enter password','login.btn':'Sign In','login.err':'Invalid username or password','login.hint':'* Demo: enter anything to sign in',
     'mem.login':'Sign In','mem.account':'My Account',
@@ -1493,19 +1493,26 @@ function payDate(r){
   const time = d.toLocaleTimeString(loc, { hour:'2-digit', minute:'2-digit' });
   return date+' '+time;
 }
-/* กรองรายการตามคำค้นหา (ชื่อ, นามสกุล, เบอร์, อีเมล, ทะเบียนรถ, ช่องทางติดต่อ) */
+/* ตรวจว่ามีตัวกรองใดถูกใช้งานอยู่หรือไม่ */
+function dashFilterActive(){
+  const f = state.dashFilter;
+  return !!(f.name||f.phone||f.email||f.priceTab||f.pkg||f.plate||f.status);
+}
+/* กรองรายการแบบแยกฟิลด์ตาม criteria */
 function filteredRegs(){
   const all = loadRegs();
-  const q = (state.dashSearch||'').trim().toLowerCase();
-  if(!q) return all;
+  if(!dashFilterActive()) return all;
+  const f = state.dashFilter;
+  const nl = s => String(s==null?'':s).toLowerCase().trim();
   return all.filter(r=>{
     const plates = (r.plates||[]).map(p=>p&&p.plate?p.plate:'').join(' ');
-    const hay = [
-      r.name, r.surname, r.phone, r.email,
-      (r.contacts||[]).join(' '), plates,
-      t('dash.st.'+regStatus(r))
-    ].join(' ').toLowerCase();
-    return hay.indexOf(q) !== -1;
+    return (!f.name   || nl(r.name+' '+r.surname).includes(nl(f.name))) &&
+           (!f.phone  || nl(r.phone).includes(nl(f.phone))) &&
+           (!f.email  || nl(r.email).includes(nl(f.email))) &&
+           (!f.priceTab || (r.priceTab||'')===f.priceTab) &&
+           (!f.pkg    || (r.pkg||'')===f.pkg) &&
+           (!f.plate  || nl(plates).includes(nl(f.plate))) &&
+           (!f.status || regStatus(r)===f.status);
   });
 }
 
@@ -1518,9 +1525,9 @@ function renderDashboard(){
   el('kpiTotal').textContent = money(allRegs.reduce((s,r)=>s+(r.amount||0),0));
 
   const regs = filteredRegs();
-  const searching = (state.dashSearch||'').trim() !== '';
+  const searching = dashFilterActive();
   el('dashCount').textContent = fmt(regs.length)+' '+t('dash.rows');
-  syncSearchBox();
+  renderFilterBar();
 
   const totalPages = Math.max(1, Math.ceil(regs.length / PAGE_SIZE));
   if(state.dashPage > totalPages) state.dashPage = totalPages;
@@ -1567,12 +1574,38 @@ function renderDashboard(){
 
   renderPager(regs.length, totalPages, start, pageRegs.length);
 }
-/* ให้ค่าในช่องค้นหาตรงกับ state และแสดงปุ่มล้างเมื่อมีข้อความ */
-function syncSearchBox(){
-  const inp = el('dashSearch'), box = el('dashSearchBox');
-  if(!inp || !box) return;
-  if(document.activeElement !== inp) inp.value = state.dashSearch || '';
-  box.classList.toggle('has-val', (state.dashSearch||'') !== '');
+const SEARCH_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+/* สร้างแถบกรองแบบแยกฟิลด์ตาม criteria (ชื่อ-นามสกุล, เบอร์, อีเมล, ประเภทราคา, แพ็กเกจ, ทะเบียนรถ, สถานะ) */
+function renderFilterBar(){
+  const bar = el('dashFilterBar');
+  if(!bar) return;
+  // ถ้ากำลังพิมพ์อยู่ในช่องใดช่องหนึ่ง อย่าสร้างใหม่ (กัน cursor เด้ง)
+  if(bar.contains(document.activeElement) && document.activeElement.tagName==='INPUT') return;
+  const f = state.dashFilter;
+  const tabOpt = '<option value="">'+t('dash.f.all')+'</option>'+
+    ['early','normal'].map(v=>'<option value="'+v+'"'+(f.priceTab===v?' selected':'')+'>'+t('tab.'+v)+'</option>').join('');
+  const pkgOpt = '<option value="">'+t('dash.f.all')+'</option>'+
+    ['p1','p2','p3'].map(v=>'<option value="'+v+'"'+(f.pkg===v?' selected':'')+'>'+t('pkg.'+v)+'</option>').join('');
+  const stOpt = '<option value="">'+t('dash.f.all')+'</option>'+
+    ['paid','pending','refunded'].map(v=>'<option value="'+v+'"'+(f.status===v?' selected':'')+'>'+t('dash.st.'+v)+'</option>').join('');
+  bar.innerHTML =
+    '<div class="dfilter">'+
+      '<div class="df-field"><label>'+t('dash.f.name')+'</label><input id="df_name" value="'+esc(f.name)+'" placeholder="'+t('dash.f.name.ph')+'"></div>'+
+      '<div class="df-field"><label>'+t('dash.f.phone')+'</label><input id="df_phone" value="'+esc(f.phone)+'" placeholder="'+t('dash.f.phone.ph')+'"></div>'+
+      '<div class="df-field"><label>'+t('dash.f.email')+'</label><input id="df_email" value="'+esc(f.email)+'" placeholder="'+t('dash.f.email.ph')+'"></div>'+
+      '<div class="df-field"><label>'+t('dash.f.pricetab')+'</label><select id="df_priceTab">'+tabOpt+'</select></div>'+
+      '<div class="df-field"><label>'+t('dash.f.pkg')+'</label><select id="df_pkg">'+pkgOpt+'</select></div>'+
+      '<div class="df-field"><label>'+t('dash.f.plate')+'</label><input id="df_plate" value="'+esc(f.plate)+'" placeholder="'+t('dash.f.plate.ph')+'"></div>'+
+      '<div class="df-field"><label>'+t('dash.f.status')+'</label><select id="df_status">'+stOpt+'</select></div>'+
+      '<button type="button" class="df-clear" id="df_clear">'+SEARCH_ICON+' '+t('dash.f.clear')+'</button>'+
+    '</div>';
+  const setF = (k)=>(e)=>{ state.dashFilter[k]=e.target.value; state.dashPage=1; renderDashboard(); };
+  ['name','phone','email','plate'].forEach(k=>{ const i=el('df_'+k); if(i) i.oninput=setF(k); });
+  ['priceTab','pkg','status'].forEach(k=>{ const s=el('df_'+k); if(s) s.onchange=setF(k); });
+  el('df_clear').onclick=()=>{
+    state.dashFilter={ name:'', phone:'', email:'', priceTab:'', pkg:'', plate:'', status:'' };
+    state.dashPage=1; renderDashboard();
+  };
 }
 function renderPager(total, totalPages, start, shown){
   const pager = el('dashPager');
@@ -1811,18 +1844,6 @@ function reportSharedDashboardHeight(){
 
 el('dashClose').onclick = returnToSharedDashboard;
 el('dashExport').onclick = exportCSV;
-// ค้นหาในตาราง — กรองแบบเรียลไทม์ พร้อมรีเซ็ตไปหน้าแรก
-el('dashSearch').addEventListener('input', e=>{
-  state.dashSearch = e.target.value;
-  state.dashPage = 1;
-  renderDashboard();
-});
-el('dashSearchClear').onclick = ()=>{
-  state.dashSearch = '';
-  state.dashPage = 1;
-  const inp = el('dashSearch'); if(inp){ inp.value=''; inp.focus(); }
-  renderDashboard();
-};
 el('dashLogout').onclick = returnToSharedDashboard;
 el('dmX').onclick = closeEdit;
 el('dmBack').addEventListener('click', e=>{ if(e.target===el('dmBack')) closeEdit(); });
