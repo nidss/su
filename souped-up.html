@@ -229,11 +229,10 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .spot:last-child{border-right:0}
 .spot.air{background:#f4d868;color:#3c2f00}
 .spot:hover:not(.booked){background:var(--mint);color:#06141d}
-.spot.booked{background:#e23b32;color:#fff;cursor:not-allowed}
+.spot.booked{background:#e23b32;color:#fff;cursor:pointer}
 .spot.sel{background:var(--mint);color:#06141d;box-shadow:inset 0 0 0 3px #0c142a}
-.booked-tent{cursor:pointer;outline:none}
-.booked-tent .spot.booked{cursor:pointer}
-.booked-tent:hover .tent-spots,.booked-tent:focus-visible .tent-spots{box-shadow:0 0 0 2px var(--mint),0 0 10px rgba(111,255,232,.5)}
+/* กดช่องที่จองแล้วเพื่อดูข้อมูลผู้จอง (ระดับช่องจอด) */
+.spot.booked:hover,.spot.booked:focus-visible{outline:none;box-shadow:0 0 0 2px var(--mint),0 0 10px rgba(111,255,232,.5);position:relative;z-index:1}
 .sponsor{background:#e23b32;color:#fff;text-align:center;font-weight:800;letter-spacing:3px;border-radius:3px;padding:7px 4px;font-size:14px;font-family:'Rajdhani',sans-serif}
 .admin-box{background:#0c2b4a;color:#fff;border-radius:4px;padding:8px 12px;font-size:11px;font-weight:600;display:grid;place-items:center;text-align:center;min-width:118px;line-height:1.35;min-height:36px}
 .recv-box{background:#fff;border:1.6px solid #26331f;border-radius:4px;padding:2px 8px;font-size:10.5px;color:#22371a;font-weight:700;display:grid;place-items:center;text-align:center;width:134px;height:39px;box-sizing:border-box;line-height:1.15}
@@ -725,7 +724,7 @@ const I18N = {
     "f.pit":"เลือกช่องจอดรถ (Pit Select)","opt.pit":"— เลือกช่องจอด —",
     "f.privatepit":"จอดพีทถาวร (Private-Owned Pit)","track.label":"PIT LANE",
     "pk.admin":"กองอำนวยการ โต๊ะ 5 / เก้าอี้ 10","pk.recv":"ที่จอดรถกรังปรีซ์","pk.air":"TENT AIR","pk.fence":"หลังรั้ว","pk.bldg":"รถสุขา","pk.tent":"เต็นท์","pk.persold":"จองแล้ว (Sponsor)","pk.spotsel":"เลือกที่จอด #","pk.expand":"ดูผังแบบเต็ม",
-    "pk.booker.title":"ข้อมูลผู้จอง","pk.booker.name":"ชื่อ-นามสกุล","pk.booker.team":"ทีม / อู่","pk.booker.type":"ประเภทการแข่งขัน","pk.booker.photo":"รูปหน้าตรง",
+    "pk.booker.title":"ข้อมูลผู้จอง","pk.booker.name":"ชื่อ-นามสกุล","pk.booker.team":"ทีม / อู่","pk.booker.type":"ประเภทการแข่งขัน","pk.booker.photo":"รูปหน้าตรง","pk.booker.slot":"ช่องจอด","pk.booker.carno":"เบอร์รถแข่ง",
     /* bank */
     "bk.title":"บัญชีรับเงินรางวัล","bk.sub":"ข้อมูลบัญชีธนาคารสำหรับรับเงินรางวัล",
     "bk.refund.t":"บัญชีคืนเงินมัดจำผู้สมัคร","bk.refund.s":"Account Name for Applicant's Deposit Refund",
@@ -854,7 +853,7 @@ const I18N = {
     "f.pit":"Pit Select","opt.pit":"— Select a pit —",
     "f.privatepit":"Private-Owned Pit","track.label":"PIT LANE",
     "pk.admin":"Organizer · 5 tables / 10 chairs","pk.recv":"Grand Prix Parking","pk.air":"TENT AIR","pk.fence":"Back Fence","pk.bldg":"Restroom","pk.tent":"Tent","pk.persold":"Booked (Sponsor)","pk.spotsel":"Selected spot #","pk.expand":"View full map",
-    "pk.booker.title":"Booking Details","pk.booker.name":"Full Name","pk.booker.team":"Team / Garage","pk.booker.type":"Race Class","pk.booker.photo":"Front Photo",
+    "pk.booker.title":"Booking Details","pk.booker.name":"Full Name","pk.booker.team":"Team / Garage","pk.booker.type":"Race Class","pk.booker.photo":"Front Photo","pk.booker.slot":"Pit","pk.booker.carno":"Race Number",
     "bk.title":"Prize Payment Account","bk.sub":"Bank account details for receiving prize payments",
     "bk.refund.t":"Applicant's Deposit Refund Account","bk.refund.s":"Account Name for Applicant's Deposit Refund",
     "bk.prize.t":"Winner's Prize Payment Account","bk.prize.s":"Account Name for Winner's Prize Payment (same as registered racer's name)",
@@ -1709,12 +1708,12 @@ function pkRows(){return [
   [ {t:'tents',tents:[pkTent(14,49,52),pkTent(15,53,56),pkTent(16,57,60),pkTent(17,61,64),pkTent(18,65,68),pkTent(19,69,72),pkTent(20,73,76),pkTent(21,77,80),pkTent(22,81,84),pkTent(23,85,88),pkTent(24,89,92),pkTent(25,93,96),pkTent(26,97,100),pkTent(27,101,104),pkTent(28,105,108)]} ],
 ];}
 function pkRenderTent(tn){
-  const tentBooked = tn.c==='red';
   const spots = tn.spots.map(s=>{
     const booked=PARK_BOOKED(s), sel=pkIsAssigned(s), air=tn.c==='yellow';
-    return `<button type="button" class="spot${air?' air':''}${booked?' booked':''}${sel?' sel':''}" data-spot="${s}" ${booked&&!tentBooked?'disabled':''}>${s}</button>`;
+    // ช่องที่จองแล้วกดได้เพื่อดูข้อมูลผู้จอง (ไม่ disabled) แต่จองซ้ำไม่ได้
+    return `<button type="button" class="spot${air?' air':''}${booked?' booked':''}${sel?' sel':''}" data-spot="${s}"${booked?' data-booked tabindex="0" title="'+esc(t('pk.booker.title'))+'"':''}>${s}</button>`;
   }).join('');
-  return `<div class="tent${tentBooked?' booked-tent':''}" data-tent="${tn.n}"${tentBooked?' role="button" tabindex="0" title="'+esc(t('pk.booker.title'))+'"':''}><div class="tent-no">${tn.n}</div><div class="tent-spots">${spots}</div></div>`;
+  return `<div class="tent" data-tent="${tn.n}"><div class="tent-no">${tn.n}</div><div class="tent-spots">${spots}</div></div>`;
 }
 function pkRenderBlk(b){
   if(b.t==='admin') return `<div class="blk"><div class="tent"><div class="tent-no">${b.n}</div><div class="admin-box">${esc(t('pk.admin'))}</div></div></div>`;
@@ -1862,9 +1861,10 @@ SCREEN_INIT.parking = function(){
   }
   function bindSpots(scope, fromModal){
     scope.querySelectorAll('.spot:not(.booked)').forEach(b=>b.onclick=()=>pkAssign(b.dataset.spot, fromModal));
-    scope.querySelectorAll('.tent.booked-tent').forEach(tn=>{
-      tn.onclick=()=>openBookerModal(tn.dataset.tent);
-      tn.onkeydown=(e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openBookerModal(tn.dataset.tent); } };
+    // กดช่องที่จองแล้ว -> แสดงข้อมูลนักแข่งที่จองช่องนั้น
+    scope.querySelectorAll('.spot.booked').forEach(b=>{
+      b.onclick=()=>openBookerModal(b.dataset.spot);
+      b.onkeydown=(e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openBookerModal(b.dataset.spot); } };
     });
   }
   function bindPanel(){
@@ -1897,19 +1897,19 @@ function savePark(form){
   const pv=el('p_private'); state.parking.privatePit=pv?pv.checked:false;
   state.parking.pit=pkAssignedPits()[0]||'';
 }
-function pkBooker(tn){
-  const n=parseInt(tn,10)||1;
+function pkBooker(s){
+  const n=parseInt(s,10)||1;
   const fn=D_FIRST[(n*3)%D_FIRST.length], ln=D_LAST[(n*7)%D_LAST.length];
   const name=fn+' '+ln, models=MODELS[state.lang];
-  return {name, team:CAR_GARAGE[n%CAR_GARAGE.length], model:models[(n*2)%models.length], photo:IMG_RACER};
+  return {name, team:CAR_GARAGE[n%CAR_GARAGE.length], model:models[(n*2)%models.length], carno:1+(n%99), photo:IMG_RACER};
 }
-function openBookerModal(tn){
-  const b=pkBooker(tn);
+function openBookerModal(s){
+  const b=pkBooker(s);
   const row=(k,v)=>`<div class="brow"><span class="bk">${esc(k)}</span><span class="bv">${esc(v)}</span></div>`;
-  el('dmBody').innerHTML=`<h3>${esc(t('pk.booker.title'))} · ${esc(t('pk.tent'))} ${esc(tn)}</h3>
+  el('dmBody').innerHTML=`<h3>${esc(t('pk.booker.title'))} · ${esc(t('pk.booker.slot'))} ${esc(s)}</h3>
     <div class="booker-card">
       <img class="booker-photo" src="${b.photo}" alt="${esc(b.name)}"/>
-      <div class="booker-rows">${row(t('pk.booker.name'),b.name)}${row(t('pk.booker.team'),b.team)}${row(t('pk.booker.type'),b.model)}</div>
+      <div class="booker-rows">${row(t('pk.booker.name'),b.name)}${row(t('pk.booker.team'),b.team)}${row(t('pk.booker.type'),b.model)}${row(t('pk.booker.carno'),b.carno)}</div>
     </div>`;
   el('dmBack').classList.add('open');
 }
