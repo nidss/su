@@ -3057,7 +3057,7 @@ function paintDashTable(){
     thead=`<thead>
       <tr>
         <th rowspan="2">วันที่ลงทะเบียน</th><th rowspan="2">ชื่อ</th><th rowspan="2">นามสกุล</th>
-        <th rowspan="2">ที่อยู่ตามบัตรฯ</th><th rowspan="2">ที่อยู่จัดส่ง</th><th rowspan="2">เบอร์โทรศัพท์</th><th rowspan="2">อีเมล</th>
+        <th rowspan="2">ที่อยู่ตามบัตรฯ</th><th rowspan="2">เบอร์โทรศัพท์</th><th rowspan="2">อีเมล</th>
         <th colspan="3" class="grp-th">ช่องทางติดต่อเพิ่มเติม</th>
         <th rowspan="2">บัตรฯ ผู้สมัคร</th><th rowspan="2">แก้ไข</th>
       </tr>
@@ -3066,7 +3066,6 @@ function paintDashTable(){
     tbody=pageRows.map(({r,idx})=>`<tr>
       <td>${esc(r.date)}</td><td>${esc(r.name)}</td><td>${esc(r.surname)}</td>
       <td class="trunc" title="${esc(r.idAddr)}">${esc(r.idAddr)}</td>
-      <td class="trunc" title="${esc(r.deliAddr)}">${esc(r.deliAddr)}</td>
       <td>${esc(r.phone)}</td><td>${esc(r.email)}</td>
       <td>${esc(r.line)}</td><td>${esc(r.wechat)}</td><td>${esc(r.whatsapp)}</td>
       <td><button class="ico-btn" data-img="${idx}" title="ดูรูปบัตรประชาชน">${D_ICON.image}</button></td>
