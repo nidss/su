@@ -3214,16 +3214,60 @@ function receiptPdfHTML(){
     <div class="ad-foot"><span>Souped Up 2026 · ระบบลงทะเบียนการแข่งขัน · NIDSS</span><span class="ad-demo">เอกสารตัวอย่าง (DEMO)</span></div>
   </div></div>`;
 }
+// แปลงแถวข้อมูลผู้สมัครใน Dashboard -> โครงสร้าง state.applicant สำหรับฟอร์มกรอกข้อมูลส่วนตัว
+function dashRowToApplicant(r){
+  return {
+    a_type:'person',
+    a_person_name:r.name||'', a_person_surname:r.surname||'',
+    a_name:r.name||'', a_surname:r.surname||'',
+    a_idaddr:r.idAddr||'',
+    a_phone:r.phone||'', a_email:r.email||'',
+    chan_line:(r.line&&r.line!=='-')?r.line:'',
+    idImg:r.idImg||''
+  };
+}
+// ซิงก์ค่าจากฟอร์มกลับเข้าฟิลด์แบนของแถวตาราง
+function dashApplicantToRow(r,a){
+  r.name=a.a_name||''; r.surname=a.a_surname||'';
+  r.idAddr=a.a_idaddr||'';
+  r.phone=a.a_phone||''; r.email=a.a_email||'';
+  r.line=a.chan_line?a.chan_line:'-';
+  if(a.a_type!=='company'&&a.idImg)r.idImg=a.idImg;
+}
+// แก้ไขข้อมูลผู้สมัครด้วย layout เดียวกับหน้ากรอกข้อมูลส่วนตัว (บุคคล/นิติบุคคล + บัญชีคืนเงิน)
+function openDashEditApplicant(r){
+  if(!r._app)r._app=dashRowToApplicant(r);
+  if(!r._bank)r._bank=buildExistingRefundBank();
+  // ถอด #screen ออกชั่วคราว กัน id ชนกับฟอร์มที่ใช้ร่วมกัน (getElementById)
+  const s=el('screen');
+  const stash=s?{node:s,parent:s.parentNode,next:s.nextSibling}:null;
+  if(stash)stash.parent.removeChild(stash.node);
+  // สลับ state ให้ตัวสร้าง/ตัวผูกฟอร์มทำงานบนแถวนี้
+  const savedApp=state.applicant, savedBank=state.bank, savedFile=state.files.a_idcard;
+  state.applicant=r._app; state.bank=r._bank; state.files.a_idcard=null;
+  DASH._modalCleanup=()=>{ state.applicant=savedApp; state.bank=savedBank; state.files.a_idcard=savedFile; if(stash)stash.parent.insertBefore(stash.node,stash.next); };
+  el('dmBody').innerHTML=`<h3>${esc(t('prof.edit'))} · ${esc(t('ap.title'))}</h3>
+    <form id="dashApForm" novalidate style="display:flex;flex-direction:column;gap:16px">
+      ${applicantFormInner()}
+    </form>
+    <div class="actions" style="margin-top:20px"><button class="btn btn-ghost" id="dmCancel">ยกเลิก</button><div class="spacer"></div><button class="btn btn-primary" id="dmSave">บันทึก</button></div>`;
+  const form=el('dashApForm');
+  bindApplicantForm(form);
+  el('dmBack').classList.add('open');
+  el('dmBody').scrollTop=0;
+  el('dmCancel').onclick=closeDashModal;
+  el('dmSave').onclick=()=>{
+    if(!validateScreen(form)){toast(t('v.fixerr'));return;}
+    saveApplicant(form);
+    dashApplicantToRow(r,r._app);
+    closeDashModal(); renderDashTable(); toast('บันทึกข้อมูลแล้ว');
+  };
+}
 function openDashEdit(tab,idx){
   const r=DASH.data[tab][idx];
-  let fields, imgs;
-  if(tab==='applicant'){
-    fields=[['date','วันที่ลงทะเบียน','date'],['name','ชื่อ'],['surname','นามสกุล'],['idAddr','ที่อยู่ตามบัตรฯ'],['phone','เบอร์โทรศัพท์'],['email','อีเมล','email'],['line','Line'],['wechat','WeChat'],['whatsapp','WhatsApp']];
-    imgs=[['idImg','รูปบัตรประชาชนผู้สมัคร']];
-  } else {
-    fields=[['registrationDate','วันที่ลงทะเบียน','date'],['paidDate','วันที่ชำระเงิน','date'],['paymentStatus','Status','payment-status'],['rname','ชื่อนักแข่ง'],['rsurname','นามสกุลนักแข่ง'],['idAddr','ที่อยู่ตามบัตรฯ'],['vehicle','รถยนต์ รุ่น/รหัสเครื่อง'],['model','รุ่นการแข่งขัน','select'],['team','ทีมแข่ง/อู่'],['carno','เบอร์รถแข่ง','number']];
-    imgs=[['idImg','บัตรประชาชนนักแข่ง'],['photo','รูปนักแข่ง (หน้าตรง)']];
-  }
+  if(tab==='applicant'){ openDashEditApplicant(r); return; }
+  const fields=[['registrationDate','วันที่ลงทะเบียน','date'],['paidDate','วันที่ชำระเงิน','date'],['paymentStatus','Status','payment-status'],['rname','ชื่อนักแข่ง'],['rsurname','นามสกุลนักแข่ง'],['idAddr','ที่อยู่ตามบัตรฯ'],['vehicle','รถยนต์ รุ่น/รหัสเครื่อง'],['model','รุ่นการแข่งขัน','select'],['team','ทีมแข่ง/อู่'],['carno','เบอร์รถแข่ง','number']];
+  const imgs=[['idImg','บัตรประชาชนนักแข่ง'],['photo','รูปนักแข่ง (หน้าตรง)']];
   const temp={}; imgs.forEach(([k])=>temp[k]=r[k]||'');
   const body=fields.map(([k,lab,type])=>{
     if(type==='select'){
@@ -3338,7 +3382,7 @@ function openVipTickets(){
     closeDashModal(); toast('บันทึกจำนวนบัตรแล้ว');
   };
 }
-function closeDashModal(){ el('dmBack').classList.remove('open'); }
+function closeDashModal(){ el('dmBack').classList.remove('open'); const fn=DASH._modalCleanup; DASH._modalCleanup=null; if(fn)fn(); }
 function exportDash(tab){
   const rows=DASH.data[tab]; let head, lines;
   const q=v=>{v=String(v==null?'':v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
