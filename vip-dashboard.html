@@ -372,28 +372,27 @@ h2.sec-title{font-size:clamp(19px,3.4vw,25px);margin:0 0 4px;font-weight:700;let
 .dash-close{background:var(--panel-2);border:1px solid var(--line-2);color:var(--txt-dim);width:42px;height:42px;border-radius:11px;cursor:pointer;display:grid;place-items:center;flex:0 0 auto}
 .dash-close:hover{color:#fff;border-color:var(--mint)}
 .dash-close svg{width:20px;height:20px}
-.kpi-row{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:26px}
-@media(max-width:760px){.kpi-row{grid-template-columns:1fr}}
+.kpi-row{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:16px;margin-bottom:26px}
+@media(max-width:900px){.kpi-row{grid-template-columns:1fr 1fr}.kpi-card-pie{grid-column:1 / -1}}
+@media(max-width:560px){.kpi-row{grid-template-columns:1fr}}
 .kpi-card{background:linear-gradient(180deg,var(--panel),var(--bg-2));border:1px solid var(--line);border-radius:14px;padding:20px 22px;position:relative;overflow:hidden}
 .kpi-card::after{content:"";position:absolute;right:-24px;top:-24px;width:96px;height:96px;border-radius:50%;background:var(--mint-soft);opacity:.5}
 .kpi-card .k-ico{width:42px;height:42px;border-radius:11px;background:var(--mint-soft);color:var(--mint);display:grid;place-items:center;margin-bottom:14px;position:relative;z-index:1}
 .kpi-card .k-ico svg{width:22px;height:22px}
 .kpi-card .k-val{font-size:clamp(26px,4vw,34px);font-weight:800;letter-spacing:.5px;position:relative;z-index:1;font-variant-numeric:tabular-nums}
 .kpi-card .k-lab{font-size:13px;color:var(--txt-dim);margin-top:3px;position:relative;z-index:1}
-/* การ์ด KPI ใบแรกที่มีพายชาร์ตสรุปบัตรรายวัน */
-.kpi-card-pie{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
-.kpi-card-pie .kpi-main{position:relative;z-index:1;min-width:118px;flex:0 0 auto}
-.kpi-card-pie .kpi-pie{position:relative;z-index:1;flex:1;min-width:210px}
-.pie-head{font-size:12px;font-weight:700;letter-spacing:.3px;color:var(--txt-dim);margin-bottom:8px}
-.pie-wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.pie-svg{width:96px;height:96px;flex:0 0 auto}
-.pie-svg .pie-c-n{fill:var(--txt);font-size:20px;font-weight:800;text-anchor:middle;font-family:'Rajdhani',sans-serif}
-.pie-svg .pie-c-l{fill:var(--txt-dim);opacity:.7;font-size:8.5px;text-anchor:middle;letter-spacing:.3px}
-.pie-legend{display:flex;flex-direction:column;gap:7px;flex:1;min-width:120px}
-.pie-lg{display:flex;align-items:center;gap:8px;font-size:12.5px}
-.pie-lg .pie-dot{width:11px;height:11px;border-radius:3px;flex:0 0 auto}
-.pie-lg .pie-lg-d{color:var(--txt-dim)}
-.pie-lg .pie-lg-v{margin-left:auto;font-weight:800;color:var(--txt);font-variant-numeric:tabular-nums;white-space:nowrap}
+/* การ์ด KPI พายชาร์ตสรุปบัตรรายวัน (Chart.js doughnut) */
+.kpi-card-pie{display:flex;flex-direction:column}
+.kpi-card-pie::after{display:none}
+.kpi-card-pie .pie-head{font-size:13px;font-weight:700;letter-spacing:.3px;color:var(--txt-dim);margin-bottom:10px;position:relative;z-index:1}
+.kpi-card-pie .pie-box{position:relative;z-index:1;flex:1;min-height:132px;width:100%}
+.kpi-card-pie .pie-box canvas{max-width:100%}
+/* legend สำรองกรณี Chart.js โหลดไม่ได้ */
+.pie-fallback{display:flex;flex-direction:column;gap:8px;padding-top:4px}
+.pie-fallback .pie-lg{display:flex;align-items:center;gap:8px;font-size:12.5px}
+.pie-fallback .pie-dot{width:11px;height:11px;border-radius:50%;flex:0 0 auto}
+.pie-fallback .pie-lg-d{color:var(--txt-dim)}
+.pie-fallback .pie-lg-v{margin-left:auto;font-weight:800;color:var(--txt);font-variant-numeric:tabular-nums;white-space:nowrap}
 /* คอลัมน์รายวันในตารางผู้ซื้อบัตร */
 .dtable th.day-th{text-align:center;white-space:nowrap}
 .dtable td.day-cell{text-align:center;white-space:nowrap;min-width:88px}
@@ -746,12 +745,13 @@ html,body{height:auto;min-height:0;overflow:visible}
     </div>
     <div class="kpi-row">
       <div class="kpi-card kpi-card-pie">
-        <div class="kpi-main">
-          <div class="k-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-          <div class="k-val" id="kpiCount">0</div>
-          <div class="k-lab" data-i18n="dash.count">จำนวนผู้สมัคร</div>
-        </div>
-        <div class="kpi-pie" id="kpiDayPie"></div>
+        <div class="pie-head" data-i18n="pie.title">บัตรที่ขายได้แยกตามวัน</div>
+        <div class="pie-box"><canvas id="dayPieCanvas"></canvas></div>
+      </div>
+      <div class="kpi-card">
+        <div class="k-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div class="k-val" id="kpiCount">0</div>
+        <div class="k-lab" data-i18n="dash.count">จำนวนผู้สมัคร</div>
       </div>
       <div class="kpi-card">
         <div class="k-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg></div>
@@ -786,6 +786,8 @@ html,body{height:auto;min-height:0;overflow:visible}
   </div>
 </div>
 
+<!-- Chart.js v4.4.1 (UMD, vendored locally) สำหรับพายชาร์ต (doughnut) สรุปบัตรรายวัน -->
+<script src="chart.umd.min.js?v=4.4.1"></script>
 <script>
 /* ================= State ================= */
 const state = { lang:'th', tab:'early', pkg:null, days:{}, plates:{}, payMethod:'card', tax:false, result:null, dashPage:1,
@@ -1542,39 +1544,37 @@ function filteredRegs(){
 }
 
 const CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
-const PIE_COLORS = ['#6FFFE8','#D1FF03','#d8bd7f']; // mint / lime / gold — วันที่ 4/5/6 ธ.ค.
-// วาดพาย/โดนัทด้วย SVG ล้วน (ไม่พึ่งไลบรารีภายนอก เพราะเป็นไฟล์ standalone)
-function pcPolar(cx,cy,r,ang){ const a=(ang-90)*Math.PI/180; return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; }
-function pcArc(cx,cy,r,r2,a0,a1){
-  const [x0,y0]=pcPolar(cx,cy,r,a0), [x1,y1]=pcPolar(cx,cy,r,a1);
-  const [x2,y2]=pcPolar(cx,cy,r2,a1), [x3,y3]=pcPolar(cx,cy,r2,a0);
-  const large=(a1-a0)>180?1:0;
-  return 'M'+x0+' '+y0+' A'+r+' '+r+' 0 '+large+' 1 '+x1+' '+y1+' L'+x2+' '+y2+' A'+r2+' '+r2+' 0 '+large+' 0 '+x3+' '+y3+' Z';
-}
-// พายสรุปจำนวนบัตรที่ขายได้แยกตามวัน (วันที่ 4/5/6 ธ.ค.) — นับจากผู้ซื้อที่เลือกวันนั้น
+// สีตามตัวอย่าง doughnut ของ Chart.js: แดง/น้ำเงิน/เหลือง สำหรับวันที่ 4/5/6 ธ.ค.
+const PIE_COLORS = ['rgb(255, 99, 132)','rgb(54, 162, 235)','rgb(255, 205, 86)'];
+let dayPieChart = null;
+// พายชาร์ต (doughnut) ด้วย Chart.js สรุปจำนวนบัตรที่ขายได้แยกตามวัน — นับจากผู้ซื้อที่เลือกวันนั้น
 function renderDayPie(){
+  const canvas = el('dayPieCanvas');
+  if(!canvas) return;
   const regs = loadRegs();
-  const days = DAYS.map((d,i)=>({ id:d.id, label:(state.lang==='th'?d.thShort:d.enShort), count:regs.filter(r=>(r.dayIds||[]).includes(d.id)).length, color:PIE_COLORS[i] }));
-  const total = days.reduce((s,d)=>s+d.count,0);
-  const cx=46,cy=46,R=44,R2=27;
-  let slices='';
-  if(total>0){
-    let ang=0;
-    days.forEach(d=>{
-      if(!d.count) return;
-      const sweep=d.count/total*360;
-      if(sweep>=359.999){ slices += '<circle cx="'+cx+'" cy="'+cy+'" r="'+((R+R2)/2)+'" fill="none" stroke="'+d.color+'" stroke-width="'+(R-R2)+'"/>'; }
-      else { slices += '<path d="'+pcArc(cx,cy,R,R2,ang,ang+sweep)+'" fill="'+d.color+'"/>'; }
-      ang+=sweep;
-    });
-  } else {
-    slices = '<circle cx="'+cx+'" cy="'+cy+'" r="'+((R+R2)/2)+'" fill="none" stroke="var(--line)" stroke-width="'+(R-R2)+'"/>';
+  const counts = DAYS.map(d=>regs.filter(r=>(r.dayIds||[]).includes(d.id)).length);
+  const labels = DAYS.map((d,i)=>(state.lang==='th'?d.thShort:d.enShort)+' · '+fmt(counts[i])+' '+t('pie.unit'));
+  // ถ้าโหลด Chart.js ไม่สำเร็จ ให้แสดง legend แบบข้อความแทน (กันหน้าว่าง)
+  if(typeof Chart === 'undefined'){
+    canvas.style.display='none';
+    let fb = el('dayPieFallback');
+    if(!fb){ fb=document.createElement('div'); fb.id='dayPieFallback'; fb.className='pie-fallback'; canvas.parentNode.appendChild(fb); }
+    fb.innerHTML = DAYS.map((d,i)=>'<div class="pie-lg"><span class="pie-dot" style="background:'+PIE_COLORS[i]+'"></span><span class="pie-lg-d">'+esc(state.lang==='th'?d.thShort:d.enShort)+'</span><span class="pie-lg-v">'+fmt(counts[i])+' '+t('pie.unit')+'</span></div>').join('');
+    return;
   }
-  const legend = days.map(d=>'<div class="pie-lg"><span class="pie-dot" style="background:'+d.color+'"></span><span class="pie-lg-d">'+esc(d.label)+'</span><span class="pie-lg-v">'+fmt(d.count)+' '+t('pie.unit')+'</span></div>').join('');
-  return '<div class="pie-head">'+t('pie.title')+'</div><div class="pie-wrap">'+
-    '<svg viewBox="0 0 92 92" class="pie-svg" role="img" aria-label="'+esc(t('pie.title'))+'">'+slices+
-      '<text x="46" y="43" class="pie-c-n">'+fmt(total)+'</text><text x="46" y="57" class="pie-c-l">'+esc(t('pie.center'))+'</text>'+
-    '</svg><div class="pie-legend">'+legend+'</div></div>';
+  const data = { labels, datasets:[{ data:counts, backgroundColor:PIE_COLORS, borderColor:'rgba(0,0,0,0)', hoverOffset:4 }] };
+  if(dayPieChart){ dayPieChart.data = data; dayPieChart.update(); return; }
+  dayPieChart = new Chart(canvas, {
+    type:'doughnut',
+    data,
+    options:{
+      responsive:true, maintainAspectRatio:false, cutout:'62%',
+      plugins:{
+        legend:{ position:'right', labels:{ color:'#f4f6f9', font:{ size:12, family:"'Rajdhani','Noto Sans Thai',sans-serif" }, boxWidth:12, boxHeight:12, padding:10, usePointStyle:true, pointStyle:'circle' } },
+        tooltip:{ callbacks:{ label:(c)=>' '+(state.lang==='th'?DAYS[c.dataIndex].thShort:DAYS[c.dataIndex].enShort)+': '+fmt(c.parsed)+' '+t('pie.unit') } }
+      }
+    }
+  });
 }
 const DASH_COLS = ['no','name','surname','phone','email','pricetab','pkg','day:d5','day:d6','day:d7','tshirt','contacts','avoid','allergy','amount','paydate','status','action'];
 
@@ -1583,7 +1583,7 @@ function renderDashboard(){
   // KPI แสดงยอดรวมทั้งหมดเสมอ ไม่ขึ้นกับการค้นหา
   el('kpiCount').textContent = fmt(allRegs.length);
   el('kpiTotal').textContent = money(allRegs.reduce((s,r)=>s+(r.amount||0),0));
-  if(el('kpiDayPie')) el('kpiDayPie').innerHTML = renderDayPie();
+  renderDayPie();
 
   const regs = filteredRegs();
   const searching = dashFilterActive();
