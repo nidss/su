@@ -388,6 +388,9 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .dash-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line)}
 .dash-tabs button{background:transparent;border:0;border-bottom:2px solid transparent;color:var(--txt-dim);padding:12px 20px;font-weight:700;font-size:14px;cursor:pointer;transition:.15s;margin-bottom:-1px}
 .dash-tabs button.active{color:#fff;border-bottom-color:var(--mint)}
+.dash-subtabs{display:inline-flex;gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:4px;margin-bottom:16px}
+.dash-subtabs button{background:transparent;border:0;color:var(--txt-dim);padding:8px 20px;border-radius:7px;font-weight:700;font-size:13.5px;cursor:pointer;transition:.15s}
+.dash-subtabs button.active{background:var(--mint-grad);color:var(--mint-ink);box-shadow:0 3px 10px var(--mint-glow)}
 .dash-source-tabs{display:flex;width:100%;background:var(--bg);border-radius:12px;padding:5px;gap:5px;margin:0 0 22px;border:1px solid var(--line)}
 .dash-source-tabs button{flex:1;background:transparent;border:0;color:var(--txt-dim);padding:14px 10px;border-radius:8px;font-weight:700;font-size:clamp(14px,2.6vw,16px);letter-spacing:.5px;cursor:pointer;transition:.15s}
 .dash-source-tabs button.active{background:var(--mint-grad);color:var(--mint-ink);box-shadow:0 4px 14px var(--mint-glow)}
@@ -2851,6 +2854,7 @@ const D_VEH=['Toyota Supra 2JZ-GTE','Honda Civic K20A','Nissan GT-R RB26DETT','M
 const D_PROV=['กรุงเทพฯ','นนทบุรี','ปทุมธานี','ชลบุรี','ระยอง','เชียงใหม่','ขอนแก่น','นครราชสีมา','ภูเก็ต','สงขลา'];
 const D_COMPANY=['บริษัท สปีด มอเตอร์สปอร์ต จำกัด','บริษัท เทอร์โบ เรซซิ่ง จำกัด','หจก. ไนตรัส ออโต้','บริษัท เอเพ็กซ์ ทูนนิ่ง จำกัด','บริษัท เรดไลน์ การาจ จำกัด','บริษัท บูสต์ แล็บ จำกัด','หจก. ทอร์ค ทีม มอเตอร์','บริษัท ไดโน โปร เรซซิ่ง จำกัด','บริษัท นอส เรซซิ่ง จำกัด','บริษัท ดริฟท์ คิง ออโต้สปอร์ต จำกัด'];
 function dTaxId(){return '0'+Array.from({length:12},()=>Math.floor(Math.random()*10)).join('');}
+function dAccNo(){return String(100+Math.floor(Math.random()*900))+'-'+Math.floor(Math.random()*10)+'-'+String(10000+Math.floor(Math.random()*90000))+'-'+Math.floor(Math.random()*10);}
 function dRnd(a){return a[Math.floor(Math.random()*a.length)];}
 function dPad(n){return n<10?'0'+n:''+n;}
 function dIsoDate(offset){const v=new Date(Date.UTC(2026,6,1+offset));return v.getUTCFullYear()+'-'+dPad(v.getUTCMonth()+1)+'-'+dPad(v.getUTCDate());}
@@ -2896,11 +2900,13 @@ function buildDashData(){
     const hasL=Math.random()>.35, hasW=Math.random()>.6, hasA=Math.random()>.7;
     const isCompany=i%4===0; // จำลองผู้สมัครนิติบุคคลราว 1 ใน 4
     const coBranch=isCompany?(Math.random()>.5?'branch':'head'):'';
+    const coName=isCompany?dRnd(D_COMPANY):'';
     applicants.push({
       date:applicantRegDate, appType:isCompany?'company':'person', name:fn, surname:ln, idAddr:addr,
-      company:isCompany?dRnd(D_COMPANY):'', taxid:isCompany?dTaxId():'',
+      company:coName, taxid:isCompany?dTaxId():'',
       branch:coBranch, branchno:coBranch==='branch'?String(1+Math.floor(Math.random()*99999)).padStart(5,'0'):'',
       contactName:isCompany?fn:'', contactSurname:isCompany?ln:'',
+      rfBankName:isCompany?dRnd(BANKS.th):'', rfAccno:isCompany?dAccNo():'', rfAccname:isCompany?coName:'',
       deliAddr:Math.random()>.5?addr:(100+i)+' คอนโด จ.'+dRnd(D_PROV),
       phone, email:'user'+(i+1)+'@email.com',
       line:hasL?'line_'+fn.slice(0,3)+i:'-', wechat:hasW?'wc'+i:'-', whatsapp:hasA?phone:'-',
@@ -2917,7 +2923,7 @@ function buildDashData(){
   }
   return {applicant:applicants, racer:racers};
 }
-const DASH={open:false, authed:false, group:'registration', tab:'applicant', page:{applicant:1,racer:1}, data:null, PS:20, rfilter:{name:'',vehicle:'',model:'',team:'',carno:''}, afilter:{type:'',name:'',company:'',taxid:'',contact:'',phone:'',email:''}};
+const DASH={open:false, authed:false, group:'registration', tab:'applicant', page:{applicant:1,racer:1}, data:null, PS:20, rfilter:{name:'',vehicle:'',model:'',team:'',carno:''}, appKind:'person', afilter:{name:'',company:'',taxid:'',contact:'',phone:'',email:''}};
 function openDash(){
   if(!DASH.data)DASH.data=buildDashData();
   DASH.open=true; el('dashRoot').classList.add('open'); document.body.style.overflow='hidden';
@@ -3001,7 +3007,7 @@ window.addEventListener('message',e=>{
   }
 });
 function racerFilterActive(){const f=DASH.rfilter;return !!(f.name||f.vehicle||f.model||f.team||f.carno);}
-function applicantFilterActive(){const f=DASH.afilter;return !!(f.type||f.name||f.company||f.taxid||f.contact||f.phone||f.email);}
+function applicantFilterActive(){const f=DASH.afilter;return !!(f.name||f.company||f.taxid||f.contact||f.phone||f.email);}
 function getDashRows(tab){
   const all=DASH.data[tab];
   const nl=s=>String(s==null?'':s).toLowerCase().trim();
@@ -3015,18 +3021,18 @@ function getDashRows(tab){
       (!f.carno || nl(r.carno).includes(nl(f.carno)))
     );
   }
-  if(tab==='applicant'&&applicantFilterActive()){
-    const f=DASH.afilter;
-    return all.map((r,i)=>({r,idx:i})).filter(({r})=>{
-      const isCo=(r.appType||'person')==='company';
-      return (!f.type || (r.appType||'person')===f.type) &&
-        (!f.name || nl(r.name+' '+r.surname).includes(nl(f.name))) &&
-        (!f.company || (isCo&&nl(r.company).includes(nl(f.company)))) &&
-        (!f.taxid || (isCo&&nl(r.taxid).includes(nl(f.taxid)))) &&
-        (!f.contact || (isCo&&nl((r.contactName||'')+' '+(r.contactSurname||'')).includes(nl(f.contact)))) &&
-        (!f.phone || nl(r.phone).includes(nl(f.phone))) &&
-        (!f.email || nl(r.email).includes(nl(f.email)));
-    });
+  if(tab==='applicant'){
+    const f=DASH.afilter, kind=DASH.appKind, isCo=kind==='company';
+    let list=all.map((r,i)=>({r,idx:i})).filter(({r})=>(r.appType||'person')===kind);
+    if(applicantFilterActive()) list=list.filter(({r})=>
+      (!f.name || nl(r.name+' '+r.surname).includes(nl(f.name))) &&
+      (!f.company || (isCo&&nl(r.company).includes(nl(f.company)))) &&
+      (!f.taxid || (isCo&&nl(r.taxid).includes(nl(f.taxid)))) &&
+      (!f.contact || (isCo&&nl((r.contactName||'')+' '+(r.contactSurname||'')).includes(nl(f.contact)))) &&
+      (!f.phone || nl(r.phone).includes(nl(f.phone))) &&
+      (!f.email || nl(r.email).includes(nl(f.email)))
+    );
+    return list;
   }
   return all.map((r,i)=>({r,idx:i}));
 }
@@ -3046,19 +3052,30 @@ function renderDashTable(){
     </div>`;
   } else if(tab==='applicant'){
     const f=DASH.afilter;
-    const typeOpt=`<option value="">ทั้งหมด</option><option value="person" ${f.type==='person'?'selected':''}>บุคคลธรรมดา</option><option value="company" ${f.type==='company'?'selected':''}>นิติบุคคล</option>`;
-    filterBar=`<div class="dfilter">
-      <div class="df-field"><label>ประเภท</label><select id="af_type">${typeOpt}</select></div>
-      <div class="df-field"><label>ชื่อ-นามสกุล</label><input id="af_name" value="${esc(f.name)}" placeholder="ค้นหาชื่อ/นามสกุล"/></div>
-      <div class="df-field"><label>ชื่อนิติบุคคล</label><input id="af_company" value="${esc(f.company)}" placeholder="ค้นหาชื่อนิติบุคคล"/></div>
-      <div class="df-field"><label>เลขผู้เสียภาษี</label><input id="af_taxid" value="${esc(f.taxid)}" placeholder="เลขผู้เสียภาษี"/></div>
-      <div class="df-field"><label>ผู้ติดต่อ</label><input id="af_contact" value="${esc(f.contact)}" placeholder="ค้นหาผู้ติดต่อ"/></div>
-      <div class="df-field"><label>เบอร์โทรศัพท์</label><input id="af_phone" value="${esc(f.phone)}" placeholder="เบอร์โทร"/></div>
-      <div class="df-field"><label>อีเมล</label><input id="af_email" value="${esc(f.email)}" placeholder="อีเมล"/></div>
-      <button class="df-clear" id="af_clear" type="button">${D_ICON.x} ล้างตัวกรอง</button>
-    </div>`;
+    if(DASH.appKind==='company'){
+      filterBar=`<div class="dfilter">
+        <div class="df-field"><label>ชื่อนิติบุคคล</label><input id="af_company" value="${esc(f.company)}" placeholder="ค้นหาชื่อนิติบุคคล"/></div>
+        <div class="df-field"><label>เลขผู้เสียภาษี</label><input id="af_taxid" value="${esc(f.taxid)}" placeholder="เลขผู้เสียภาษี"/></div>
+        <div class="df-field"><label>ผู้ติดต่อ</label><input id="af_contact" value="${esc(f.contact)}" placeholder="ค้นหาผู้ติดต่อ"/></div>
+        <div class="df-field"><label>เบอร์โทรศัพท์</label><input id="af_phone" value="${esc(f.phone)}" placeholder="เบอร์โทร"/></div>
+        <div class="df-field"><label>อีเมล</label><input id="af_email" value="${esc(f.email)}" placeholder="อีเมล"/></div>
+        <button class="df-clear" id="af_clear" type="button">${D_ICON.x} ล้างตัวกรอง</button>
+      </div>`;
+    } else {
+      filterBar=`<div class="dfilter">
+        <div class="df-field"><label>ชื่อ-นามสกุล</label><input id="af_name" value="${esc(f.name)}" placeholder="ค้นหาชื่อ/นามสกุล"/></div>
+        <div class="df-field"><label>เบอร์โทรศัพท์</label><input id="af_phone" value="${esc(f.phone)}" placeholder="เบอร์โทร"/></div>
+        <div class="df-field"><label>อีเมล</label><input id="af_email" value="${esc(f.email)}" placeholder="อีเมล"/></div>
+        <button class="df-clear" id="af_clear" type="button">${D_ICON.x} ล้างตัวกรอง</button>
+      </div>`;
+    }
   }
+  const subtabs=tab==='applicant'?`<div class="dash-subtabs">
+      <button data-akind="person" class="${DASH.appKind==='person'?'active':''}">บุคคลธรรมดา</button>
+      <button data-akind="company" class="${DASH.appKind==='company'?'active':''}">นิติบุคคล</button>
+    </div>`:'';
   el('dashCard').innerHTML=`
+    ${subtabs}
     <div class="table-tools">
       ${filterBar||'<span></span>'}
       <button class="btn-export" id="dashExport">${D_ICON.download} Export CSV</button>
@@ -3071,10 +3088,11 @@ function renderDashTable(){
     el('rf_model').onchange=commit('model');
     el('rf_clear').onclick=()=>{ DASH.rfilter={name:'',vehicle:'',model:'',team:'',carno:''}; DASH.page.racer=1; renderDashTable(); };
   } else if(tab==='applicant'){
+    el('dashCard').querySelectorAll('[data-akind]').forEach(btn=>btn.onclick=()=>{ DASH.appKind=btn.dataset.akind; DASH.page.applicant=1; renderDashTable(); });
     const commit=(k)=>(e)=>{ DASH.afilter[k]=e.target.value; DASH.page.applicant=1; paintDashTable(); };
-    ['name','company','taxid','contact','phone','email'].forEach(k=>{const inp=el('af_'+k); inp.oninput=commit(k);});
-    el('af_type').onchange=commit('type');
-    el('af_clear').onclick=()=>{ DASH.afilter={type:'',name:'',company:'',taxid:'',contact:'',phone:'',email:''}; DASH.page.applicant=1; renderDashTable(); };
+    const ids=DASH.appKind==='company'?['company','taxid','contact','phone','email']:['name','phone','email'];
+    ids.forEach(k=>{const inp=el('af_'+k); if(inp)inp.oninput=commit(k);});
+    el('af_clear').onclick=()=>{ DASH.afilter={name:'',company:'',taxid:'',contact:'',phone:'',email:''}; DASH.page.applicant=1; renderDashTable(); };
   }
   paintDashTable();
 }
@@ -3084,36 +3102,50 @@ function paintDashTable(){
   if(DASH.page[tab]>totalPages)DASH.page[tab]=totalPages;
   const pg=DASH.page[tab], start=(pg-1)*PS, pageRows=view.slice(start,start+PS);
   let thead, tbody;
-  if(tab==='applicant'){
+  if(tab==='applicant'&&DASH.appKind==='company'){
     thead=`<thead>
       <tr>
-        <th rowspan="2">วันที่ลงทะเบียน</th><th rowspan="2">ประเภท</th><th rowspan="2">ชื่อ</th><th rowspan="2">นามสกุล</th>
-        <th colspan="4" class="grp-th">ข้อมูลนิติบุคคล</th>
+        <th rowspan="2">วันที่ลงทะเบียน</th><th rowspan="2">ชื่อนิติบุคคล</th><th rowspan="2">เลขผู้เสียภาษี</th><th rowspan="2">สำนักงาน/สาขา</th>
+        <th rowspan="2">ที่อยู่จดทะเบียน</th><th rowspan="2">ผู้ติดต่อ</th><th rowspan="2">เบอร์โทรศัพท์</th><th rowspan="2">อีเมล</th><th rowspan="2">Line</th>
+        <th colspan="3" class="grp-th">บัญชีคืนเงินมัดจำ</th>
+        <th rowspan="2">หนังสือรับรอง</th><th rowspan="2">แก้ไข</th>
+      </tr>
+      <tr><th class="sub-th">ธนาคาร</th><th class="sub-th">เลขที่บัญชี</th><th class="sub-th">ชื่อบัญชี</th></tr>
+    </thead>`;
+    tbody=pageRows.map(({r,idx})=>{
+      const dash='-';
+      const branch=r.branch==='branch'?('สาขาที่ '+(r.branchno||'-')):'สำนักงานใหญ่';
+      const contact=((r.contactName||'')+' '+(r.contactSurname||'')).trim()||dash;
+      const rfBank=r.rfBankName||dash, rfAccno=r.rfAccno||dash, rfAccname=r.rfAccname||dash;
+      return `<tr>
+      <td>${esc(r.date)}</td>
+      <td class="trunc" title="${esc(r.company||'')}">${esc(r.company||dash)}</td>
+      <td>${esc(r.taxid||dash)}</td><td>${esc(branch)}</td>
+      <td class="trunc" title="${esc(r.idAddr||'')}">${esc(r.idAddr||dash)}</td>
+      <td class="trunc" title="${esc(contact)}">${esc(contact)}</td>
+      <td>${esc(r.phone||dash)}</td><td>${esc(r.email||dash)}</td><td>${esc(r.line||dash)}</td>
+      <td class="trunc" title="${esc(rfBank)}">${esc(rfBank)}</td><td>${esc(rfAccno)}</td><td class="trunc" title="${esc(rfAccname)}">${esc(rfAccname)}</td>
+      <td><button class="ico-btn" data-img="${idx}" title="ดูหนังสือรับรอง">${D_ICON.image}</button></td>
+      <td><button class="ico-btn edit" data-edit="${idx}" title="แก้ไขข้อมูล">${D_ICON.edit}</button></td>
+    </tr>`;}).join('');
+  } else if(tab==='applicant'){
+    thead=`<thead>
+      <tr>
+        <th rowspan="2">วันที่ลงทะเบียน</th><th rowspan="2">ชื่อ</th><th rowspan="2">นามสกุล</th>
         <th rowspan="2">ที่อยู่ตามบัตรฯ</th><th rowspan="2">เบอร์โทรศัพท์</th><th rowspan="2">อีเมล</th>
         <th colspan="3" class="grp-th">ช่องทางติดต่อเพิ่มเติม</th>
         <th rowspan="2">บัตรฯ ผู้สมัคร</th><th rowspan="2">แก้ไข</th>
       </tr>
-      <tr>
-        <th class="sub-th">ชื่อนิติบุคคล</th><th class="sub-th">เลขผู้เสียภาษี</th><th class="sub-th">สำนักงาน/สาขา</th><th class="sub-th">ผู้ติดต่อ</th>
-        <th class="sub-th">Line</th><th class="sub-th">WeChat</th><th class="sub-th">WhatsApp</th>
-      </tr>
+      <tr><th class="sub-th">Line</th><th class="sub-th">WeChat</th><th class="sub-th">WhatsApp</th></tr>
     </thead>`;
-    tbody=pageRows.map(({r,idx})=>{
-      const isCo=r.appType==='company', dash='-';
-      const typeLabel=isCo?'นิติบุคคล':'บุคคลธรรมดา';
-      const coName=isCo?(r.company||dash):dash;
-      const coTax=isCo?(r.taxid||dash):dash;
-      const coBranch=isCo?(r.branch==='branch'?('สาขาที่ '+(r.branchno||'-')):'สำนักงานใหญ่'):dash;
-      const coContact=isCo?(((r.contactName||'')+' '+(r.contactSurname||'')).trim()||dash):dash;
-      return `<tr>
-      <td>${esc(r.date)}</td><td>${esc(typeLabel)}</td><td>${esc(r.name)}</td><td>${esc(r.surname)}</td>
-      <td class="trunc" title="${esc(coName)}">${esc(coName)}</td><td>${esc(coTax)}</td><td>${esc(coBranch)}</td><td class="trunc" title="${esc(coContact)}">${esc(coContact)}</td>
+    tbody=pageRows.map(({r,idx})=>`<tr>
+      <td>${esc(r.date)}</td><td>${esc(r.name)}</td><td>${esc(r.surname)}</td>
       <td class="trunc" title="${esc(r.idAddr)}">${esc(r.idAddr)}</td>
       <td>${esc(r.phone)}</td><td>${esc(r.email)}</td>
       <td>${esc(r.line)}</td><td>${esc(r.wechat)}</td><td>${esc(r.whatsapp)}</td>
       <td><button class="ico-btn" data-img="${idx}" title="ดูรูปบัตรประชาชน">${D_ICON.image}</button></td>
       <td><button class="ico-btn edit" data-edit="${idx}" title="แก้ไขข้อมูล">${D_ICON.edit}</button></td>
-    </tr>`;}).join('');
+    </tr>`).join('');
   } else {
     thead=`<thead><tr>
       <th>วันที่ลงทะเบียน</th><th>วันที่ชำระเงิน</th><th>Status</th><th>ชื่อนักแข่ง</th><th>นามสกุลนักแข่ง</th><th>ที่อยู่ตามบัตรฯ</th><th>รถยนต์ รุ่น/รหัสเครื่อง</th>
@@ -3131,11 +3163,12 @@ function paintDashTable(){
       <td><button class="ico-btn edit" data-edit="${idx}" title="แก้ไขข้อมูล">${D_ICON.edit}</button></td>
     </tr>`).join('');
   }
-  const colspan = tab==='applicant'?12:14;
+  const colspan = tab==='racer'?14:(tab==='applicant'&&DASH.appKind==='company'?14:11);
   const from=n?start+1:0, to=Math.min(start+PS,n);
-  const empty = tab==='racer'&&racerFilterActive()?'ไม่พบรายการที่ตรงกับตัวกรอง':'ไม่มีข้อมูล';
+  const filtered = (tab==='racer'&&racerFilterActive())||(tab==='applicant'&&applicantFilterActive());
+  const empty = filtered?'ไม่พบรายการที่ตรงกับตัวกรอง':'ไม่มีข้อมูล';
   el('dashTableWrap').innerHTML=`
-    <div class="tt-count" style="padding:4px 2px 10px">แสดง ${from}–${to} จาก ${n} รายการ${tab==='racer'&&racerFilterActive()?' (กรองแล้ว)':''}</div>
+    <div class="tt-count" style="padding:4px 2px 10px">แสดง ${from}–${to} จาก ${n} รายการ${filtered?' (กรองแล้ว)':''}</div>
     <div class="table-scroll"><table class="dtable">${thead}<tbody>${tbody||`<tr><td colspan="${colspan}" style="text-align:center;color:var(--txt-faint);padding:26px">${empty}</td></tr>`}</tbody></table></div>
     <div class="pager">
       <span class="pinfo">หน้า ${pg} / ${totalPages}</span>
@@ -3272,6 +3305,19 @@ function dashRowToApplicant(r){
     companyDoc:r.appType==='company'&&r.idImg?{name:'company-document.png',data:r.idImg}:null
   };
 }
+// สร้างบัญชีคืนเงินมัดจำสำหรับฟอร์มแก้ไข จากฟิลด์แบนของแถว (ถ้ามี)
+function dashRowToBank(r){
+  if(r.appType==='company'&&r.rfBankName)
+    return {rf_bank:'__other__',rf_bankother:r.rfBankName,rf_accno:r.rfAccno||'',rf_accname:r.rfAccname||'',rf_accsur:''};
+  return buildExistingRefundBank();
+}
+// สรุปบัญชีคืนเงินมัดจำสำหรับแสดงในตาราง (ธนาคาร/เลขที่บัญชี/ชื่อบัญชี)
+function refundBankSummary(b){
+  if(!b) return {name:'',accno:'',accname:''};
+  if(b.rf_bank==='__foreign__') return {name:'ต่างชาติ · '+(b.rf_fbank_name||''), accno:b.rf_fbank_accno||'', accname:b.rf_ben_name||''};
+  const name=b.rf_bank==='__other__'?(b.rf_bankother||''):(b.rf_bank||'');
+  return {name, accno:b.rf_accno||'', accname:b.rf_accname||''};
+}
 // ซิงก์ค่าจากฟอร์มกลับเข้าฟิลด์แบนของแถวตาราง
 function dashApplicantToRow(r,a){
   r.appType=a.a_type||'person';
@@ -3282,11 +3328,15 @@ function dashApplicantToRow(r,a){
   r.phone=a.a_phone||''; r.email=a.a_email||'';
   r.line=a.chan_line?a.chan_line:'-';
   if(a.a_type!=='company'&&a.idImg)r.idImg=a.idImg;
+  if(r.appType==='company'){
+    const summ=refundBankSummary(r._bank);
+    r.rfBankName=summ.name; r.rfAccno=summ.accno; r.rfAccname=summ.accname;
+  }
 }
 // แก้ไขข้อมูลผู้สมัครด้วย layout เดียวกับหน้ากรอกข้อมูลส่วนตัว (บุคคล/นิติบุคคล + บัญชีคืนเงิน)
 function openDashEditApplicant(r){
   if(!r._app)r._app=dashRowToApplicant(r);
-  if(!r._bank)r._bank=buildExistingRefundBank();
+  if(!r._bank)r._bank=dashRowToBank(r);
   // ถอด #screen ออกชั่วคราว กัน id ชนกับฟอร์มที่ใช้ร่วมกัน (getElementById)
   const s=el('screen');
   const stash=s?{node:s,parent:s.parentNode,next:s.nextSibling}:null;
@@ -3436,14 +3486,19 @@ function exportDash(tab){
   const rows=DASH.data[tab]; let head, lines;
   const q=v=>{v=String(v==null?'':v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
   if(tab==='applicant'){
-    head=['วันที่ลงทะเบียน','ประเภท','ชื่อ','นามสกุล','ชื่อนิติบุคคล','เลขผู้เสียภาษี','สำนักงาน/สาขา','ผู้ติดต่อ','ที่อยู่ตามบัตรฯ','เบอร์โทรศัพท์','อีเมล','Line','WeChat','WhatsApp'];
-    lines=rows.map(r=>{
-      const isCo=r.appType==='company';
-      const typeLabel=isCo?'นิติบุคคล':'บุคคลธรรมดา';
-      const coBranch=isCo?(r.branch==='branch'?('สาขาที่ '+(r.branchno||'')):'สำนักงานใหญ่'):'';
-      const coContact=isCo?(((r.contactName||'')+' '+(r.contactSurname||'')).trim()):'';
-      return [r.date,typeLabel,r.name,r.surname,isCo?(r.company||''):'',isCo?(r.taxid||''):'',coBranch,coContact,r.idAddr,r.phone,r.email,r.line,r.wechat,r.whatsapp].map(q).join(',');
-    });
+    const kind=DASH.appKind;
+    const view=rows.filter(r=>(r.appType||'person')===kind);
+    if(kind==='company'){
+      head=['วันที่ลงทะเบียน','ชื่อนิติบุคคล','เลขผู้เสียภาษี','สำนักงาน/สาขา','ที่อยู่จดทะเบียน','ผู้ติดต่อ','เบอร์โทรศัพท์','อีเมล','Line','ธนาคาร (คืนเงิน)','เลขที่บัญชี','ชื่อบัญชี'];
+      lines=view.map(r=>{
+        const branch=r.branch==='branch'?('สาขาที่ '+(r.branchno||'')):'สำนักงานใหญ่';
+        const contact=((r.contactName||'')+' '+(r.contactSurname||'')).trim();
+        return [r.date,r.company||'',r.taxid||'',branch,r.idAddr||'',contact,r.phone||'',r.email||'',r.line||'',r.rfBankName||'',r.rfAccno||'',r.rfAccname||''].map(q).join(',');
+      });
+    } else {
+      head=['วันที่ลงทะเบียน','ชื่อ','นามสกุล','ที่อยู่ตามบัตรฯ','เบอร์โทรศัพท์','อีเมล','Line','WeChat','WhatsApp'];
+      lines=view.map(r=>[r.date,r.name,r.surname,r.idAddr,r.phone,r.email,r.line,r.wechat,r.whatsapp].map(q).join(','));
+    }
   } else {
     head=['วันที่ลงทะเบียน','วันที่ชำระเงิน','Status','ชื่อนักแข่ง','นามสกุลนักแข่ง','ที่อยู่ตามบัตรฯ','รถยนต์ รุ่น/รหัสเครื่อง','รุ่นการแข่งขัน','ทีมแข่ง/อู่','เบอร์รถแข่ง'];
     lines=rows.map(r=>[r.registrationDate,r.paidDate,r.paymentStatus,r.rname,r.rsurname,r.idAddr,r.vehicle,r.model,r.team,r.carno].map(q).join(','));
