@@ -380,6 +380,27 @@ h2.sec-title{font-size:clamp(19px,3.4vw,25px);margin:0 0 4px;font-weight:700;let
 .kpi-card .k-ico svg{width:22px;height:22px}
 .kpi-card .k-val{font-size:clamp(26px,4vw,34px);font-weight:800;letter-spacing:.5px;position:relative;z-index:1;font-variant-numeric:tabular-nums}
 .kpi-card .k-lab{font-size:13px;color:var(--txt-dim);margin-top:3px;position:relative;z-index:1}
+/* การ์ด KPI ใบแรกที่มีพายชาร์ตสรุปบัตรรายวัน */
+.kpi-card-pie{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.kpi-card-pie .kpi-main{position:relative;z-index:1;min-width:118px;flex:0 0 auto}
+.kpi-card-pie .kpi-pie{position:relative;z-index:1;flex:1;min-width:210px}
+.pie-head{font-size:12px;font-weight:700;letter-spacing:.3px;color:var(--txt-dim);margin-bottom:8px}
+.pie-wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.pie-svg{width:96px;height:96px;flex:0 0 auto}
+.pie-svg .pie-c-n{fill:var(--txt);font-size:20px;font-weight:800;text-anchor:middle;font-family:'Rajdhani',sans-serif}
+.pie-svg .pie-c-l{fill:var(--txt-dim);opacity:.7;font-size:8.5px;text-anchor:middle;letter-spacing:.3px}
+.pie-legend{display:flex;flex-direction:column;gap:7px;flex:1;min-width:120px}
+.pie-lg{display:flex;align-items:center;gap:8px;font-size:12.5px}
+.pie-lg .pie-dot{width:11px;height:11px;border-radius:3px;flex:0 0 auto}
+.pie-lg .pie-lg-d{color:var(--txt-dim)}
+.pie-lg .pie-lg-v{margin-left:auto;font-weight:800;color:var(--txt);font-variant-numeric:tabular-nums;white-space:nowrap}
+/* คอลัมน์รายวันในตารางผู้ซื้อบัตร */
+.dtable th.day-th{text-align:center;white-space:nowrap}
+.dtable td.day-cell{text-align:center;white-space:nowrap;min-width:88px}
+.day-cell .day-yes{display:inline-flex;color:var(--green)}
+.day-cell .day-yes svg{width:19px;height:19px}
+.day-cell .day-no{opacity:.28;font-size:15px}
+.day-cell .day-plate{display:block;margin-top:3px;font-size:11.5px;color:var(--txt-dim);opacity:.85;font-variant-numeric:tabular-nums}
 .table-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .table-tools{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
 .table-tools .tt-count{font-size:13px;color:var(--txt);font-weight:700}
@@ -724,10 +745,13 @@ html,body{height:auto;min-height:0;overflow:visible}
       </div>
     </div>
     <div class="kpi-row">
-      <div class="kpi-card">
-        <div class="k-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-        <div class="k-val" id="kpiCount">0</div>
-        <div class="k-lab" data-i18n="dash.count">จำนวนผู้สมัคร</div>
+      <div class="kpi-card kpi-card-pie">
+        <div class="kpi-main">
+          <div class="k-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div class="k-val" id="kpiCount">0</div>
+          <div class="k-lab" data-i18n="dash.count">จำนวนผู้สมัคร</div>
+        </div>
+        <div class="kpi-pie" id="kpiDayPie"></div>
       </div>
       <div class="kpi-card">
         <div class="k-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg></div>
@@ -776,9 +800,9 @@ const PRICES = {
 };
 const PKG_DAYS = { p1:1, p2:2, p3:3 };
 const DAYS = [
-  { id:'d5', th:'4 ธันวาคม 2026', en:'4 December 2026' },
-  { id:'d6', th:'5 ธันวาคม 2026', en:'5 December 2026' },
-  { id:'d7', th:'6 ธันวาคม 2026', en:'6 December 2026' }
+  { id:'d5', th:'4 ธันวาคม 2026', en:'4 December 2026', thShort:'4 ธันวาคม', enShort:'4 Dec' },
+  { id:'d6', th:'5 ธันวาคม 2026', en:'5 December 2026', thShort:'5 ธันวาคม', enShort:'5 Dec' },
+  { id:'d7', th:'6 ธันวาคม 2026', en:'6 December 2026', thShort:'6 ธันวาคม', enShort:'6 Dec' }
 ];
 // Per-day seat capacity + mock bookings (demo): d5 full, d6 nearly full, d7 available
 const DAY_CAP = 20;
@@ -844,6 +868,7 @@ const L = {
     'dn.new':'ลงทะเบียนรายการใหม่','dn.print':'พิมพ์ใบเสร็จ (PDF)','dn.receipt':'ใบเสร็จรับเงิน · OFFICIAL RECEIPT',
     'dash.title':'แดชบอร์ดผู้สมัคร<small>SOUPED UP VIP VILLAGE · DASHBOARD</small>',
     'dash.count':'จำนวนผู้สมัคร','dash.total':'จำนวนเงินรวม',
+    'pie.title':'บัตรที่ขายได้แยกตามวัน','pie.unit':'ใบ','pie.center':'ใบ·วัน','pie.empty':'ยังไม่มีข้อมูล',
     'dash.rows':'รายการ','dash.empty':'ยังไม่มีข้อมูลผู้สมัคร',
     'dash.edit':'แก้ไขข้อมูลผู้สมัคร','dash.save':'บันทึก','dash.saved':'บันทึกข้อมูลแล้ว ✓','dash.cancel':'ยกเลิก',
     'dash.h.no':'#','dash.h.username':'ชื่อผู้ใช้','dash.h.name':'ชื่อ','dash.h.surname':'นามสกุล','dash.h.phone':'เบอร์โทร','dash.h.email':'อีเมล','dash.h.pricetab':'ประเภทราคา','dash.h.pkg':'แพ็กเกจ','dash.h.days':'วันที่มา','dash.h.tshirt':'ไซส์เสื้อ','dash.h.contacts':'ช่องทางติดต่อ','dash.h.plates':'ทะเบียนรถ','dash.h.avoid':'อาหารที่ไม่ทาน','dash.h.allergy':'อาหารที่แพ้','dash.h.amount':'ยอดชำระ','dash.h.paydate':'วันที่ชำระเงิน','dash.h.status':'สถานะ','dash.h.action':'จัดการ',
@@ -921,6 +946,7 @@ const L = {
     'dn.new':'Register another entry','dn.print':'Print receipt (PDF)','dn.receipt':'OFFICIAL RECEIPT · ใบเสร็จรับเงิน',
     'dash.title':'Applicants Dashboard<small>SOUPED UP VIP VILLAGE · DASHBOARD</small>',
     'dash.count':'Applicants','dash.total':'Total Amount',
+    'pie.title':'Tickets sold by day','pie.unit':'tickets','pie.center':'day-tickets','pie.empty':'No data yet',
     'dash.rows':'record(s)','dash.empty':'No applicants yet',
     'dash.edit':'Edit applicant','dash.save':'Save','dash.saved':'Saved ✓','dash.cancel':'Cancel',
     'dash.h.no':'#','dash.h.username':'Username','dash.h.name':'Name','dash.h.surname':'Surname','dash.h.phone':'Phone','dash.h.email':'Email','dash.h.pricetab':'Price type','dash.h.pkg':'Package','dash.h.days':'Days','dash.h.tshirt':'T-Shirt','dash.h.contacts':'Contacts','dash.h.plates':'License plate','dash.h.avoid':'Food avoided','dash.h.allergy':'Allergies','dash.h.amount':'Amount','dash.h.paydate':'Payment date','dash.h.status':'Status','dash.h.action':'Manage',
@@ -1515,13 +1541,49 @@ function filteredRegs(){
   });
 }
 
-const DASH_COLS = ['no','name','surname','phone','email','pricetab','pkg','days','tshirt','contacts','plates','avoid','allergy','amount','paydate','status','action'];
+const CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+const PIE_COLORS = ['#6FFFE8','#D1FF03','#d8bd7f']; // mint / lime / gold — วันที่ 4/5/6 ธ.ค.
+// วาดพาย/โดนัทด้วย SVG ล้วน (ไม่พึ่งไลบรารีภายนอก เพราะเป็นไฟล์ standalone)
+function pcPolar(cx,cy,r,ang){ const a=(ang-90)*Math.PI/180; return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; }
+function pcArc(cx,cy,r,r2,a0,a1){
+  const [x0,y0]=pcPolar(cx,cy,r,a0), [x1,y1]=pcPolar(cx,cy,r,a1);
+  const [x2,y2]=pcPolar(cx,cy,r2,a1), [x3,y3]=pcPolar(cx,cy,r2,a0);
+  const large=(a1-a0)>180?1:0;
+  return 'M'+x0+' '+y0+' A'+r+' '+r+' 0 '+large+' 1 '+x1+' '+y1+' L'+x2+' '+y2+' A'+r2+' '+r2+' 0 '+large+' 0 '+x3+' '+y3+' Z';
+}
+// พายสรุปจำนวนบัตรที่ขายได้แยกตามวัน (วันที่ 4/5/6 ธ.ค.) — นับจากผู้ซื้อที่เลือกวันนั้น
+function renderDayPie(){
+  const regs = loadRegs();
+  const days = DAYS.map((d,i)=>({ id:d.id, label:(state.lang==='th'?d.thShort:d.enShort), count:regs.filter(r=>(r.dayIds||[]).includes(d.id)).length, color:PIE_COLORS[i] }));
+  const total = days.reduce((s,d)=>s+d.count,0);
+  const cx=46,cy=46,R=44,R2=27;
+  let slices='';
+  if(total>0){
+    let ang=0;
+    days.forEach(d=>{
+      if(!d.count) return;
+      const sweep=d.count/total*360;
+      if(sweep>=359.999){ slices += '<circle cx="'+cx+'" cy="'+cy+'" r="'+((R+R2)/2)+'" fill="none" stroke="'+d.color+'" stroke-width="'+(R-R2)+'"/>'; }
+      else { slices += '<path d="'+pcArc(cx,cy,R,R2,ang,ang+sweep)+'" fill="'+d.color+'"/>'; }
+      ang+=sweep;
+    });
+  } else {
+    slices = '<circle cx="'+cx+'" cy="'+cy+'" r="'+((R+R2)/2)+'" fill="none" stroke="var(--line)" stroke-width="'+(R-R2)+'"/>';
+  }
+  const legend = days.map(d=>'<div class="pie-lg"><span class="pie-dot" style="background:'+d.color+'"></span><span class="pie-lg-d">'+esc(d.label)+'</span><span class="pie-lg-v">'+fmt(d.count)+' '+t('pie.unit')+'</span></div>').join('');
+  return '<div class="pie-head">'+t('pie.title')+'</div><div class="pie-wrap">'+
+    '<svg viewBox="0 0 92 92" class="pie-svg" role="img" aria-label="'+esc(t('pie.title'))+'">'+slices+
+      '<text x="46" y="43" class="pie-c-n">'+fmt(total)+'</text><text x="46" y="57" class="pie-c-l">'+esc(t('pie.center'))+'</text>'+
+    '</svg><div class="pie-legend">'+legend+'</div></div>';
+}
+const DASH_COLS = ['no','name','surname','phone','email','pricetab','pkg','day:d5','day:d6','day:d7','tshirt','contacts','avoid','allergy','amount','paydate','status','action'];
 
 function renderDashboard(){
   const allRegs = loadRegs();
   // KPI แสดงยอดรวมทั้งหมดเสมอ ไม่ขึ้นกับการค้นหา
   el('kpiCount').textContent = fmt(allRegs.length);
   el('kpiTotal').textContent = money(allRegs.reduce((s,r)=>s+(r.amount||0),0));
+  if(el('kpiDayPie')) el('kpiDayPie').innerHTML = renderDayPie();
 
   const regs = filteredRegs();
   const searching = dashFilterActive();
@@ -1534,7 +1596,10 @@ function renderDashboard(){
   const start = (state.dashPage-1) * PAGE_SIZE;
   const pageRegs = regs.slice(start, start + PAGE_SIZE);
 
-  const heads = DASH_COLS.map(h=>'<th>'+t('dash.h.'+h)+'</th>').join('');
+  const heads = DASH_COLS.map(h=>{
+    if(h.indexOf('day:')===0){ const d=DAYS.find(x=>x.id===h.slice(4)); return '<th class="day-th">'+esc(state.lang==='th'?d.thShort:d.enShort)+'</th>'; }
+    return '<th>'+t('dash.h.'+h)+'</th>';
+  }).join('');
 
   let body;
   if(regs.length===0){
@@ -1543,10 +1608,16 @@ function renderDashboard(){
   } else {
     body = pageRegs.map((r,idx)=>{
       const i = start + idx;
-      const days = (r.dayIds||[]).map(dayLabel).join(', ');
-      const plates = (r.plates||[]).filter(p=>p.plate).map(p=>dayLabel(p.day)+': '+esc(p.plate)).join(' · ') || '-';
       const contacts = (r.contacts||[]).map(esc).join(', ') || '-';
       const tabBadge = '<span class="badge-tab '+(r.priceTab==='early'?'early':'')+'">'+t('tab.'+r.priceTab)+'</span>';
+      // เซลล์รายวัน: ถ้าซื้อวันนั้นแสดงเครื่องหมายถูก + ทะเบียนรถ (ถ้ามี), ถ้าไม่ซื้อแสดงขีด
+      const dayCell = id=>{
+        const bought = (r.dayIds||[]).includes(id);
+        if(!bought) return '<td class="day-cell"><span class="day-no">–</span></td>';
+        const po = (r.plates||[]).find(p=>p&&p.day===id&&p.plate);
+        const plate = po ? '<span class="day-plate">'+esc(po.plate)+'</span>' : '';
+        return '<td class="day-cell"><span class="day-yes" title="'+esc(t('pie.unit'))+'">'+CHECK_ICON+'</span>'+plate+'</td>';
+      };
       return '<tr>'+
         '<td>'+(i+1)+'</td>'+
         '<td>'+(esc(r.name)||'-')+'</td>'+
@@ -1555,10 +1626,9 @@ function renderDashboard(){
         '<td class="trunc" title="'+esc(r.email)+'">'+esc(r.email)+'</td>'+
         '<td>'+tabBadge+'</td>'+
         '<td>'+t('pkg.'+r.pkg)+'</td>'+
-        '<td>'+esc(days)+'</td>'+
+        dayCell('d5')+dayCell('d6')+dayCell('d7')+
         '<td>'+esc(r.tshirt||'-')+'</td>'+
         '<td class="trunc" title="'+esc(contacts)+'">'+contacts+'</td>'+
-        '<td>'+plates+'</td>'+
         '<td class="trunc" title="'+esc(r.foodAvoid||'')+'">'+(esc(r.foodAvoid)||'-')+'</td>'+
         '<td class="trunc" title="'+esc(r.foodAllergy||'')+'">'+(esc(r.foodAllergy)||'-')+'</td>'+
         '<td class="amt">'+money(r.amount||0)+'</td>'+
