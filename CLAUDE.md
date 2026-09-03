@@ -8,6 +8,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Two companion pages (`vip.html`, `vip-dashboard.html`) are **separate standalone HTML apps** that `index.html` embeds in same-origin iframes (see "Companion iframe apps" below) — they are not part of `index.html` and have their own `<script>`, `state`, and i18n.
 
+A fourth page, **`checkin.html`**, is a standalone staff check-in page (reference-code / QR entry that looks up racers and VIP holders). It is **not** embedded as an iframe — `index.html` links to it by a plain `href="checkin.html"` in the footer (no `?v=` cache-buster), so editing it needs no `?v=` bump and no `souped-up.html` regeneration. It has its own `state`, i18n, and helpers.
+
 ## The two output files — keep them in sync
 
 - `index.html` — the app, served by **GitHub Pages** at https://nidss.github.io/su/ (Settings → Pages → branch `main`, root). Full HTML document.
