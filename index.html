@@ -804,7 +804,9 @@ const I18N = {
     "bk.refund.t":"บัญชีคืนเงินมัดจำผู้สมัคร","bk.refund.s":"Account Name for Applicant's Deposit Refund",
     "bk.prize.t":"บัญชีรับเงินรางวัลสำหรับผู้ชนะ","bk.prize.s":"Account Name for Winner's Prize Payment (ชื่อต้องตรงกับนักแข่งที่ลงทะเบียน)",
     "f.bank":"ธนาคาร (Bank Name)","f.bankother":"ระบุชื่อธนาคาร","f.accno":"เลขที่บัญชี (Account Number)",
-    "f.accname":"ชื่อบัญชี (Name)","f.accsur":"นามสกุล (Surname)","opt.bank":"— เลือกธนาคาร —","bank.other":"อื่นๆ",
+    "f.accname":"ชื่อบัญชี (Name)","f.accsur":"นามสกุล (Surname)","opt.bank":"— เลือกธนาคาร —","bank.other":"อื่นๆ","bank.foreign":"สำหรับชาวต่างชาติ (International)",
+    "fbk.ben.t":"ข้อมูลผู้รับเงิน (Beneficiary Information)","fbk.ben.name":"Beneficiary Name (ชื่อตรงตามบัญชี)","fbk.ben.addr":"Beneficiary Address (ที่อยู่ผู้รับเงิน)","fbk.ben.country":"Country (ประเทศ)",
+    "fbk.bank.t":"ข้อมูลธนาคาร (Bank Information)","fbk.bank.name":"Bank Name (ชื่อธนาคาร)","fbk.bank.accno":"Account Number (เลขที่บัญชี)","fbk.bank.swift":"SWIFT Code (รหัส SWIFT)","fbk.bank.addr":"Bank Address (ที่อยู่ธนาคาร)","fbk.bank.country":"Bank Country (ประเทศของธนาคาร)",
     /* summary */
     "sm.title":"สรุปยอดการลงทะเบียน","sm.sub":"ตรวจสอบรายการและยอดชำระ",
     "sm.entry":"ค่าสมัคร","sm.deposit":"ค่ามัดจำการแข่งขัน","sm.pit":"ค่าช่องจอด (Pit)","sm.privatepit":"พีทถาวร (Private Pit)",
@@ -942,7 +944,9 @@ const I18N = {
     "bk.refund.t":"Applicant's Deposit Refund Account","bk.refund.s":"Account Name for Applicant's Deposit Refund",
     "bk.prize.t":"Winner's Prize Payment Account","bk.prize.s":"Account Name for Winner's Prize Payment (same as registered racer's name)",
     "f.bank":"Bank Name","f.bankother":"Specify bank name","f.accno":"Bank Account Number",
-    "f.accname":"Name","f.accsur":"Surname","opt.bank":"— Select bank —","bank.other":"Other",
+    "f.accname":"Name","f.accsur":"Surname","opt.bank":"— Select bank —","bank.other":"Other","bank.foreign":"For foreigners (International)",
+    "fbk.ben.t":"Beneficiary Information","fbk.ben.name":"Beneficiary Name","fbk.ben.addr":"Beneficiary Address","fbk.ben.country":"Country",
+    "fbk.bank.t":"Bank Information","fbk.bank.name":"Bank Name","fbk.bank.accno":"Account Number","fbk.bank.swift":"SWIFT Code","fbk.bank.addr":"Bank Address","fbk.bank.country":"Bank Country",
     "sm.title":"Registration Summary","sm.sub":"Review your items and amount due",
     "sm.entry":"Registration Fee","sm.deposit":"Competition Deposit","sm.pit":"Pit Fee","sm.privatepit":"Private Pit",
     "sm.discount":"Discount","sm.total":"Total Amount","sm.code.ph":"Enter discount code","sm.code.apply":"Apply",
@@ -1399,6 +1403,7 @@ function hasPersonalInfo(){
 }
 function hasRefundAccount(){
   const b=state.bank||{};
+  if(b.rf_bank==='__foreign__') return !!(b.rf_ben_name && b.rf_ben_country && b.rf_fbank_name && b.rf_fbank_accno && b.rf_swift);
   return !!(b.rf_bank && b.rf_accno && b.rf_accname && (b.rf_bank!=='__other__'||b.rf_bankother));
 }
 /* ปลายทางหลังสมัคร/เข้าสู่ระบบ (บัญชีใหม่): ถ้าซ่อน choose ให้เข้าสู่การลงทะเบียนนักแข่งตรงๆ */
@@ -1558,23 +1563,35 @@ function refundAccSurname(){
   if((a.a_type||'person')==='company') return a.a_contact_surname||a.a_surname||'';
   return a.a_person_surname||a.a_surname||'';
 }
+// เปิด/ปิดสถานะบังคับกรอก (data-req) และล้างสถานะ invalid เมื่อยกเลิกการบังคับ
+function setReq(inp,req){
+  if(!inp)return;
+  if(req)inp.setAttribute('data-req','');
+  else{inp.removeAttribute('data-req');const f=inp.closest('.field');if(f)f.classList.remove('invalid');}
+}
+// รหัสฟิลด์ของบัญชีต่างชาติ (ใช้เฉพาะบัญชีคืนเงินมัดจำ rf)
+const FOREIGN_BANK_FIELDS=['ben_name','ben_addr','ben_country','fbank_name','fbank_accno','swift','fbank_addr','fbank_country'];
 function bankAccountFields(prefix){
   const b=state.bank;
-  const bankOpts=BANKS[state.lang].map(x=>({v:x,l:x})).concat([{v:'__other__',l:t('bank.other')}]);
+  const isRefund=prefix==='rf';
+  const bankOpts=BANKS[state.lang].map(x=>({v:x,l:x}))
+    .concat(isRefund?[{v:'__foreign__',l:t('bank.foreign')}]:[])
+    .concat([{v:'__other__',l:t('bank.other')}]);
   const other=b[prefix+'_bank']==='__other__';
+  const foreign=isRefund&&b[prefix+'_bank']==='__foreign__';
   const prize=prefix==='pz';
   const adaptiveSurname=prefix==='rf';
   // บัญชีคืนเงินมัดจำ (rf) ล็อกชื่อ/นามสกุลตามข้อมูลผู้สมัคร แก้ไขไม่ได้
   const lockName=prize||adaptiveSurname;
+  // ฟิลด์แสดงเครื่องหมาย * ไว้เสมอ ส่วนสถานะบังคับกรอก (data-req) จัดการโดย apply() ตามชนิดบัญชีที่เลือก
   const nameVal=adaptiveSurname?refundAccName():(b[prefix+'_accname']||'');
   const surVal=adaptiveSurname?refundAccSurname():(b[prefix+'_accsur']||'');
   const surnameField=fieldText({id:prefix+'_accsur',labelKey:'f.accsur',req:true,value:surVal,readonly:lockName});
   const hideSurname=adaptiveSurname&&state.applicant.a_type==='company';
-  return `
-    ${fieldSelect({id:prefix+'_bank',labelKey:'f.bank',req:true,options:bankOpts,placeholderKey:'opt.bank',value:b[prefix+'_bank']||'',full:true})}
-    <div class="field full ${other?'':'hidden'}" data-otherwrap="${prefix}">
+  const domestic=`
+    <div class="field full ${other&&!foreign?'':'hidden'}" data-otherwrap="${prefix}">
       <label>${esc(t('f.bankother'))}<span class="req">*</span></label>
-      <input class="control" id="${prefix}_bankother" ${other?'data-req':''} value="${esc(b[prefix+'_bankother']||'')}"/>
+      <input class="control" id="${prefix}_bankother" ${other&&!foreign?'data-req':''} value="${esc(b[prefix+'_bankother']||'')}"/>
       <div class="err-msg">${esc(t('v.required'))}</div>
     </div>
     ${fieldText({id:prefix+'_accno',labelKey:'f.accno',req:true,value:b[prefix+'_accno']||'',full:true})}
@@ -1582,18 +1599,59 @@ function bankAccountFields(prefix){
       ${fieldText({id:prefix+'_accname',labelKey:'f.accname',req:true,value:nameVal,readonly:lockName})}
       ${adaptiveSurname?`<div data-refund-surname class="${hideSurname?'hidden':''}">${surnameField}</div>`:surnameField}
     </div>`;
+  const bankSelect=fieldSelect({id:prefix+'_bank',labelKey:'f.bank',req:true,options:bankOpts,placeholderKey:'opt.bank',value:b[prefix+'_bank']||'',full:true});
+  if(!isRefund) return `${bankSelect}${domestic}`;
+  // บัญชีต่างชาติ: ผู้ใช้กรอกชื่อผู้รับเงินเอง (ไม่ pre-fill)
+  const ff=(id,labelKey)=>fieldText({id:prefix+'_'+id,labelKey,req:true,value:b[prefix+'_'+id]||'',full:true});
+  return `
+    ${bankSelect}
+    <div data-refund-domestic class="${foreign?'hidden':''}" style="display:flex;flex-direction:column;gap:16px">
+      ${domestic}
+    </div>
+    <div data-refund-foreign class="${foreign?'':'hidden'}" style="display:flex;flex-direction:column;gap:16px">
+      <h4 class="form-section-title" style="margin:0">${esc(t('fbk.ben.t'))}</h4>
+      ${ff('ben_name','fbk.ben.name')}
+      ${ff('ben_addr','fbk.ben.addr')}
+      ${ff('ben_country','fbk.ben.country')}
+      <h4 class="form-section-title" style="margin:0">${esc(t('fbk.bank.t'))}</h4>
+      ${ff('fbank_name','fbk.bank.name')}
+      ${ff('fbank_accno','fbk.bank.accno')}
+      ${ff('swift','fbk.bank.swift')}
+      ${ff('fbank_addr','fbk.bank.addr')}
+      ${ff('fbank_country','fbk.bank.country')}
+    </div>`;
 }
 function bindBankAccount(form,prefix){
   const bank=el(prefix+'_bank');
   if(!bank)return;
-  bank.onchange=(e)=>{
-    const wrap=form.querySelector('[data-otherwrap="'+prefix+'"]');
-    const other=e.target.value==='__other__';
-    wrap.classList.toggle('hidden',!other);
-    const inp=el(prefix+'_bankother');
-    if(other)inp.setAttribute('data-req','');
-    else{inp.removeAttribute('data-req');wrap.classList.remove('invalid');}
+  const isRefund=prefix==='rf';
+  const apply=()=>{
+    const val=bank.value;
+    const other=val==='__other__';
+    const foreign=isRefund&&val==='__foreign__';
+    const otherWrap=form.querySelector('[data-otherwrap="'+prefix+'"]');
+    const otherInp=el(prefix+'_bankother');
+    const showOther=other&&!foreign;
+    if(otherWrap)otherWrap.classList.toggle('hidden',!showOther);
+    setReq(otherInp,showOther);
+    if(!isRefund)return;
+    const domWrap=form.querySelector('[data-refund-domestic]');
+    const forWrap=form.querySelector('[data-refund-foreign]');
+    if(domWrap)domWrap.classList.toggle('hidden',foreign);
+    if(forWrap)forWrap.classList.toggle('hidden',!foreign);
+    // ฟิลด์บัญชีในประเทศ: บังคับกรอกเมื่อไม่ใช่บัญชีต่างชาติ
+    setReq(el(prefix+'_accno'),!foreign);
+    setReq(el(prefix+'_accname'),!foreign);
+    const surInp=el(prefix+'_accsur');
+    if(surInp)setReq(surInp,!foreign&&state.applicant.a_type!=='company');
+    // ฟิลด์บัญชีต่างชาติ: บังคับกรอกเมื่อเลือกบัญชีต่างชาติ
+    FOREIGN_BANK_FIELDS.forEach(id=>setReq(el(prefix+'_'+id),foreign));
+    // ล้างสถานะ invalid ของฝั่งที่ถูกซ่อน
+    const clearWrap=foreign?domWrap:forWrap;
+    if(clearWrap)clearWrap.querySelectorAll('.invalid').forEach(f=>f.classList.remove('invalid'));
   };
+  bank.onchange=apply;
+  apply();
 }
 function applicantFormInner(opts={}){
   const a=state.applicant;
@@ -1668,10 +1726,10 @@ function bindApplicantForm(form){
     if(addrLabel)addrLabel.innerHTML=esc(t(type==='company'?'f.regaddr':'f.idaddr'))+'<span class="req">*</span>';
     const refundSurname=form.querySelector('[data-refund-surname]'), refundSurnameInput=el('rf_accsur');
     if(refundSurname&&refundSurnameInput){
-      const hide=type==='company';
-      refundSurname.classList.toggle('hidden',hide);
-      if(hide){refundSurnameInput.removeAttribute('data-req');refundSurnameInput.closest('.field').classList.remove('invalid');}
-      else refundSurnameInput.setAttribute('data-req','');
+      refundSurname.classList.toggle('hidden',type==='company');
+      // บัญชีต่างชาติซ่อนฟิลด์บัญชีในประเทศทั้งชุด จึงไม่บังคับกรอกนามสกุล
+      const foreign=(el('rf_bank')||{}).value==='__foreign__';
+      setReq(refundSurnameInput,type!=='company'&&!foreign);
     }
     syncRefundName();
     const upload=el('a_idcard');
@@ -1744,7 +1802,8 @@ function saveApplicant(form){
   state.applicant.chan_wechat='';
   state.applicant.chan_whatsapp_on=false;
   state.applicant.chan_whatsapp='';
-  ['rf_bank','rf_bankother','rf_accno','rf_accname','rf_accsur'].forEach(k=>{
+  ['rf_bank','rf_bankother','rf_accno','rf_accname','rf_accsur',
+   ...FOREIGN_BANK_FIELDS.map(id=>'rf_'+id)].forEach(k=>{
     const inp=form.querySelector('#'+k);
     if(inp)state.bank[k]=inp.value;
     delete state.applicant[k];
