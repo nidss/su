@@ -3056,21 +3056,33 @@ function paintDashTable(){
   if(tab==='applicant'){
     thead=`<thead>
       <tr>
-        <th rowspan="2">วันที่ลงทะเบียน</th><th rowspan="2">ชื่อ</th><th rowspan="2">นามสกุล</th>
+        <th rowspan="2">วันที่ลงทะเบียน</th><th rowspan="2">ประเภท</th><th rowspan="2">ชื่อ</th><th rowspan="2">นามสกุล</th>
+        <th colspan="4" class="grp-th">ข้อมูลนิติบุคคล</th>
         <th rowspan="2">ที่อยู่ตามบัตรฯ</th><th rowspan="2">เบอร์โทรศัพท์</th><th rowspan="2">อีเมล</th>
         <th colspan="3" class="grp-th">ช่องทางติดต่อเพิ่มเติม</th>
         <th rowspan="2">บัตรฯ ผู้สมัคร</th><th rowspan="2">แก้ไข</th>
       </tr>
-      <tr><th class="sub-th">Line</th><th class="sub-th">WeChat</th><th class="sub-th">WhatsApp</th></tr>
+      <tr>
+        <th class="sub-th">ชื่อนิติบุคคล</th><th class="sub-th">เลขผู้เสียภาษี</th><th class="sub-th">สำนักงาน/สาขา</th><th class="sub-th">ผู้ติดต่อ</th>
+        <th class="sub-th">Line</th><th class="sub-th">WeChat</th><th class="sub-th">WhatsApp</th>
+      </tr>
     </thead>`;
-    tbody=pageRows.map(({r,idx})=>`<tr>
-      <td>${esc(r.date)}</td><td>${esc(r.name)}</td><td>${esc(r.surname)}</td>
+    tbody=pageRows.map(({r,idx})=>{
+      const isCo=r.appType==='company', dash='-';
+      const typeLabel=isCo?'นิติบุคคล':'บุคคลธรรมดา';
+      const coName=isCo?(r.company||dash):dash;
+      const coTax=isCo?(r.taxid||dash):dash;
+      const coBranch=isCo?(r.branch==='branch'?('สาขาที่ '+(r.branchno||'-')):'สำนักงานใหญ่'):dash;
+      const coContact=isCo?(((r.contactName||'')+' '+(r.contactSurname||'')).trim()||dash):dash;
+      return `<tr>
+      <td>${esc(r.date)}</td><td>${esc(typeLabel)}</td><td>${esc(r.name)}</td><td>${esc(r.surname)}</td>
+      <td class="trunc" title="${esc(coName)}">${esc(coName)}</td><td>${esc(coTax)}</td><td>${esc(coBranch)}</td><td class="trunc" title="${esc(coContact)}">${esc(coContact)}</td>
       <td class="trunc" title="${esc(r.idAddr)}">${esc(r.idAddr)}</td>
       <td>${esc(r.phone)}</td><td>${esc(r.email)}</td>
       <td>${esc(r.line)}</td><td>${esc(r.wechat)}</td><td>${esc(r.whatsapp)}</td>
       <td><button class="ico-btn" data-img="${idx}" title="ดูรูปบัตรประชาชน">${D_ICON.image}</button></td>
       <td><button class="ico-btn edit" data-edit="${idx}" title="แก้ไขข้อมูล">${D_ICON.edit}</button></td>
-    </tr>`).join('');
+    </tr>`;}).join('');
   } else {
     thead=`<thead><tr>
       <th>วันที่ลงทะเบียน</th><th>วันที่ชำระเงิน</th><th>Status</th><th>ชื่อนักแข่ง</th><th>นามสกุลนักแข่ง</th><th>ที่อยู่ตามบัตรฯ</th><th>รถยนต์ รุ่น/รหัสเครื่อง</th>
@@ -3217,9 +3229,11 @@ function receiptPdfHTML(){
 // แปลงแถวข้อมูลผู้สมัครใน Dashboard -> โครงสร้าง state.applicant สำหรับฟอร์มกรอกข้อมูลส่วนตัว
 function dashRowToApplicant(r){
   return {
-    a_type:'person',
+    a_type:r.appType||'person',
     a_person_name:r.name||'', a_person_surname:r.surname||'',
     a_name:r.name||'', a_surname:r.surname||'',
+    a_company:r.company||'', a_taxid:r.taxid||'', a_branch:r.branch||'head', a_branchno:r.branchno||'',
+    a_contact_name:r.contactName||'', a_contact_surname:r.contactSurname||'',
     a_idaddr:r.idAddr||'',
     a_phone:r.phone||'', a_email:r.email||'',
     chan_line:(r.line&&r.line!=='-')?r.line:'',
@@ -3228,7 +3242,10 @@ function dashRowToApplicant(r){
 }
 // ซิงก์ค่าจากฟอร์มกลับเข้าฟิลด์แบนของแถวตาราง
 function dashApplicantToRow(r,a){
+  r.appType=a.a_type||'person';
   r.name=a.a_name||''; r.surname=a.a_surname||'';
+  r.company=a.a_company||''; r.taxid=a.a_taxid||''; r.branch=a.a_branch||''; r.branchno=a.a_branchno||'';
+  r.contactName=a.a_contact_name||''; r.contactSurname=a.a_contact_surname||'';
   r.idAddr=a.a_idaddr||'';
   r.phone=a.a_phone||''; r.email=a.a_email||'';
   r.line=a.chan_line?a.chan_line:'-';
@@ -3387,8 +3404,14 @@ function exportDash(tab){
   const rows=DASH.data[tab]; let head, lines;
   const q=v=>{v=String(v==null?'':v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
   if(tab==='applicant'){
-    head=['วันที่ลงทะเบียน','ชื่อ','นามสกุล','ที่อยู่ตามบัตรฯ','เบอร์โทรศัพท์','อีเมล','Line','WeChat','WhatsApp'];
-    lines=rows.map(r=>[r.date,r.name,r.surname,r.idAddr,r.phone,r.email,r.line,r.wechat,r.whatsapp].map(q).join(','));
+    head=['วันที่ลงทะเบียน','ประเภท','ชื่อ','นามสกุล','ชื่อนิติบุคคล','เลขผู้เสียภาษี','สำนักงาน/สาขา','ผู้ติดต่อ','ที่อยู่ตามบัตรฯ','เบอร์โทรศัพท์','อีเมล','Line','WeChat','WhatsApp'];
+    lines=rows.map(r=>{
+      const isCo=r.appType==='company';
+      const typeLabel=isCo?'นิติบุคคล':'บุคคลธรรมดา';
+      const coBranch=isCo?(r.branch==='branch'?('สาขาที่ '+(r.branchno||'')):'สำนักงานใหญ่'):'';
+      const coContact=isCo?(((r.contactName||'')+' '+(r.contactSurname||'')).trim()):'';
+      return [r.date,typeLabel,r.name,r.surname,isCo?(r.company||''):'',isCo?(r.taxid||''):'',coBranch,coContact,r.idAddr,r.phone,r.email,r.line,r.wechat,r.whatsapp].map(q).join(',');
+    });
   } else {
     head=['วันที่ลงทะเบียน','วันที่ชำระเงิน','Status','ชื่อนักแข่ง','นามสกุลนักแข่ง','ที่อยู่ตามบัตรฯ','รถยนต์ รุ่น/รหัสเครื่อง','รุ่นการแข่งขัน','ทีมแข่ง/อู่','เบอร์รถแข่ง'];
     lines=rows.map(r=>[r.registrationDate,r.paidDate,r.paymentStatus,r.rname,r.rsurname,r.idAddr,r.vehicle,r.model,r.team,r.carno].map(q).join(','));
