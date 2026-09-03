@@ -799,7 +799,8 @@ const I18N = {
     "f.loginid":"เลือกผู้ใช้","f.forgot":"ลืมรหัสผ่าน?","f.remember":"จดจำฉันในระบบ","btn.login":"เข้าสู่ระบบ",
     "auth.user.select":"— เลือกบัญชีตัวอย่าง —",
     "auth.user.new":"ผู้ใช้ใหม่ — ยังไม่มีข้อมูลส่วนตัว นักแข่ง หรือ VIP",
-    "auth.user.existing":"ผู้ใช้เดิม — มีข้อมูล นักแข่ง และ VIP แล้ว",
+    "auth.user.existing":"ผู้ใช้เดิม — มีข้อมูลส่วนตัวและนักแข่งแล้ว",
+    "auth.user.vip":"ผู้ใช้ที่ซื้อบัตร VIP — ไม่มีข้อมูลส่วนตัว มีเฉพาะประวัติซื้อบัตร",
     "ph.username":"เช่น speed_racer","ph.phone":"08X-XXX-XXXX","ph.email":"you@email.com",
     "ph.password":"อย่างน้อย 6 ตัวอักษร","ph.confirm":"กรอกรหัสผ่านอีกครั้ง","ph.loginid":"อีเมลหรือชื่อผู้ใช้",
     "forgot.eyebrow":"กู้คืนบัญชี","forgot.request.title":"ลืมรหัสผ่าน","forgot.request.sub":"กรอกอีเมลที่ใช้สมัครสมาชิกเพื่อรับรหัส OTP",
@@ -907,7 +908,7 @@ const I18N = {
     "t.acceptall":"กรุณาอ่านและยอมรับเอกสารทั้งหมดก่อน","t.pit":"เลือกช่องจอด ","t.uploaded":"อัปโหลดไฟล์แล้ว",
     "prof.title":"ประวัติของฉัน","prof.info":"ข้อมูลส่วนตัว","prof.racers":"ข้อมูลนักแข่ง","prof.history":"ประวัติการลงทะเบียน",
     "prof.hello":"สวัสดี คุณ","prof.save":"บันทึก","prof.curid":"รูปบัตรประชาชนปัจจุบัน",
-    "prof.vip":"Vip Village","prof.vip.card":"บัตร Vip Village","prof.buyvip":"ซื้อบัตร Vip Village","prof.novip":"ยังไม่มีบัตร Vip Village",
+    "prof.vip":"Vip Village","prof.vip.card":"บัตร Vip Village","prof.vip.history":"ประวัติการซื้อบัตร Vip Village","prof.buyvip":"ซื้อบัตร Vip Village","prof.novip":"ยังไม่มีบัตร Vip Village","vip.plate":"ทะเบียนรถ",
     "ch.eyebrow":"เลือกรายการ","ch.title":"คุณต้องการทำอะไร?","ch.sub":"เลือกลงทะเบียนนักแข่ง หรือซื้อบัตร VIP Village",
     "ch.racer.title":"ลงทะเบียนนักแข่ง","ch.racer.desc":"สมัครและลงทะเบียนนักแข่งเข้าร่วมการแข่งขัน",
     "ch.vip.title":"ซื้อบัตร VIP Village","ch.vip.desc":"จองบัตรเข้าชมพื้นที่ VIP Village",
@@ -948,7 +949,8 @@ const I18N = {
     "f.loginid":"Select User","f.forgot":"Forgot password?","f.remember":"Remember me","btn.login":"Sign In",
     "auth.user.select":"— Select a demo account —",
     "auth.user.new":"New user — no personal info, racer, or VIP",
-    "auth.user.existing":"Existing user — personal info, racers, and VIP ready",
+    "auth.user.existing":"Existing user — personal info and racers ready",
+    "auth.user.vip":"VIP buyer — no personal info, only ticket purchase history",
     "ph.username":"e.g. speed_racer","ph.phone":"08X-XXX-XXXX","ph.email":"you@email.com",
     "ph.password":"At least 6 characters","ph.confirm":"Re-enter your password","ph.loginid":"Email or username",
     "forgot.eyebrow":"Account recovery","forgot.request.title":"Forgot password","forgot.request.sub":"Enter your registered email to receive an OTP",
@@ -1046,7 +1048,7 @@ const I18N = {
     "t.acceptall":"Please read and accept all documents first","t.pit":"Selected pit ","t.uploaded":"File uploaded",
     "prof.title":"My Profile","prof.info":"Personal Info","prof.racers":"My Racers","prof.history":"Registration History",
     "prof.hello":"Hello,","prof.save":"Save","prof.curid":"Current ID card",
-    "prof.vip":"Vip Village","prof.vip.card":"Vip Village Ticket","prof.buyvip":"Buy Vip Village Ticket","prof.novip":"No Vip Village tickets yet",
+    "prof.vip":"Vip Village","prof.vip.card":"Vip Village Ticket","prof.vip.history":"Vip Village Purchase History","prof.buyvip":"Buy Vip Village Ticket","prof.novip":"No Vip Village tickets yet","vip.plate":"License plate",
     "ch.eyebrow":"Choose an option","ch.title":"What would you like to do?","ch.sub":"Register a racer, or buy a VIP Village ticket",
     "ch.racer.title":"Register Racer","ch.racer.desc":"Sign up and register racers for the competition",
     "ch.vip.title":"Buy VIP Village Ticket","ch.vip.desc":"Reserve access to the VIP Village area",
@@ -1228,6 +1230,10 @@ const DEMO_USERS = {
   existing:{
     kind:'existing',
     account:{username:'existing_user',email:'existing.user@example.com',phone:'089-999-9999',password:'demo123'}
+  },
+  vip:{
+    kind:'vip',
+    account:{username:'vip_member',email:'vip.member@example.com',phone:'082-222-2222',password:'demo123'}
   }
 };
 function clearMemberRegistrationData(){
@@ -1281,7 +1287,8 @@ SCREENS.auth = function(){
       id:'l_id',labelKey:'f.loginid',req:true,full:true,placeholderKey:'auth.user.select',
       options:[
         {v:'new',l:t('auth.user.new')},
-        {v:'existing',l:t('auth.user.existing')}
+        {v:'existing',l:t('auth.user.existing')},
+        {v:'vip',l:t('auth.user.vip')}
       ],
       value:state.authPresetUser||''
     })}
@@ -1334,6 +1341,11 @@ SCREEN_INIT.auth = function(){
         state.profile=emptyMemberProfile();
         toast(t('t.loginok'));
         enterPostAuth();
+      }else if(rec.kind==='vip'){
+        // ผู้ใช้ที่สมัครแล้วไปซื้อบัตรเลย ไม่มีข้อมูลส่วนตัว/นักแข่ง มีเฉพาะประวัติซื้อบัตร VIP
+        state.profile=buildVipOnlyProfile(state.account);
+        toast(t('t.loginok'));
+        go('profile');
       }else{
         state.profile=buildProfile(state.account);
         state.applicant=Object.assign({},state.profile.applicant);
@@ -2725,27 +2737,40 @@ function buildProfile(acct){
   const racers=[genProfRacer(0,ap.a_type),genProfRacer(1,ap.a_type)];
   const history=racers.map((r,i)=>({ref:'SU26-'+Math.random().toString(36).slice(2,7).toUpperCase()+'-'+(1000+Math.floor(Math.random()*9000)),
     racer:r.r_rname+' '+r.r_rsurname,model:r.r_model,carno:r.r_carno,date:'2026-0'+(2+i)+'-'+dPad(8+i*5),amount:17000,status:'paid'}));
-  return {applicant:ap,racers,history,vips:[genVip(0)]};
+  // ผู้ใช้เดิม (ลงทะเบียนนักแข่ง) — แสดงแท็บ VIP เป็น "ยังไม่มีการซื้อบัตร"
+  return {applicant:ap,racers,history,vips:[]};
+}
+// โปรไฟล์ของผู้ใช้ที่สมัครแล้วไปซื้อบัตร VIP เลย (ไม่มีข้อมูลส่วนตัว/นักแข่ง)
+function buildVipOnlyProfile(acct){
+  return {applicant:{},racers:[],history:[],vips:[genVip(0),genVip(1)]};
 }
 function buildExistingRefundBank(){
   return {rf_type:'domestic',rf_bank:'__other__',rf_bankother:'ธนาคารกสิกรไทย (KBank)',rf_accno:'123-4-56789-0',rf_accname:'บริษัท ซูพด์ อัพ มอเตอร์สปอร์ต จำกัด',rf_accsur:''};
 }
 function genVip(i){
   const qty=1+Math.floor(Math.random()*3);
-  return {holder:dRnd(D_FIRST)+' '+dRnd(D_LAST),type:dRnd(['Grandstand VIP','Pit VIP','Village Pass']),zone:dRnd(['Zone A','Zone B','Zone C','Pit Lane']),qty,date:'2026-0'+(3+i)+'-'+dPad(10+i*4),ref:'VIP26-DEMO-'+dPad(1000+i),amount:8900*qty,shirt:dRnd(['S','M','L','XL'])};
+  const dayIds=[['d5'],['d5','d6'],['d5','d6','d7']][i%3];
+  const plate=dRnd(['กก','ขข','คค','งง','จจ','ฉฉ'])+' '+(1000+Math.floor(Math.random()*8999));
+  return {holder:dRnd(D_FIRST)+' '+dRnd(D_LAST),type:dRnd(['Grandstand VIP','Pit VIP','Village Pass']),zone:dRnd(['Zone A','Zone B','Zone C','Pit Lane']),qty,date:'2026-0'+(3+i)+'-'+dPad(10+i*4),ref:'VIP26-DEMO-'+dPad(1000+i),amount:8900*qty,shirt:dRnd(['S','M','L','XL']),dayIds,plate,plates:dayIds.map(d=>({day:d,plate}))};
 }
-function profInfoHTML(p){
+// กล่องบัญชีผู้ใช้ (ชื่อผู้ใช้ / อีเมล / รหัสผ่าน) ใช้ร่วมทั้งผู้ใช้แบบนักแข่งและแบบซื้อบัตรอย่างเดียว
+function profAccountCard(){
   const acc=state.account||{};
-  const uname=acc.username||((state.applicant.a_name||'')+' '+(state.applicant.a_surname||'')).trim()||'-';
+  const a=state.applicant||{};
+  const uname=acc.username||((a.a_name||'')+' '+(a.a_surname||'')).trim()||'-';
+  const email=acc.email||a.a_email||(state.profile&&state.profile.applicant&&state.profile.applicant.a_email)||'-';
   const pwMask='•'.repeat(Math.min(Math.max((acc.password||'').length||8,6),12));
-  const accountCard=`<div class="prof-card" style="margin-bottom:16px">
+  return `<div class="prof-card" style="margin-bottom:16px">
     <div class="pc-head"><h3>${esc(t('prof.account'))}</h3></div>
     <div class="pinfo-grid">
       <div class="pinfo-row"><div class="l">${esc(t('f.username'))}</div><div class="v">${esc(uname)}</div></div>
+      <div class="pinfo-row"><div class="l">${esc(t('f.email'))}</div><div class="v">${esc(email)}</div></div>
       <div class="pinfo-row"><div class="l">${esc(t('f.password'))}</div><div class="v pw-row"><span class="pw-mask">${pwMask}</span><button type="button" class="btn btn-ghost btn-sm" id="profChgPw">${D_ICON.edit} ${esc(t('prof.changepw'))}</button></div></div>
     </div>
   </div>`;
-  return accountCard + `<div class="prof-card">
+}
+function profInfoHTML(p){
+  return profAccountCard() + `<div class="prof-card">
     <div class="pc-head"><h3>${esc(t('prof.info'))}</h3></div>
     <form id="apInfoForm" novalidate>
       ${applicantFormInner()}
@@ -2756,7 +2781,11 @@ function profInfoHTML(p){
 function profVipHTML(p){
   const vips=p.vips||[];
   const row=(lab,val)=>`<div class="pinfo-row"><div class="l">${esc(lab)}</div><div class="v">${esc(val||'-')}</div></div>`;
-  const cards=vips.length?vips.map((v,i)=>`
+  const rowFull=(lab,val)=>`<div class="pinfo-row full"><div class="l">${esc(lab)}</div><div class="v">${esc(val||'-')}</div></div>`;
+  const plateOf=v=>{ const list=[...new Set((v.plates||[]).map(pp=>pp&&pp.plate).filter(Boolean))]; if(list.length)return list.join(', '); return v.plate||''; };
+  const cards=vips.length?vips.map((v,i)=>{
+    const plate=plateOf(v);
+    return `
     <div class="racer-card">
       <div class="rc-head"><span class="rc-badge">${esc(t('prof.vip.card'))} ${i+1}</span><button type="button" class="btn btn-ghost btn-sm" data-vipreceipt="${i}">${D_ICON.printer} ${esc(t('hist.receipt'))}</button></div>
       <div class="pinfo-grid">
@@ -2764,10 +2793,11 @@ function profVipHTML(p){
         ${row(t('vip.zone'),v.zone)}${row(t('vip.qty'),String(v.qty))}
         ${row(t('hist.date'),v.date)}${v.ref?row(t('vipx.ref'),v.ref):''}
         ${v.amount?row(t('hist.amount'),money(v.amount)):''}${v.shirt?row(t('vipx.shirt'),v.shirt):''}
+        ${plate?rowFull(t('vip.plate'),plate):''}
       </div>
-    </div>`).join(''):`<div class="prof-empty">${esc(t('prof.novip'))}</div>`;
+    </div>`;}).join(''):`<div class="prof-empty">${esc(t('prof.novip'))}</div>`;
   return `<div class="prof-card">
-    <div class="pc-head"><h3>${esc(t('prof.vip.card'))}</h3><button class="btn btn-primary btn-sm" id="profBuyVip">${PLUS_SVG} ${esc(t('prof.buyvip'))}</button></div>
+    <div class="pc-head"><h3>${esc(t('prof.vip.history'))}</h3><button class="btn btn-primary btn-sm" id="profBuyVip">${PLUS_SVG} ${esc(t('prof.buyvip'))}</button></div>
     ${cards}
   </div>`;
 }
@@ -2820,17 +2850,27 @@ SCREENS.profile=function(){
   if(!state.profile)state.profile=buildProfile(state.account);
   if(!state.profile.vips)state.profile.vips=[];
   if(!state.profileTab)state.profileTab='info';
-  const p=state.profile, tab=state.profileTab;
+  const p=state.profile;
   const acc=state.account||{};
-  const uname=acc.username||((state.applicant.a_name||'')+' '+(state.applicant.a_surname||'')).trim()||'';
-  // แท็บ VIP Village ถูกซ่อน (โค้ด profVipHTML ยังอยู่ เผื่อเปิดกลับมา)
-  const menu=[['info','prof.info'],['racers','prof.racers'],['history','prof.history']].map(([k,tk])=>`<button data-ptab="${k}" class="${tab===k?'active':''}">${esc(t(tk))}</button>`).join('');
-  const content = tab==='info'?profInfoHTML(p):(tab==='racers'?profRacersHTML(p):(tab==='vip'?profVipHTML(p):profHistoryHTML(p)));
-  return `
+  const a=state.applicant||{};
+  const uname=acc.username||((a.a_name||'')+' '+(a.a_surname||'')).trim()||'';
+  // แยกผู้ใช้ 2 แบบ: มีข้อมูลส่วนตัว (ลงทะเบียนนักแข่ง) vs สมัครแล้วซื้อบัตร VIP อย่างเดียว
+  const pa=p.applicant||{};
+  const hasInfo=!!(pa.a_name||pa.a_company||(p.racers&&p.racers.length));
+  const top=`
   <div class="prof-top">
     <div><p class="eyebrow">${esc(t('prof.welcome'))}</p><h1 class="page-title" style="margin:0">${esc(t('prof.hello'))} ${esc(uname||'-')}</h1></div>
     <button class="btn btn-ghost" id="profLogout">${esc(t('prof.logout'))}</button>
-  </div>
+  </div>`;
+  if(!hasInfo){
+    // แบบที่ 2: ไม่มีแท็บ มี 2 กล่อง — บัญชีผู้ใช้ + ประวัติการซื้อบัตร VIP Village
+    return top + `<div style="margin-top:20px">${profAccountCard()}${profVipHTML(p)}</div>`;
+  }
+  // แบบที่ 1: 4 แท็บ — ข้อมูลส่วนตัว, ข้อมูลนักแข่ง, VIP Village, ประวัติการลงทะเบียน
+  const tab=state.profileTab;
+  const menu=[['info','prof.info'],['racers','prof.racers'],['vip','prof.vip'],['history','prof.history']].map(([k,tk])=>`<button data-ptab="${k}" class="${tab===k?'active':''}">${esc(t(tk))}</button>`).join('');
+  const content = tab==='info'?profInfoHTML(p):(tab==='racers'?profRacersHTML(p):(tab==='vip'?profVipHTML(p):profHistoryHTML(p)));
+  return top + `
   <div class="dash-tabs" style="margin:18px 0 20px">${menu}</div>
   <div id="profContent">${content}</div>`;
 };
