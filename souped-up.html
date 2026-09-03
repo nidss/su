@@ -2849,6 +2849,8 @@ const D_LAST=['ใจดี','รักษ์ไทย','ศรีสุข','�
 const D_TEAM=['Speed Garage','Turbo Modify','NOS Racing','Nitro Works','Apex Tuning','Redline Shop','Boost Lab','Drift King','Torque Team','Dyno Pro'];
 const D_VEH=['Toyota Supra 2JZ-GTE','Honda Civic K20A','Nissan GT-R RB26DETT','Mitsubishi Evo 4G63','Subaru WRX EJ20','Toyota AE86 4A-GE','Mazda RX-7 13B','Ford Mustang Coyote','BMW M3 S54','Nissan Silvia SR20DET'];
 const D_PROV=['กรุงเทพฯ','นนทบุรี','ปทุมธานี','ชลบุรี','ระยอง','เชียงใหม่','ขอนแก่น','นครราชสีมา','ภูเก็ต','สงขลา'];
+const D_COMPANY=['บริษัท สปีด มอเตอร์สปอร์ต จำกัด','บริษัท เทอร์โบ เรซซิ่ง จำกัด','หจก. ไนตรัส ออโต้','บริษัท เอเพ็กซ์ ทูนนิ่ง จำกัด','บริษัท เรดไลน์ การาจ จำกัด','บริษัท บูสต์ แล็บ จำกัด','หจก. ทอร์ค ทีม มอเตอร์','บริษัท ไดโน โปร เรซซิ่ง จำกัด','บริษัท นอส เรซซิ่ง จำกัด','บริษัท ดริฟท์ คิง ออโต้สปอร์ต จำกัด'];
+function dTaxId(){return '0'+Array.from({length:12},()=>Math.floor(Math.random()*10)).join('');}
 function dRnd(a){return a[Math.floor(Math.random()*a.length)];}
 function dPad(n){return n<10?'0'+n:''+n;}
 function dIsoDate(offset){const v=new Date(Date.UTC(2026,6,1+offset));return v.getUTCFullYear()+'-'+dPad(v.getUTCMonth()+1)+'-'+dPad(v.getUTCDate());}
@@ -2892,8 +2894,13 @@ function buildDashData(){
     const addr=(10+Math.floor(Math.random()*990))+' หมู่ '+(1+Math.floor(Math.random()*15))+' จ.'+dRnd(D_PROV);
     const phone='08'+(1+Math.floor(Math.random()*8))+'-'+dPad(Math.floor(Math.random()*1000))+'-'+dPad(Math.floor(Math.random()*10000));
     const hasL=Math.random()>.35, hasW=Math.random()>.6, hasA=Math.random()>.7;
+    const isCompany=i%4===0; // จำลองผู้สมัครนิติบุคคลราว 1 ใน 4
+    const coBranch=isCompany?(Math.random()>.5?'branch':'head'):'';
     applicants.push({
-      date:applicantRegDate, name:fn, surname:ln, idAddr:addr,
+      date:applicantRegDate, appType:isCompany?'company':'person', name:fn, surname:ln, idAddr:addr,
+      company:isCompany?dRnd(D_COMPANY):'', taxid:isCompany?dTaxId():'',
+      branch:coBranch, branchno:coBranch==='branch'?String(1+Math.floor(Math.random()*99999)).padStart(5,'0'):'',
+      contactName:isCompany?fn:'', contactSurname:isCompany?ln:'',
       deliAddr:Math.random()>.5?addr:(100+i)+' คอนโด จ.'+dRnd(D_PROV),
       phone, email:'user'+(i+1)+'@email.com',
       line:hasL?'line_'+fn.slice(0,3)+i:'-', wechat:hasW?'wc'+i:'-', whatsapp:hasA?phone:'-',
@@ -2910,7 +2917,7 @@ function buildDashData(){
   }
   return {applicant:applicants, racer:racers};
 }
-const DASH={open:false, authed:false, group:'registration', tab:'applicant', page:{applicant:1,racer:1}, data:null, PS:20, rfilter:{name:'',vehicle:'',model:'',team:'',carno:''}};
+const DASH={open:false, authed:false, group:'registration', tab:'applicant', page:{applicant:1,racer:1}, data:null, PS:20, rfilter:{name:'',vehicle:'',model:'',team:'',carno:''}, afilter:{type:'',name:'',company:'',taxid:'',contact:'',phone:'',email:''}};
 function openDash(){
   if(!DASH.data)DASH.data=buildDashData();
   DASH.open=true; el('dashRoot').classList.add('open'); document.body.style.overflow='hidden';
@@ -2994,17 +3001,34 @@ window.addEventListener('message',e=>{
   }
 });
 function racerFilterActive(){const f=DASH.rfilter;return !!(f.name||f.vehicle||f.model||f.team||f.carno);}
+function applicantFilterActive(){const f=DASH.afilter;return !!(f.type||f.name||f.company||f.taxid||f.contact||f.phone||f.email);}
 function getDashRows(tab){
   const all=DASH.data[tab];
-  if(tab!=='racer'||!racerFilterActive()) return all.map((r,i)=>({r,idx:i}));
-  const f=DASH.rfilter, nl=s=>String(s==null?'':s).toLowerCase().trim();
-  return all.map((r,i)=>({r,idx:i})).filter(({r})=>
-    (!f.name || nl(r.rname+' '+r.rsurname).includes(nl(f.name))) &&
-    (!f.vehicle || nl(r.vehicle).includes(nl(f.vehicle))) &&
-    (!f.model || r.model===f.model) &&
-    (!f.team || nl(r.team).includes(nl(f.team))) &&
-    (!f.carno || nl(r.carno).includes(nl(f.carno)))
-  );
+  const nl=s=>String(s==null?'':s).toLowerCase().trim();
+  if(tab==='racer'&&racerFilterActive()){
+    const f=DASH.rfilter;
+    return all.map((r,i)=>({r,idx:i})).filter(({r})=>
+      (!f.name || nl(r.rname+' '+r.rsurname).includes(nl(f.name))) &&
+      (!f.vehicle || nl(r.vehicle).includes(nl(f.vehicle))) &&
+      (!f.model || r.model===f.model) &&
+      (!f.team || nl(r.team).includes(nl(f.team))) &&
+      (!f.carno || nl(r.carno).includes(nl(f.carno)))
+    );
+  }
+  if(tab==='applicant'&&applicantFilterActive()){
+    const f=DASH.afilter;
+    return all.map((r,i)=>({r,idx:i})).filter(({r})=>{
+      const isCo=(r.appType||'person')==='company';
+      return (!f.type || (r.appType||'person')===f.type) &&
+        (!f.name || nl(r.name+' '+r.surname).includes(nl(f.name))) &&
+        (!f.company || (isCo&&nl(r.company).includes(nl(f.company)))) &&
+        (!f.taxid || (isCo&&nl(r.taxid).includes(nl(f.taxid)))) &&
+        (!f.contact || (isCo&&nl((r.contactName||'')+' '+(r.contactSurname||'')).includes(nl(f.contact)))) &&
+        (!f.phone || nl(r.phone).includes(nl(f.phone))) &&
+        (!f.email || nl(r.email).includes(nl(f.email)));
+    });
+  }
+  return all.map((r,i)=>({r,idx:i}));
 }
 function renderDashTable(){
   const tab=DASH.tab;
@@ -3020,6 +3044,19 @@ function renderDashTable(){
       <div class="df-field"><label>เบอร์รถแข่ง</label><input id="rf_carno" value="${esc(f.carno)}" placeholder="เช่น 88"/></div>
       <button class="df-clear" id="rf_clear" type="button">${D_ICON.x} ล้างตัวกรอง</button>
     </div>`;
+  } else if(tab==='applicant'){
+    const f=DASH.afilter;
+    const typeOpt=`<option value="">ทั้งหมด</option><option value="person" ${f.type==='person'?'selected':''}>บุคคลธรรมดา</option><option value="company" ${f.type==='company'?'selected':''}>นิติบุคคล</option>`;
+    filterBar=`<div class="dfilter">
+      <div class="df-field"><label>ประเภท</label><select id="af_type">${typeOpt}</select></div>
+      <div class="df-field"><label>ชื่อ-นามสกุล</label><input id="af_name" value="${esc(f.name)}" placeholder="ค้นหาชื่อ/นามสกุล"/></div>
+      <div class="df-field"><label>ชื่อนิติบุคคล</label><input id="af_company" value="${esc(f.company)}" placeholder="ค้นหาชื่อนิติบุคคล"/></div>
+      <div class="df-field"><label>เลขผู้เสียภาษี</label><input id="af_taxid" value="${esc(f.taxid)}" placeholder="เลขผู้เสียภาษี"/></div>
+      <div class="df-field"><label>ผู้ติดต่อ</label><input id="af_contact" value="${esc(f.contact)}" placeholder="ค้นหาผู้ติดต่อ"/></div>
+      <div class="df-field"><label>เบอร์โทรศัพท์</label><input id="af_phone" value="${esc(f.phone)}" placeholder="เบอร์โทร"/></div>
+      <div class="df-field"><label>อีเมล</label><input id="af_email" value="${esc(f.email)}" placeholder="อีเมล"/></div>
+      <button class="df-clear" id="af_clear" type="button">${D_ICON.x} ล้างตัวกรอง</button>
+    </div>`;
   }
   el('dashCard').innerHTML=`
     <div class="table-tools">
@@ -3033,6 +3070,11 @@ function renderDashTable(){
     ['name','vehicle','team','carno'].forEach(k=>{const inp=el('rf_'+k); inp.oninput=commit(k);});
     el('rf_model').onchange=commit('model');
     el('rf_clear').onclick=()=>{ DASH.rfilter={name:'',vehicle:'',model:'',team:'',carno:''}; DASH.page.racer=1; renderDashTable(); };
+  } else if(tab==='applicant'){
+    const commit=(k)=>(e)=>{ DASH.afilter[k]=e.target.value; DASH.page.applicant=1; paintDashTable(); };
+    ['name','company','taxid','contact','phone','email'].forEach(k=>{const inp=el('af_'+k); inp.oninput=commit(k);});
+    el('af_type').onchange=commit('type');
+    el('af_clear').onclick=()=>{ DASH.afilter={type:'',name:'',company:'',taxid:'',contact:'',phone:'',email:''}; DASH.page.applicant=1; renderDashTable(); };
   }
   paintDashTable();
 }
@@ -3226,7 +3268,8 @@ function dashRowToApplicant(r){
     a_idaddr:r.idAddr||'',
     a_phone:r.phone||'', a_email:r.email||'',
     chan_line:(r.line&&r.line!=='-')?r.line:'',
-    idImg:r.idImg||''
+    idImg:r.idImg||'',
+    companyDoc:r.appType==='company'&&r.idImg?{name:'company-document.png',data:r.idImg}:null
   };
 }
 // ซิงก์ค่าจากฟอร์มกลับเข้าฟิลด์แบนของแถวตาราง
