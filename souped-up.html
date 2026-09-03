@@ -830,7 +830,7 @@ const I18N = {
     "f.accname":"ชื่อบัญชี (Name)","f.accsur":"นามสกุล (Surname)","opt.bank":"— เลือกธนาคาร —","bank.other":"อื่นๆ","bank.foreign":"สำหรับชาวต่างชาติ (International)",
     "fbk.ben.t":"ข้อมูลผู้รับเงิน (Beneficiary Information)","fbk.ben.name":"Beneficiary Name (ชื่อตรงตามบัญชี)","fbk.ben.addr":"Beneficiary Address (ที่อยู่ผู้รับเงิน)","fbk.ben.country":"Country (ประเทศ)",
     "fbk.bank.t":"ข้อมูลธนาคาร (Bank Information)","fbk.bank.name":"Bank Name (ชื่อธนาคาร)","fbk.bank.accno":"Account Number (เลขที่บัญชี)","fbk.bank.swift":"SWIFT Code (รหัส SWIFT)","fbk.bank.addr":"Bank Address (ที่อยู่ธนาคาร)","fbk.bank.country":"Bank Country (ประเทศของธนาคาร)",
-    "bk.account.type":"ประเภทบัญชีรับเงินรางวัล","bk.account.select":"— เลือกประเภทบัญชี —","bk.account.domestic":"บัญชีธนาคารไทย","bk.account.foreign":"บัญชีธนาคารต่างประเทศ (ชาวต่างชาติ)",
+    "bk.account.type":"ประเภทบัญชีรับเงินรางวัล","bk.refund.account.type":"ประเภทบัญชีคืนเงินมัดจำ","bk.account.select":"— เลือกประเภทบัญชี —","bk.account.domestic":"บัญชีธนาคารไทย","bk.account.foreign":"บัญชีธนาคารต่างประเทศ (ชาวต่างชาติ)",
     "bk.country":"ประเทศของธนาคาร","bk.intlbank":"ชื่อธนาคารต่างประเทศ","bk.swift":"SWIFT / BIC Code",
     /* summary */
     "sm.title":"สรุปยอดการลงทะเบียน","sm.sub":"ตรวจสอบรายการและยอดชำระ",
@@ -973,7 +973,7 @@ const I18N = {
     "f.accname":"Name","f.accsur":"Surname","opt.bank":"— Select bank —","bank.other":"Other","bank.foreign":"For foreigners (International)",
     "fbk.ben.t":"Beneficiary Information","fbk.ben.name":"Beneficiary Name","fbk.ben.addr":"Beneficiary Address","fbk.ben.country":"Country",
     "fbk.bank.t":"Bank Information","fbk.bank.name":"Bank Name","fbk.bank.accno":"Account Number","fbk.bank.swift":"SWIFT Code","fbk.bank.addr":"Bank Address","fbk.bank.country":"Bank Country",
-    "bk.account.type":"Prize account type","bk.account.select":"— Select account type —","bk.account.domestic":"Thai bank account","bk.account.foreign":"International bank account (foreigner)",
+    "bk.account.type":"Prize account type","bk.refund.account.type":"Deposit refund account type","bk.account.select":"— Select account type —","bk.account.domestic":"Thai bank account","bk.account.foreign":"International bank account (foreigner)",
     "bk.country":"Bank country","bk.intlbank":"International bank name","bk.swift":"SWIFT / BIC Code",
     "sm.title":"Registration Summary","sm.sub":"Review your items and amount due",
     "sm.entry":"Registration Fee","sm.deposit":"Competition Deposit","sm.pit":"Pit Fee","sm.privatepit":"Private Pit",
@@ -1435,7 +1435,8 @@ function hasPersonalInfo(){
 }
 function hasRefundAccount(){
   const b=state.bank||{};
-  if(b.rf_bank==='__foreign__') return !!(b.rf_ben_name && b.rf_ben_country && b.rf_fbank_name && b.rf_fbank_accno && b.rf_swift);
+  const type=b.rf_type||(b.rf_bank==='__foreign__'?'foreign':'domestic');
+  if(type==='foreign') return !!(b.rf_ben_name && b.rf_ben_country && b.rf_fbank_name && b.rf_fbank_accno && b.rf_swift);
   return !!(b.rf_bank && b.rf_accno && b.rf_accname && (b.rf_bank!=='__other__'||b.rf_bankother));
 }
 /* ปลายทางหลังสมัคร/เข้าสู่ระบบ (บัญชีใหม่) */
@@ -1608,11 +1609,10 @@ const FOREIGN_BANK_FIELDS=['ben_name','ben_addr','ben_country','fbank_name','fba
 function bankAccountFields(prefix){
   const b=state.bank;
   const isRefund=prefix==='rf';
-  const bankOpts=BANKS[state.lang].map(x=>({v:x,l:x}))
-    .concat(isRefund?[{v:'__foreign__',l:t('bank.foreign')}]:[])
-    .concat([{v:'__other__',l:t('bank.other')}]);
+  const bankOpts=BANKS[state.lang].map(x=>({v:x,l:x})).concat([{v:'__other__',l:t('bank.other')}]);
   const other=b[prefix+'_bank']==='__other__';
-  const foreign=isRefund&&b[prefix+'_bank']==='__foreign__';
+  const refundType=b.rf_type||(b.rf_bank==='__foreign__'?'foreign':'domestic');
+  const foreign=isRefund&&refundType==='foreign';
   const prize=prefix==='pz';
   const adaptiveSurname=prefix==='rf';
   // บัญชีคืนเงินมัดจำ (rf) ล็อกชื่อ/นามสกุลตามข้อมูลผู้สมัคร แก้ไขไม่ได้
@@ -1638,8 +1638,11 @@ function bankAccountFields(prefix){
   // บัญชีต่างชาติ: ผู้ใช้กรอกชื่อผู้รับเงินเอง (ไม่ pre-fill)
   const ff=(id,labelKey)=>fieldText({id:prefix+'_'+id,labelKey,req:true,value:b[prefix+'_'+id]||'',full:true});
   return `
-    ${bankSelect}
+    ${fieldSelect({id:'rf_type',labelKey:'bk.refund.account.type',req:true,full:true,value:refundType,placeholderKey:'bk.account.select',options:[
+      {v:'domestic',l:t('bk.account.domestic')},{v:'foreign',l:t('bk.account.foreign')}
+    ]})}
     <div data-refund-domestic class="${foreign?'hidden':''}" style="display:flex;flex-direction:column;gap:16px">
+      ${bankSelect}
       ${domestic}
     </div>
     <div data-refund-foreign class="${foreign?'':'hidden'}" style="display:flex;flex-direction:column;gap:16px">
@@ -1659,10 +1662,12 @@ function bindBankAccount(form,prefix){
   const bank=el(prefix+'_bank');
   if(!bank)return;
   const isRefund=prefix==='rf';
+  const typeSelect=isRefund?el('rf_type'):null;
   const apply=()=>{
     const val=bank.value;
     const other=val==='__other__';
-    const foreign=isRefund&&val==='__foreign__';
+    const foreign=isRefund&&typeSelect&&typeSelect.value==='foreign';
+    if(isRefund)state.bank.rf_type=foreign?'foreign':'domestic';
     const otherWrap=form.querySelector('[data-otherwrap="'+prefix+'"]');
     const otherInp=el(prefix+'_bankother');
     const showOther=other&&!foreign;
@@ -1674,6 +1679,7 @@ function bindBankAccount(form,prefix){
     if(domWrap)domWrap.classList.toggle('hidden',foreign);
     if(forWrap)forWrap.classList.toggle('hidden',!foreign);
     // ฟิลด์บัญชีในประเทศ: บังคับกรอกเมื่อไม่ใช่บัญชีต่างชาติ
+    setReq(bank,!foreign);
     setReq(el(prefix+'_accno'),!foreign);
     setReq(el(prefix+'_accname'),!foreign);
     const surInp=el(prefix+'_accsur');
@@ -1685,6 +1691,7 @@ function bindBankAccount(form,prefix){
     if(clearWrap)clearWrap.querySelectorAll('.invalid').forEach(f=>f.classList.remove('invalid'));
   };
   bank.onchange=apply;
+  if(typeSelect)typeSelect.onchange=apply;
   apply();
 }
 function prizeAccountNames(){
@@ -1822,7 +1829,7 @@ function bindApplicantForm(form){
     if(refundSurname&&refundSurnameInput){
       refundSurname.classList.toggle('hidden',type==='company');
       // บัญชีต่างชาติซ่อนฟิลด์บัญชีในประเทศทั้งชุด จึงไม่บังคับกรอกนามสกุล
-      const foreign=(el('rf_bank')||{}).value==='__foreign__';
+      const foreign=(el('rf_type')||{}).value==='foreign';
       setReq(refundSurnameInput,type!=='company'&&!foreign);
     }
     syncRefundName();
@@ -1897,7 +1904,7 @@ function saveApplicant(form){
   state.applicant.chan_wechat='';
   state.applicant.chan_whatsapp_on=false;
   state.applicant.chan_whatsapp='';
-  ['rf_bank','rf_bankother','rf_accno','rf_accname','rf_accsur',
+  ['rf_type','rf_bank','rf_bankother','rf_accno','rf_accname','rf_accsur',
    ...FOREIGN_BANK_FIELDS.map(id=>'rf_'+id)].forEach(k=>{
     const inp=form.querySelector('#'+k);
     if(inp)state.bank[k]=inp.value;
@@ -2637,7 +2644,7 @@ function buildProfile(acct){
   return {applicant:ap,racers,history,vips:[genVip(0)]};
 }
 function buildExistingRefundBank(){
-  return {rf_bank:'__other__',rf_bankother:'ธนาคารกสิกรไทย (KBank)',rf_accno:'123-4-56789-0',rf_accname:'บริษัท ซูพด์ อัพ มอเตอร์สปอร์ต จำกัด',rf_accsur:''};
+  return {rf_type:'domestic',rf_bank:'__other__',rf_bankother:'ธนาคารกสิกรไทย (KBank)',rf_accno:'123-4-56789-0',rf_accname:'บริษัท ซูพด์ อัพ มอเตอร์สปอร์ต จำกัด',rf_accsur:''};
 }
 function genVip(i){
   const qty=1+Math.floor(Math.random()*3);
@@ -3352,13 +3359,13 @@ function dashRowToApplicant(r){
 // สร้างบัญชีคืนเงินมัดจำสำหรับฟอร์มแก้ไข จากฟิลด์แบนของแถว (ถ้ามี)
 function dashRowToBank(r){
   if(r.appType==='company'&&r.rfBankName)
-    return {rf_bank:'__other__',rf_bankother:r.rfBankName,rf_accno:r.rfAccno||'',rf_accname:r.rfAccname||'',rf_accsur:''};
+    return {rf_type:'domestic',rf_bank:'__other__',rf_bankother:r.rfBankName,rf_accno:r.rfAccno||'',rf_accname:r.rfAccname||'',rf_accsur:''};
   return buildExistingRefundBank();
 }
 // สรุปบัญชีคืนเงินมัดจำสำหรับแสดงในตาราง (ธนาคาร/เลขที่บัญชี/ชื่อบัญชี)
 function refundBankSummary(b){
   if(!b) return {name:'',accno:'',accname:''};
-  if(b.rf_bank==='__foreign__') return {name:'ต่างชาติ · '+(b.rf_fbank_name||''), accno:b.rf_fbank_accno||'', accname:b.rf_ben_name||''};
+  if(b.rf_type==='foreign'||b.rf_bank==='__foreign__') return {name:'ต่างชาติ · '+(b.rf_fbank_name||''), accno:b.rf_fbank_accno||'', accname:b.rf_ben_name||''};
   const name=b.rf_bank==='__other__'?(b.rf_bankother||''):(b.rf_bank||'');
   return {name, accno:b.rf_accno||'', accname:b.rf_accname||''};
 }
