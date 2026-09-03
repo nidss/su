@@ -360,6 +360,18 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .receipt .r-row:last-child{border-bottom:0}
 .receipt .r-row .rl{color:var(--txt-dim)}
 .receipt .r-row .rv{font-weight:700}
+.receipt.receipt-lg{max-width:600px}
+/* ส่วนหัวหมวด และตารางรายการในใบเสร็จบนหน้าจอ (ให้ข้อมูลตรงกับ PDF) */
+.receipt .r-sec{padding:13px 18px 8px;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--mint);border-bottom:1px solid var(--line);background:rgba(111,255,232,.05)}
+.receipt .r-items-wrap{overflow-x:auto}
+.receipt .r-items{width:100%;border-collapse:collapse;font-size:12.5px;min-width:480px}
+.receipt .r-items th{text-align:left;padding:9px 11px;font-size:10.5px;color:var(--txt-dim);font-weight:700;border-bottom:1px solid var(--line);white-space:nowrap;opacity:.72}
+.receipt .r-items td{padding:10px 11px;border-bottom:1px solid var(--line);color:var(--txt);vertical-align:top}
+.receipt .r-items .num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.receipt .r-items tbody tr:last-child td{border-bottom:0}
+.receipt .r-items tfoot td{border-bottom:0;border-top:2px solid var(--line-2);font-weight:800;padding-top:13px;padding-bottom:14px}
+.receipt .r-items tfoot .tot-l{text-align:right}
+.receipt .r-items tfoot .tot-v{text-align:right;color:var(--amber);font-size:16px;font-family:'Rajdhani',monospace;white-space:nowrap}
 .receipt .r-qr{display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px;border-top:1px dashed var(--line-2)}
 .receipt .r-qr-t{font-size:12px;font-weight:700;letter-spacing:1px;color:var(--mint);text-transform:uppercase}
 .receipt .r-qr-img{background:#fff;padding:10px;border-radius:10px;line-height:0}
@@ -872,6 +884,7 @@ const I18N = {
     /* success */
     "dn.title":"ชำระเงินสำเร็จ!","dn.sub":"เราได้ส่งอีเมลยืนยันการลงทะเบียนให้คุณแล้ว",
     "dn.ref":"หมายเลขอ้างอิง","dn.racer":"ชื่อนักแข่ง","dn.comp":"รายการแข่ง","dn.amount":"ยอดที่ชำระ",
+    "dn.payer":"ข้อมูลผู้ชำระเงิน","dn.items":"รายการชำระเงิน","dn.payername":"ชื่อ-นามสกุล","dn.method":"วิธีชำระเงิน","dn.class":"รุ่นการแข่งขัน","dn.percar":"รวม/คัน","dn.entry.s":"ค่าสมัคร","dn.deposit.s":"ค่ามัดจำ","dn.total.cars":"ยอดชำระทั้งหมด ({n} คัน)","dn.pay.qr":"QR / โอนเงิน","dn.pay.card":"บัตรเครดิต",
     "dn.qr":"QR สำหรับเช็คอินเข้างาน","dn.qr.cap":"แสดง QR นี้ที่จุดลงทะเบียนหน้างานเพื่อเช็คอิน",
     "dn.email":"ส่งไปที่","dn.new":"ลงทะเบียนรายการใหม่","dn.print":"พิมพ์ใบเสร็จ","dn.receipt":"พิมพ์ใบเสร็จ (PDF)","dn.profile":"ไปที่ประวัติของฉัน","sm.car":"รุ่นการแข่งขัน","sm.percar":"ต่อคัน","bk.save":"บันทึกข้อมูลบัญชีนี้เพื่อใช้ในครั้งต่อไป",
     /* buttons */
@@ -1012,6 +1025,7 @@ const I18N = {
     "py.confirm":"Confirm Payment",
     "dn.title":"Payment Successful!","dn.sub":"A confirmation email has been sent to you.",
     "dn.ref":"Reference No.","dn.racer":"Racer Name","dn.comp":"Competition","dn.amount":"Amount Paid",
+    "dn.payer":"Payer Information","dn.items":"Payment Details","dn.payername":"Name","dn.method":"Payment Method","dn.class":"Race Class","dn.percar":"Per Car","dn.entry.s":"Reg. Fee","dn.deposit.s":"Deposit","dn.total.cars":"Total Amount ({n} cars)","dn.pay.qr":"QR / Bank Transfer","dn.pay.card":"Credit Card",
     "dn.qr":"Event Check-in QR","dn.qr.cap":"Show this QR at the registration desk to check in",
     "dn.email":"Sent to","dn.new":"Register another entry","dn.print":"Print receipt","dn.receipt":"Print receipt (PDF)","dn.profile":"Go to My Profile","sm.car":"Race class","sm.percar":"per car","bk.save":"Save this account for next time",
     "btn.back":"Back","btn.continue":"Continue","btn.next":"Next","btn.next.racer":"Next (Racer Info)",
@@ -2641,17 +2655,42 @@ window.addEventListener('message',e=>{
 /* ---- DONE ---- */
 SCREENS.done = function(){
   const r=state.result||{};
+  // ดึงข้อมูลชุดเดียวกับที่แสดงในใบเสร็จ (receiptPdfHTML) มาแสดงบนหน้าจอด้วย
+  const c=calcTotal(), slots=pkSlots(), a=state.applicant||{};
+  const today=new Date().toLocaleDateString(state.lang==='th'?'th-TH':'en-US',{year:'numeric',month:'long',day:'numeric'});
+  const payer=((a.a_name||'')+' '+(a.a_surname||'')).trim()||r.racer||'-';
+  const email=a.a_email||r.email||'';
+  const payMethod=state.payMethod==='qr'?t('dn.pay.qr'):t('dn.pay.card');
+  // แถวข้อมูลผู้ชำระเงิน
+  const payerRows=[
+    `<div class="r-row"><span class="rl">${esc(t('dn.payername'))}</span><span class="rv">${esc(payer)}</span></div>`
+  ];
+  if(email)payerRows.push(`<div class="r-row"><span class="rl">${esc(t('f.email'))}</span><span class="rv">${esc(email)}</span></div>`);
+  if(a.a_phone)payerRows.push(`<div class="r-row"><span class="rl">${esc(t('f.phone'))}</span><span class="rv">${esc(a.a_phone)}</span></div>`);
+  payerRows.push(`<div class="r-row"><span class="rl">${esc(t('dn.method'))}</span><span class="rv">${esc(payMethod)}</span></div>`);
+  // แถวรายการต่อคัน (ชื่อนักแข่ง / เบอร์รถ / รุ่น / ค่าสมัคร / ค่ามัดจำ / รวมต่อคัน)
+  const lines=slots.map((s,i)=>`<tr><td>${i+1}</td><td>${esc(s.name||r.racer||'-')}</td><td>${s.carno?'#'+esc(s.carno):'-'}</td><td>${esc(s.cls||('คันที่ '+(i+1)))}</td><td class="num">${esc(money(PRICES.entry))}</td><td class="num">${esc(money(PRICES.deposit))}</td><td class="num">${esc(money(c.perCar))}</td></tr>`).join('');
+  const totalCars=(t('dn.total.cars')||'').replace('{n}',String(slots.length||r.cars||1));
   return `
   <div class="success-wrap">
     <div class="success-ico">🏁</div>
     <h1 class="page-title">${esc(t('dn.title'))}</h1>
-    <p class="page-sub">${esc(t('dn.sub'))} ${r.email?('· '+esc(t('dn.email'))+' '+esc(r.email)):''}</p>
-    <div class="receipt">
+    <p class="page-sub">${esc(t('dn.sub'))} ${email?('· '+esc(t('dn.email'))+' '+esc(email)):''}</p>
+    <div class="receipt receipt-lg">
       <div class="r-head">SOUPED UP · PROVISIONAL RECEIPT</div>
       <div class="r-row"><span class="rl">${esc(t('dn.ref'))}</span><span class="rv ref-num">${esc(r.ref||'')}</span></div>
-      <div class="r-row"><span class="rl">${esc(t('dn.racer'))}</span><span class="rv">${esc(r.racer||'-')}</span></div>
-      <div class="r-row"><span class="rl">${esc(t('dn.comp'))}</span><span class="rv">${esc(r.model||'-')}</span></div>
-      <div class="r-row"><span class="rl">${esc(t('dn.amount'))}</span><span class="rv" style="color:var(--amber)">${esc(money(r.amount||0))}</span></div>
+      <div class="r-row"><span class="rl">${esc(t('hist.date'))}</span><span class="rv">${esc(today)}</span></div>
+      <div class="r-row"><span class="rl">${esc(t('hist.status'))}</span><span class="rv" style="color:var(--green)">${esc(t('hist.paid'))}</span></div>
+      <div class="r-sec">${esc(t('dn.payer'))}</div>
+      ${payerRows.join('')}
+      <div class="r-sec">${esc(t('dn.items'))}</div>
+      <div class="r-items-wrap">
+        <table class="r-items">
+          <thead><tr><th>#</th><th>${esc(t('dn.racer'))}</th><th>${esc(t('hist.carno'))}</th><th>${esc(t('dn.class'))}</th><th class="num">${esc(t('dn.entry.s'))}</th><th class="num">${esc(t('dn.deposit.s'))}</th><th class="num">${esc(t('dn.percar'))}</th></tr></thead>
+          <tbody>${lines}</tbody>
+          <tfoot><tr><td colspan="6" class="tot-l">${esc(totalCars)}</td><td class="num tot-v">${esc(money(c.total))}</td></tr></tfoot>
+        </table>
+      </div>
     </div>
     <div class="actions" style="justify-content:center;flex-wrap:wrap">
       <button class="btn btn-ghost" id="dnReceipt">${D_ICON.printer} ${esc(t('dn.receipt'))}</button>
