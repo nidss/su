@@ -10,7 +10,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<script src="asset/html5-qrcode.min.js" defer></script>
 <style>
 :root{
   --bg:#0a0b0d;--panel:#15181e;--panel-2:#1b1f27;--line:#2a2f3a;--line-2:#363c49;
@@ -55,19 +54,10 @@ button,a{-webkit-tap-highlight-color:transparent}.topbar{position:sticky;top:0;z
   <div class="layout">
     <div class="primary">
     <section class="card scanner-card">
-      <div class="card-head"><h2>สแกน QR Code</h2><small id="cameraStatus">กล้องยังไม่เปิด</small></div>
-      <div class="camera idle" id="camera">
-        <div id="reader"></div>
-        <div class="camera-placeholder"><div><div class="scan-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M7 12h10"/></svg></div><strong>พร้อมสแกน</strong><span>กด “เปิดกล้อง” แล้วหันกล้องหลังไปที่ QR</span></div></div>
-        <i class="corner c1"></i><i class="corner c2"></i><i class="corner c3"></i><i class="corner c4"></i>
-      </div>
-      <div class="camera-actions">
-        <button class="btn btn-primary" id="cameraBtn" type="button">เปิดกล้อง</button>
-        <label class="btn file-btn">เลือกรูป QR<input id="qrFile" type="file" accept="image/*" /></label>
-      </div>
+      <div class="card-head"><h2>เช็กอินด้วยรหัสอ้างอิง</h2><small>กรอกหรือสแกนรหัสจากเครื่องอ่าน</small></div>
       <form class="manual" id="manualForm">
-        <label for="manualCode">หรือกรอกรหัสอ้างอิง / ข้อมูล QR</label>
-        <div class="input-row"><input class="input" id="manualCode" autocomplete="off" placeholder="เช่น SU26-... หรือ SUVIP-..." /><button class="btn" type="submit">ค้นหา</button></div>
+        <label for="manualCode">กรอกรหัสอ้างอิง / ข้อมูล QR</label>
+        <div class="input-row"><input class="input" id="manualCode" autocomplete="off" placeholder="เช่น SU26-... หรือ SUVIP-..." /><button class="btn btn-primary" type="submit">ค้นหา</button></div>
       </form>
     </section>
     <section class="card result-card">
@@ -90,7 +80,7 @@ button,a{-webkit-tap-highlight-color:transparent}.topbar{position:sticky;top:0;z
 'use strict';
 var STORAGE_KEY='su_checkins_v1';
 var DAYS=[{id:'d5',label:'ศุกร์ 4 ธ.ค.'},{id:'d6',label:'เสาร์ 5 ธ.ค.'},{id:'d7',label:'อาทิตย์ 6 ธ.ค.'}];
-var activeTab='racer',scanner=null,scanning=false,current=null,selectedDay=defaultDay(),scanLock=false;
+var activeTab='racer',current=null,selectedDay=defaultDay(),scanLock=false;
 var $=function(id){return document.getElementById(id);};
 function esc(value){return String(value==null?'':value).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function toast(message){var el=$('toast');el.textContent=message;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(function(){el.classList.remove('show');},2600);}
@@ -151,28 +141,13 @@ function renderRecent(){
 function setTab(type){activeTab=type;document.querySelectorAll('.tab').forEach(function(btn){btn.classList.toggle('active',btn.dataset.tab===type);btn.setAttribute('aria-selected',btn.dataset.tab===type?'true':'false');});renderRecent();}
 function handleCode(raw){
   if(scanLock)return;scanLock=true;setTimeout(function(){scanLock=false;},900);
-  try{current=parsePayload(raw);setTab(current.type);selectedDay=defaultDay();renderResult();stopCamera();window.scrollTo({top:0,behavior:'smooth'});}
+  try{current=parsePayload(raw);setTab(current.type);selectedDay=defaultDay();renderResult();window.scrollTo({top:0,behavior:'smooth'});}
   catch(e){toast(e.message||'อ่าน QR ไม่สำเร็จ');}
 }
-function cameraReady(){return typeof Html5Qrcode!=='undefined';}
-function startCamera(){
-  if(scanning)return stopCamera();if(!cameraReady()){toast('ตัวอ่านกล้องยังโหลดไม่สำเร็จ กรุณาใช้ “เลือกรูป QR” หรือกรอกรหัส');return;}
-  scanner=scanner||new Html5Qrcode('reader');$('cameraStatus').textContent='กำลังขออนุญาตกล้อง…';$('cameraBtn').disabled=true;
-  scanner.start({facingMode:'environment'},{fps:10,qrbox:function(w,h){var size=Math.floor(Math.min(w,h)*.68);return {width:size,height:size};},aspectRatio:1},function(text){handleCode(text);},function(){}).then(function(){scanning=true;$('camera').classList.remove('idle');$('cameraBtn').disabled=false;$('cameraBtn').textContent='ปิดกล้อง';$('cameraBtn').classList.remove('btn-primary');$('cameraBtn').classList.add('btn-danger');$('cameraStatus').textContent='กล้องทำงาน · หันไปที่ QR';}).catch(function(){scanning=false;$('cameraBtn').disabled=false;$('cameraStatus').textContent='เปิดกล้องไม่ได้';toast('เปิดกล้องไม่ได้ กรุณาอนุญาตการใช้กล้อง หรือเลือกรูป QR');});
-}
-function stopCamera(){
-  if(!scanner||!scanning)return Promise.resolve();return scanner.stop().catch(function(){}).then(function(){scanning=false;$('camera').classList.add('idle');$('cameraBtn').textContent='เปิดกล้อง';$('cameraBtn').classList.add('btn-primary');$('cameraBtn').classList.remove('btn-danger');$('cameraBtn').disabled=false;$('cameraStatus').textContent='กล้องหยุดแล้ว';});
-}
-function resetResult(){current=null;renderResult();startCamera();}
+function resetResult(){current=null;renderResult();var m=$('manualCode');if(m){m.value='';m.focus();}}
 document.querySelectorAll('.tab').forEach(function(btn){btn.onclick=function(){setTab(btn.dataset.tab);};});
-$('cameraBtn').onclick=startCamera;
 $('manualForm').onsubmit=function(e){e.preventDefault();handleCode($('manualCode').value);};
-$('qrFile').onchange=function(e){
-  var file=e.target.files&&e.target.files[0];if(!file)return;if(!cameraReady()){toast('ตัวอ่าน QR ยังโหลดไม่สำเร็จ');return;}
-  stopCamera().then(function(){scanner=scanner||new Html5Qrcode('reader');return scanner.scanFile(file,true);}).then(handleCode).catch(function(){toast('ไม่พบ QR ที่อ่านได้ในรูปนี้');}).finally(function(){e.target.value='';});
-};
-window.addEventListener('beforeunload',function(){if(scanner&&scanning)scanner.stop().catch(function(){});});
-setTab('racer');renderResult();
+setTab('racer');renderResult();var m0=$('manualCode');if(m0)m0.focus();
 })();
 </script>
 </body>
