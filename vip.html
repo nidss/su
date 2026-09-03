@@ -896,13 +896,7 @@ function renderPay(){
      '<div class="pay-opt '+(!isCard?'sel':'')+'" data-pay="qr"><div class="p-ico">📱</div><div class="p-name">'+t('py.qr')+'</div><div class="p-desc">'+t('py.qr.d')+'</div></div>'+
    '</div>'+
    '<div id="payDetail" style="margin-top:6px"></div>'+
-   '<label class="checkbox" style="margin:18px 0 4px"><input type="checkbox" id="taxCb"'+(state.tax?' checked':'')+'> <span>'+t('py.tax')+'</span></label>'+
-   '<div id="taxFields" class="'+(state.tax?'':'hidden')+'">'+
-     '<div class="field full"><label>'+t('py.tax.name')+'</label><input class="control" id="tax_name"></div>'+
-     '<div class="grid"><div class="field"><label>'+t('py.tax.taxid')+'</label><input class="control" id="tax_id"></div></div>'+
-     '<div class="field full"><label>'+t('py.tax.addr')+'</label><input class="control" id="tax_addr"></div>'+
-   '</div>'+
-   '<div class="actions"><button type="button" class="btn btn-ghost" id="payBack">'+t('btn.back')+'</button>'+
+   '<div class="actions" style="margin-top:20px"><button type="button" class="btn btn-ghost" id="payBack">'+t('btn.back')+'</button>'+
      '<div class="spacer"></div>'+
      '<button type="button" class="btn btn-primary btn-lg" id="confirmPay">'+t('py.confirm')+' · '+money(price)+'</button></div>';
   renderPayDetail();
@@ -911,7 +905,6 @@ function renderPay(){
     el('payScreen').querySelectorAll('.pay-opt').forEach(p=>p.classList.toggle('sel',p===o));
     renderPayDetail();
   });
-  el('taxCb').onchange=(e)=>{ state.tax=e.target.checked; el('taxFields').classList.toggle('hidden',!e.target.checked); };
   el('payBack').onclick=()=>{ showView('sum'); renderSummary(); };
   el('confirmPay').onclick=()=>finishPayment();
 }
@@ -927,6 +920,12 @@ function renderSummary(){
    '<div class="sum-line"><span class="lab">'+t('ticket.list')+'</span><span class="val">'+t('ticket.qty').replace('{n}',state.tickets.length)+'</span></div>'+
    '<div class="sum-line"><span class="lab">'+t('py.pricetab')+'</span><span class="val">'+t('tab.'+state.tab)+'</span></div>'+
    '<div class="sum-line total"><span class="lab">'+t('sm.total')+'</span><span class="val">'+money(price)+'</span></div>'+
+   '<label class="checkbox" style="margin:18px 0 4px"><input type="checkbox" id="taxCb"'+(state.tax?' checked':'')+'> <span>'+t('py.tax')+'</span></label>'+
+   '<div id="taxFields" class="'+(state.tax?'':'hidden')+'">'+
+     '<div class="field full"><label>'+t('py.tax.name')+'</label><input class="control" id="tax_name"></div>'+
+     '<div class="grid"><div class="field"><label>'+t('py.tax.taxid')+'</label><input class="control" id="tax_id"></div></div>'+
+     '<div class="field full"><label>'+t('py.tax.addr')+'</label><input class="control" id="tax_addr"></div>'+
+   '</div>'+
    '<div class="card" style="margin:18px 0;background:var(--panel-2)"><div class="card-pad" style="padding:16px 18px">'+
      '<h4 style="margin:0 0 10px;font-size:14px">'+t('py.terms.t')+'</h4>'+
      '<p class="note" style="margin-bottom:10px"><b>'+t('py.t1.t')+'</b><br>'+t('py.t1.b')+'</p>'+
@@ -936,6 +935,7 @@ function renderSummary(){
    '<div class="actions"><button type="button" class="btn btn-ghost" id="sumBack">'+t('btn.back')+'</button>'+
      '<div class="spacer"></div>'+
      '<button type="button" class="btn btn-primary btn-lg" id="sumNext">'+t('sm.next')+' · '+money(price)+'</button></div>';
+  el('taxCb').onchange=(e)=>{ state.tax=e.target.checked; el('taxFields').classList.toggle('hidden',!e.target.checked); };
   el('sumBack').onclick=()=>showView('reg');
   el('sumNext').onclick=()=>{ showView('pay'); renderPay(); };
 }
