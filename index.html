@@ -452,6 +452,25 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .ico-btn.edit:hover{background:rgba(255,180,0,.12);border-color:var(--amber)}
 .ico-btn.pdf{color:var(--lime)}
 .ico-btn.pdf:hover{background:rgba(209,255,3,.12);border-color:var(--lime)}
+/* ปุ่มและแถวขยาย/ยุบในตารางผู้สมัคร เพื่อแสดงนักแข่งภายใต้ผู้สมัคร */
+.dtable th.exp-th{width:38px}
+.dtable td.exp-cell{width:38px;text-align:center;padding-left:8px;padding-right:8px}
+.exp-btn{background:transparent;border:1px solid var(--line-2);border-radius:7px;width:26px;height:26px;color:var(--mint);cursor:pointer;display:inline-grid;place-items:center;transition:transform .18s,background .18s,border-color .18s}
+.exp-btn svg{width:15px;height:15px}
+.exp-btn:hover{background:var(--mint-soft);border-color:var(--mint)}
+.exp-main.expanded .exp-btn{transform:rotate(90deg);background:var(--mint-soft);border-color:var(--mint)}
+.dtable tr.exp-main.expanded>td{background:rgba(111,255,232,.06)}
+.exp-detail{display:none}
+.exp-detail.open{display:table-row}
+.exp-detail>.exp-detail-cell{padding:0;border-bottom:1px solid var(--line-2);background:var(--carbon);white-space:normal}
+.exp-inner{padding:14px 16px 16px 46px}
+.exp-title{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:800;letter-spacing:.5px;color:var(--mint);margin-bottom:10px}
+.exp-title svg{width:16px;height:16px}
+.subtable{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--panel-2);border:1px solid var(--line-2);border-radius:8px;overflow:hidden}
+.subtable th{background:rgba(255,255,255,.03);color:var(--txt-dim);font-weight:700;text-align:left;padding:8px 12px;border-bottom:1px solid var(--line-2);position:static;font-size:11.5px;white-space:nowrap}
+.subtable td{padding:8px 12px;border-bottom:1px solid var(--line);color:var(--txt);white-space:nowrap}
+.subtable tbody tr:last-child td{border-bottom:0}
+.subtable tbody tr:hover td{background:rgba(255,255,255,.03)}
 .pager{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px;flex-wrap:wrap}
 .pager .pinfo{font-size:12.5px;color:var(--txt-dim)}
 .pager .pbtns{display:flex;gap:4px;flex-wrap:wrap}
@@ -2973,7 +2992,8 @@ const D_ICON = {
   file:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>',
   printer:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V2h12v7"/><rect width="12" height="8" x="6" y="14"/></svg>',
   search:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>',
-  ticket:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg>'
+  ticket:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg>',
+  chevron:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>'
 };
 const D_FIRST=['สมชาย','สมหญิง','ณัฐพงษ์','ปิยะ','กิตติ','อนุชา','วิชัย','ธนกร','ศักดิ์ชัย','พรทิพย์','จิราภรณ์','สุริยา','เอกชัย','ภูริ','ชนาธิป','ธีรศักดิ์','อภิสิทธิ์','ณัฐวุฒิ','ปกรณ์','วีระ'];
 const D_LAST=['ใจดี','รักษ์ไทย','ศรีสุข','ทองคำ','บุญมี','แสงทอง','วงศ์ไทย','พรหมมา','จันทร์เพ็ญ','มั่งมี','เกียรติศักดิ์','ไชยวงศ์','สุขสันต์','ผ่องใส','ยอดรัก','เจริญสุข','ธนาคาร','กล้าหาญ','รุ่งเรือง','พิทักษ์'];
@@ -3014,10 +3034,18 @@ document.addEventListener('error',function(e){
     else if(/logo-main-b\.png/.test(t.src)){t.dataset.fb='1';const d=document.createElement('div');d.className='ad-title';d.textContent='SOUPED UP 2026';t.replaceWith(d);}
   }
 },true);
+// รวมช่องจอดทั้งหมดเป็นคู่ {เลขพีท, เลขเต็นท์} เรียงตามเลขพีท ใช้กำหนดเต็นท์/พีทให้นักแข่งตัวอย่าง
+function pkPitTentPairs(){
+  const pairs=[];
+  pkRows().forEach(row=>row.forEach(blk=>{ if(blk.t==='tents'&&blk.tents) blk.tents.forEach(tn=>tn.spots.forEach(pit=>pairs.push({pit,tent:tn.n}))); }));
+  pairs.sort((a,b)=>a.pit-b.pit);
+  return pairs;
+}
 function buildDashData(){
   const N=43, applicants=[], racers=[];
+  const pits=pkPitTentPairs(); let pk=0; // ตัวชี้ช่องจอดถัดไปที่จะแจกให้นักแข่ง
   for(let i=0;i<N;i++){
-    const fn=dRnd(D_FIRST), ln=dRnd(D_LAST), rfn=dRnd(D_FIRST), rln=dRnd(D_LAST);
+    const fn=dRnd(D_FIRST), ln=dRnd(D_LAST);
     const applicantRegDate=dIsoDate(i);
     const racerRegDate=dIsoDate(i+1);
     const statusSlot=i%10;
@@ -3034,24 +3062,33 @@ function buildDashData(){
       company:coName, taxid:isCompany?dTaxId():'',
       branch:coBranch, branchno:coBranch==='branch'?String(1+Math.floor(Math.random()*99999)).padStart(5,'0'):'',
       contactName:isCompany?fn:'', contactSurname:isCompany?ln:'',
-      rfBankName:isCompany?dRnd(BANKS.th):'', rfAccno:isCompany?dAccNo():'', rfAccname:isCompany?coName:'',
+      // บัญชีคืนเงินมัดจำมีทั้งบุคคลธรรมดาและนิติบุคคล (ชื่อบัญชีนิติบุคคลใช้ชื่อบริษัท)
+      rfBankName:dRnd(BANKS.th), rfAccno:dAccNo(), rfAccname:isCompany?coName:(fn+' '+ln),
       deliAddr:Math.random()>.5?addr:(100+i)+' คอนโด จ.'+dRnd(D_PROV),
       phone, email:'user'+(i+1)+'@email.com',
       line:hasL?'line_'+fn.slice(0,3)+i:'-', wechat:hasW?'wc'+i:'-', whatsapp:hasA?phone:'-',
       idImg:IMG_IDCARD
     });
-    const carno=1+((i*7+3)%120);
-    racers.push({
-      rname:rfn, rsurname:rln, idAddr:addr, vehicle:dRnd(D_VEH),
-      model:dRnd(MODELS.th), team:dRnd(D_TEAM), carno:String(carno),
-      registrationDate:racerRegDate, paidDate, paymentStatus,
-      idImg:IMG_IDCARD,
-      photo:IMG_RACER
-    });
+    // นักแข่งภายใต้ผู้สมัคร 1–3 คน เพื่อสาธิตการขยาย/ยุบแถวในตารางผู้สมัคร
+    const nRacers=1+(i%3===0?1:0)+(i%5===0?1:0);
+    for(let j=0;j<nRacers;j++){
+      const rfn=dRnd(D_FIRST), rln=dRnd(D_LAST);
+      const carno=1+((i*7+j*13+3)%120);
+      const spot=pits[pk%pits.length]; pk++;
+      racers.push({
+        applicantIdx:i, // เชื่อมนักแข่งกลับไปยังผู้สมัคร
+        rname:rfn, rsurname:rln, idAddr:addr, vehicle:dRnd(D_VEH),
+        model:dRnd(MODELS.th), team:dRnd(D_TEAM), carno:String(carno),
+        tent:String(spot.tent), pit:String(spot.pit),
+        registrationDate:racerRegDate, paidDate, paymentStatus,
+        idImg:IMG_IDCARD,
+        photo:IMG_RACER
+      });
+    }
   }
   return {applicant:applicants, racer:racers};
 }
-const DASH={open:false, authed:false, group:'registration', tab:'applicant', page:{applicant:1,racer:1}, data:null, PS:20, rfilter:{name:'',vehicle:'',model:'',team:'',carno:''}, appKind:'person', afilter:{name:'',company:'',taxid:'',contact:'',phone:'',email:''}};
+const DASH={open:false, authed:false, group:'registration', tab:'applicant', page:{applicant:1,racer:1}, data:null, PS:20, rfilter:{name:'',applicant:'',model:'',team:'',carno:''}, appKind:'person', afilter:{name:'',company:'',taxid:'',contact:'',phone:'',email:''}};
 function openDash(){
   if(!DASH.data)DASH.data=buildDashData();
   DASH.open=true; el('dashRoot').classList.add('open'); document.body.style.overflow='hidden';
@@ -3134,20 +3171,22 @@ window.addEventListener('message',e=>{
     }
   }
 });
-function racerFilterActive(){const f=DASH.rfilter;return !!(f.name||f.vehicle||f.model||f.team||f.carno);}
+function racerFilterActive(){const f=DASH.rfilter;return !!(f.name||f.applicant||f.model||f.team||f.carno);}
 function applicantFilterActive(){const f=DASH.afilter;return !!(f.name||f.company||f.taxid||f.contact||f.phone||f.email);}
 function getDashRows(tab){
   const all=DASH.data[tab];
   const nl=s=>String(s==null?'':s).toLowerCase().trim();
   if(tab==='racer'&&racerFilterActive()){
     const f=DASH.rfilter;
-    return all.map((r,i)=>({r,idx:i})).filter(({r})=>
-      (!f.name || nl(r.rname+' '+r.rsurname).includes(nl(f.name))) &&
-      (!f.vehicle || nl(r.vehicle).includes(nl(f.vehicle))) &&
+    return all.map((r,i)=>({r,idx:i})).filter(({r})=>{
+      const a=DASH.data.applicant[r.applicantIdx]||{};
+      const appName=((a.name||'')+' '+(a.surname||'')).trim();
+      return (!f.name || nl(r.rname+' '+r.rsurname).includes(nl(f.name))) &&
+      (!f.applicant || nl(appName).includes(nl(f.applicant))) &&
       (!f.model || r.model===f.model) &&
       (!f.team || nl(r.team).includes(nl(f.team))) &&
-      (!f.carno || nl(r.carno).includes(nl(f.carno)))
-    );
+      (!f.carno || nl(r.carno).includes(nl(f.carno)));
+    });
   }
   if(tab==='applicant'){
     const f=DASH.afilter, kind=DASH.appKind, isCo=kind==='company';
@@ -3171,8 +3210,8 @@ function renderDashTable(){
     const f=DASH.rfilter;
     const modelOpt='<option value="">ทั้งหมด</option>'+MODELS.th.map(m=>`<option value="${esc(m)}" ${f.model===m?'selected':''}>${esc(m)}</option>`).join('');
     filterBar=`<div class="dfilter">
-      <div class="df-field"><label>ชื่อ-นามสกุล</label><input id="rf_name" value="${esc(f.name)}" placeholder="ค้นหาชื่อ/นามสกุล"/></div>
-      <div class="df-field"><label>รถยนต์ รุ่น/รหัสเครื่อง</label><input id="rf_vehicle" value="${esc(f.vehicle)}" placeholder="เช่น Supra 2JZ"/></div>
+      <div class="df-field"><label>ชื่อ-นามสกุลนักแข่ง</label><input id="rf_name" value="${esc(f.name)}" placeholder="ค้นหาชื่อ/นามสกุล"/></div>
+      <div class="df-field"><label>ชื่อ-นามสกุลผู้สมัคร</label><input id="rf_applicant" value="${esc(f.applicant)}" placeholder="ค้นหาผู้สมัคร"/></div>
       <div class="df-field"><label>รุ่นการแข่งขัน</label><select id="rf_model">${modelOpt}</select></div>
       <div class="df-field"><label>ทีมแข่ง/อู่</label><input id="rf_team" value="${esc(f.team)}" placeholder="ค้นหาทีม/อู่"/></div>
       <div class="df-field"><label>เบอร์รถแข่ง</label><input id="rf_carno" value="${esc(f.carno)}" placeholder="เช่น 88"/></div>
@@ -3212,9 +3251,9 @@ function renderDashTable(){
   el('dashExport').onclick=()=>exportDash(tab);
   if(tab==='racer'){
     const commit=(k)=>(e)=>{ DASH.rfilter[k]=e.target.value; DASH.page.racer=1; paintDashTable(); };
-    ['name','vehicle','team','carno'].forEach(k=>{const inp=el('rf_'+k); inp.oninput=commit(k);});
+    ['name','applicant','team','carno'].forEach(k=>{const inp=el('rf_'+k); if(inp)inp.oninput=commit(k);});
     el('rf_model').onchange=commit('model');
-    el('rf_clear').onclick=()=>{ DASH.rfilter={name:'',vehicle:'',model:'',team:'',carno:''}; DASH.page.racer=1; renderDashTable(); };
+    el('rf_clear').onclick=()=>{ DASH.rfilter={name:'',applicant:'',model:'',team:'',carno:''}; DASH.page.racer=1; renderDashTable(); };
   } else if(tab==='applicant'){
     el('dashCard').querySelectorAll('[data-akind]').forEach(btn=>btn.onclick=()=>{ DASH.appKind=btn.dataset.akind; DASH.page.applicant=1; renderDashTable(); });
     const commit=(k)=>(e)=>{ DASH.afilter[k]=e.target.value; DASH.page.applicant=1; paintDashTable(); };
@@ -3223,6 +3262,25 @@ function renderDashTable(){
     el('af_clear').onclick=()=>{ DASH.afilter={name:'',company:'',taxid:'',contact:'',phone:'',email:''}; DASH.page.applicant=1; renderDashTable(); };
   }
   paintDashTable();
+}
+// จำนวนคอลัมน์รวมของตารางแต่ละแท็บ (ผู้สมัครมีคอลัมน์ปุ่มขยาย/ยุบด้วย) ใช้กับ colspan
+function dashColCount(tab){ return tab==='racer'?15:15; }
+// นักแข่งทั้งหมดที่อยู่ภายใต้ผู้สมัครลำดับ appIdx
+function racersOfApplicant(appIdx){ return DASH.data.racer.filter(r=>r.applicantIdx===appIdx); }
+// แถวรายละเอียดแบบขยาย/ยุบ แสดงนักแข่งภายใต้ผู้สมัครหนึ่งราย
+function dashRacerSubRow(appIdx, colspan){
+  const list=racersOfApplicant(appIdx);
+  const rows=list.length?list.map(r=>`<tr>
+      <td>${esc(((r.rname||'')+' '+(r.rsurname||'')).trim()||'-')}</td>
+      <td>${esc(r.model||'-')}</td><td>${esc(r.team||'-')}</td>
+      <td>#${esc(r.carno)}</td><td>${esc(r.tent||'-')}</td><td>${esc(r.pit||'-')}</td>
+      <td><span class="pay-status ${paymentStatusClass(r.paymentStatus)}">${esc(r.paymentStatus||'-')}</span></td>
+    </tr>`).join(''):`<tr><td colspan="7" style="text-align:center;color:var(--txt-faint);padding:14px">ยังไม่มีนักแข่ง</td></tr>`;
+  return `<tr class="exp-detail" data-exprow="${appIdx}"><td class="exp-detail-cell" colspan="${colspan}">
+      <div class="exp-inner">
+        <div class="exp-title">${D_ICON.flag} นักแข่งภายใต้ผู้สมัคร (${list.length} คน)</div>
+        <table class="subtable"><thead><tr><th>ชื่อ-นามสกุลนักแข่ง</th><th>รุ่นการแข่งขัน</th><th>ทีมแข่ง/อู่</th><th>เบอร์รถแข่ง</th><th>เลขเต็นท์</th><th>เลขพีท</th><th>สถานะชำระเงิน</th></tr></thead><tbody>${rows}</tbody></table>
+      </div></td></tr>`;
 }
 function paintDashTable(){
   const tab=DASH.tab, PS=DASH.PS, view=getDashRows(tab), n=view.length;
@@ -3233,6 +3291,7 @@ function paintDashTable(){
   if(tab==='applicant'&&DASH.appKind==='company'){
     thead=`<thead>
       <tr>
+        <th rowspan="2" class="exp-th"></th>
         <th rowspan="2">วันที่ลงทะเบียน</th><th rowspan="2">ชื่อนิติบุคคล</th><th rowspan="2">เลขผู้เสียภาษี</th><th rowspan="2">สำนักงาน/สาขา</th>
         <th rowspan="2">ที่อยู่จดทะเบียน</th><th rowspan="2">ผู้ติดต่อ</th><th rowspan="2">เบอร์โทรศัพท์</th><th rowspan="2">อีเมล</th><th rowspan="2">Line</th>
         <th colspan="3" class="grp-th">บัญชีคืนเงินมัดจำ</th>
@@ -3245,7 +3304,9 @@ function paintDashTable(){
       const branch=r.branch==='branch'?('สาขาที่ '+(r.branchno||'-')):'สำนักงานใหญ่';
       const contact=((r.contactName||'')+' '+(r.contactSurname||'')).trim()||dash;
       const rfBank=r.rfBankName||dash, rfAccno=r.rfAccno||dash, rfAccname=r.rfAccname||dash;
-      return `<tr>
+      const nR=racersOfApplicant(idx).length;
+      return `<tr class="exp-main" data-mainrow="${idx}">
+      <td class="exp-cell"><button type="button" class="exp-btn" data-exp="${idx}" title="ดูนักแข่ง (${nR} คน)">${D_ICON.chevron}</button></td>
       <td>${esc(r.date)}</td>
       <td class="trunc" title="${esc(r.company||'')}">${esc(r.company||dash)}</td>
       <td>${esc(r.taxid||dash)}</td><td>${esc(branch)}</td>
@@ -3255,43 +3316,54 @@ function paintDashTable(){
       <td class="trunc" title="${esc(rfBank)}">${esc(rfBank)}</td><td>${esc(rfAccno)}</td><td class="trunc" title="${esc(rfAccname)}">${esc(rfAccname)}</td>
       <td><button class="ico-btn" data-img="${idx}" title="ดูหนังสือรับรอง">${D_ICON.image}</button></td>
       <td><button class="ico-btn edit" data-edit="${idx}" title="แก้ไขข้อมูล">${D_ICON.edit}</button></td>
-    </tr>`;}).join('');
+    </tr>`+dashRacerSubRow(idx, dashColCount('applicant'));}).join('');
   } else if(tab==='applicant'){
     thead=`<thead>
       <tr>
+        <th rowspan="2" class="exp-th"></th>
         <th rowspan="2">วันที่ลงทะเบียน</th><th rowspan="2">ชื่อ</th><th rowspan="2">นามสกุล</th>
         <th rowspan="2">ที่อยู่ตามบัตรฯ</th><th rowspan="2">เบอร์โทรศัพท์</th><th rowspan="2">อีเมล</th>
         <th colspan="3" class="grp-th">ช่องทางติดต่อเพิ่มเติม</th>
+        <th colspan="3" class="grp-th">บัญชีคืนเงินมัดจำ</th>
         <th rowspan="2">บัตรฯ ผู้สมัคร</th><th rowspan="2">แก้ไข</th>
       </tr>
-      <tr><th class="sub-th">Line</th><th class="sub-th">WeChat</th><th class="sub-th">WhatsApp</th></tr>
+      <tr><th class="sub-th">Line</th><th class="sub-th">WeChat</th><th class="sub-th">WhatsApp</th><th class="sub-th">ธนาคาร</th><th class="sub-th">เลขที่บัญชี</th><th class="sub-th">ชื่อบัญชี</th></tr>
     </thead>`;
-    tbody=pageRows.map(({r,idx})=>`<tr>
+    tbody=pageRows.map(({r,idx})=>{
+      const dash='-';
+      const rfBank=r.rfBankName||dash, rfAccno=r.rfAccno||dash, rfAccname=r.rfAccname||dash;
+      const nR=racersOfApplicant(idx).length;
+      return `<tr class="exp-main" data-mainrow="${idx}">
+      <td class="exp-cell"><button type="button" class="exp-btn" data-exp="${idx}" title="ดูนักแข่ง (${nR} คน)">${D_ICON.chevron}</button></td>
       <td>${esc(r.date)}</td><td>${esc(r.name)}</td><td>${esc(r.surname)}</td>
       <td class="trunc" title="${esc(r.idAddr)}">${esc(r.idAddr)}</td>
       <td>${esc(r.phone)}</td><td>${esc(r.email)}</td>
       <td>${esc(r.line)}</td><td>${esc(r.wechat)}</td><td>${esc(r.whatsapp)}</td>
+      <td class="trunc" title="${esc(rfBank)}">${esc(rfBank)}</td><td>${esc(rfAccno)}</td><td class="trunc" title="${esc(rfAccname)}">${esc(rfAccname)}</td>
       <td><button class="ico-btn" data-img="${idx}" title="ดูรูปบัตรประชาชน">${D_ICON.image}</button></td>
       <td><button class="ico-btn edit" data-edit="${idx}" title="แก้ไขข้อมูล">${D_ICON.edit}</button></td>
-    </tr>`).join('');
+    </tr>`+dashRacerSubRow(idx, dashColCount('applicant'));}).join('');
   } else {
     thead=`<thead><tr>
-      <th>วันที่ลงทะเบียน</th><th>วันที่ชำระเงิน</th><th>Status</th><th>ชื่อนักแข่ง</th><th>นามสกุลนักแข่ง</th><th>ที่อยู่ตามบัตรฯ</th><th>รถยนต์ รุ่น/รหัสเครื่อง</th>
-      <th>รุ่นการแข่งขัน</th><th>ทีมแข่ง/อู่</th><th>เบอร์รถแข่ง</th><th>บัตรฯ นักแข่ง</th><th>รูปนักแข่ง</th><th>ใบสมัครนักแข่ง</th><th>แก้ไข</th>
+      <th>วันที่ลงทะเบียน</th><th>วันที่ชำระเงิน</th><th>Status</th><th>ชื่อ-นามสกุลผู้สมัคร</th><th>ชื่อนักแข่ง</th><th>นามสกุลนักแข่ง</th>
+      <th>รุ่นการแข่งขัน</th><th>ทีมแข่ง/อู่</th><th>เบอร์รถแข่ง</th><th>เลขเต็นท์</th><th>เลขพีท</th><th>บัตรฯ นักแข่ง</th><th>รูปนักแข่ง</th><th>ใบสมัครนักแข่ง</th><th>แก้ไข</th>
     </tr></thead>`;
-    tbody=pageRows.map(({r,idx})=>`<tr>
+    tbody=pageRows.map(({r,idx})=>{
+      const a=DASH.data.applicant[r.applicantIdx]||{};
+      const appName=((a.name||'')+' '+(a.surname||'')).trim()||'-';
+      return `<tr>
       <td>${esc(r.registrationDate||'-')}</td><td>${esc(r.paidDate||'-')}</td><td><span class="pay-status ${paymentStatusClass(r.paymentStatus)}">${esc(r.paymentStatus||'-')}</span></td>
+      <td class="trunc" title="${esc(appName)}">${esc(appName)}</td>
       <td>${esc(r.rname)}</td><td>${esc(r.rsurname)}</td>
-      <td class="trunc" title="${esc(r.idAddr)}">${esc(r.idAddr)}</td>
-      <td class="trunc" title="${esc(r.vehicle)}">${esc(r.vehicle)}</td>
       <td>${esc(r.model)}</td><td>${esc(r.team)}</td><td>#${esc(r.carno)}</td>
+      <td>${esc(r.tent||'-')}</td><td>${esc(r.pit||'-')}</td>
       <td><button class="ico-btn" data-img="${idx}" data-kind="id" title="ดูบัตรประชาชน">${D_ICON.image}</button></td>
       <td><button class="ico-btn" data-img="${idx}" data-kind="photo" title="ดูรูปนักแข่ง">${D_ICON.image}</button></td>
       <td><button class="ico-btn pdf" data-pdf="${idx}" title="ดูใบสมัครนักแข่ง (PDF)">${D_ICON.file}</button></td>
       <td><button class="ico-btn edit" data-edit="${idx}" title="แก้ไขข้อมูล">${D_ICON.edit}</button></td>
-    </tr>`).join('');
+    </tr>`;}).join('');
   }
-  const colspan = tab==='racer'?14:(tab==='applicant'&&DASH.appKind==='company'?14:11);
+  const colspan = dashColCount(tab);
   const from=n?start+1:0, to=Math.min(start+PS,n);
   const filtered = (tab==='racer'&&racerFilterActive())||(tab==='applicant'&&applicantFilterActive());
   const empty = filtered?'ไม่พบรายการที่ตรงกับตัวกรอง':'ไม่มีข้อมูล';
@@ -3314,6 +3386,15 @@ function paintDashTable(){
   });
   el('dashTableWrap').querySelectorAll('[data-pdf]').forEach(b=>b.onclick=()=>openRacerPdf(+b.dataset.pdf));
   el('dashTableWrap').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openDashEdit(tab,+b.dataset.edit));
+  // ปุ่มขยาย/ยุบแถวผู้สมัคร เพื่อดูนักแข่งที่อยู่ภายใต้ผู้สมัคร
+  el('dashTableWrap').querySelectorAll('[data-exp]').forEach(b=>b.onclick=()=>{
+    const id=b.dataset.exp, wrap=el('dashTableWrap');
+    const det=wrap.querySelector('.exp-detail[data-exprow="'+id+'"]');
+    const main=wrap.querySelector('.exp-main[data-mainrow="'+id+'"]');
+    if(!det)return;
+    const open=det.classList.toggle('open');
+    if(main)main.classList.toggle('expanded',open);
+  });
 }
 function openDashImg(src,cap){
   const inner = src ? `<img class="dm-img" src="${src}" alt="${esc(cap)}"/><div class="dm-cap">${esc(cap)} · ตัวอย่าง (Demo)</div>`
@@ -3322,7 +3403,7 @@ function openDashImg(src,cap){
   el('dmBack').classList.add('open');
 }
 function racerPdfHTML(idx){
-  const r=DASH.data.racer[idx]||{}, a=DASH.data.applicant[idx]||{};
+  const r=DASH.data.racer[idx]||{}, a=DASH.data.applicant[r.applicantIdx]||DASH.data.applicant[idx]||{};
   const ref='SU26-R'+dPad(idx+1)+'-'+String(1000+((idx*37)%9000));
   const today=new Date().toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'});
   const row=(k,v)=>`<div class="ad-row"><span class="ad-k">${esc(k)}</span><span class="ad-v">${esc(v||'-')}</span></div>`;
@@ -3623,12 +3704,16 @@ function exportDash(tab){
         return [r.date,r.company||'',r.taxid||'',branch,r.idAddr||'',contact,r.phone||'',r.email||'',r.line||'',r.rfBankName||'',r.rfAccno||'',r.rfAccname||''].map(q).join(',');
       });
     } else {
-      head=['วันที่ลงทะเบียน','ชื่อ','นามสกุล','ที่อยู่ตามบัตรฯ','เบอร์โทรศัพท์','อีเมล','Line','WeChat','WhatsApp'];
-      lines=view.map(r=>[r.date,r.name,r.surname,r.idAddr,r.phone,r.email,r.line,r.wechat,r.whatsapp].map(q).join(','));
+      head=['วันที่ลงทะเบียน','ชื่อ','นามสกุล','ที่อยู่ตามบัตรฯ','เบอร์โทรศัพท์','อีเมล','Line','WeChat','WhatsApp','ธนาคาร (คืนเงิน)','เลขที่บัญชี','ชื่อบัญชี'];
+      lines=view.map(r=>[r.date,r.name,r.surname,r.idAddr,r.phone,r.email,r.line,r.wechat,r.whatsapp,r.rfBankName||'',r.rfAccno||'',r.rfAccname||''].map(q).join(','));
     }
   } else {
-    head=['วันที่ลงทะเบียน','วันที่ชำระเงิน','Status','ชื่อนักแข่ง','นามสกุลนักแข่ง','ที่อยู่ตามบัตรฯ','รถยนต์ รุ่น/รหัสเครื่อง','รุ่นการแข่งขัน','ทีมแข่ง/อู่','เบอร์รถแข่ง'];
-    lines=rows.map(r=>[r.registrationDate,r.paidDate,r.paymentStatus,r.rname,r.rsurname,r.idAddr,r.vehicle,r.model,r.team,r.carno].map(q).join(','));
+    head=['วันที่ลงทะเบียน','วันที่ชำระเงิน','Status','ชื่อ-นามสกุลผู้สมัคร','ชื่อนักแข่ง','นามสกุลนักแข่ง','รุ่นการแข่งขัน','ทีมแข่ง/อู่','เบอร์รถแข่ง','เลขเต็นท์','เลขพีท'];
+    lines=rows.map(r=>{
+      const a=DASH.data.applicant[r.applicantIdx]||{};
+      const appName=((a.name||'')+' '+(a.surname||'')).trim();
+      return [r.registrationDate,r.paidDate,r.paymentStatus,appName,r.rname,r.rsurname,r.model,r.team,r.carno,r.tent||'',r.pit||''].map(q).join(',');
+    });
   }
   const csv='﻿'+[head.map(q).join(','),...lines].join('\r\n');
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
