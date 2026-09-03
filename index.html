@@ -464,6 +464,9 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .vtk-table tbody tr:last-child td,.vtk-table tbody tr:last-child th{border-bottom:0}
 .vtk-in{width:74px;background:var(--bg);border:1px solid var(--line-2);color:var(--txt);border-radius:8px;padding:7px 8px;font-size:13px;text-align:center;font-family:inherit;font-variant-numeric:tabular-nums}
 .vtk-in:focus{outline:none;border-color:var(--mint);box-shadow:0 0 0 2px var(--mint-soft)}
+/* ซ่อนปุ่มลูกศรขึ้น-ลงของช่องตัวเลขในตัวจัดการบัตร */
+.vtk-in::-webkit-outer-spin-button,.vtk-in::-webkit-inner-spin-button,#vtkTotal::-webkit-outer-spin-button,#vtkTotal::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.vtk-in,#vtkTotal{-moz-appearance:textfield;appearance:textfield}
 .vtk-rowtot{font-weight:800;color:var(--txt-dim);font-variant-numeric:tabular-nums}
 .vtk-sum{margin-top:18px;padding:16px;border:1px solid var(--mint);border-radius:14px;background:linear-gradient(180deg,var(--mint-soft),var(--panel-2));box-shadow:0 6px 20px var(--mint-glow)}
 .vtk-sum.over{border-color:var(--red-2);background:rgba(255,80,80,.1);box-shadow:0 6px 20px rgba(255,80,80,.2)}
@@ -3266,8 +3269,8 @@ function openDashEdit(tab,idx){
 const VIP_TK_KEY='suvip_ticket_config';
 const VIP_PKGS=['p1','p2','p3'];
 function defaultVipTickets(){
-  const alloc={}; VIP_DAYS.forEach(d=>{alloc[d.id]={p1:100,p2:100,p3:100};});
-  return {total:900,alloc};
+  const alloc={}; VIP_DAYS.forEach(d=>{alloc[d.id]={p1:20,p2:20,p3:20};});
+  return {total:180,alloc};
 }
 function loadVipTickets(){
   try{
