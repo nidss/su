@@ -2804,7 +2804,7 @@ function profVipHTML(p){
         ${row(t('vip.zone'),v.zone)}${row(t('vip.qty'),String(v.qty))}
         ${row(t('hist.date'),v.date)}${v.ref?row(t('vipx.ref'),v.ref):''}
         ${v.amount?row(t('hist.amount'),money(v.amount)):''}${v.shirt?row(t('vipx.shirt'),v.shirt):''}
-        ${plate?rowFull(t('vip.plate'),plate):''}
+        ${rowFull(t('vip.plate'),plate||'-')}
       </div>
     </div>`;}).join(''):`<div class="prof-empty">${esc(t('prof.novip'))}</div>`;
   return `<div class="prof-card">
