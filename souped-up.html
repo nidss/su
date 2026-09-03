@@ -439,6 +439,27 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .booker-rows .bk{font-size:12px;color:var(--txt-dim);letter-spacing:.3px}
 .booker-rows .bv{font-size:15px;font-weight:700;color:var(--txt)}
 .dm-cap{font-size:12.5px;color:var(--txt-dim);margin-top:10px;text-align:center}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+/* ---- Dashboard header actions + VIP ticket manager ---- */
+.dash-head-actions{display:flex;align-items:center;gap:10px;flex:0 0 auto;flex-wrap:wrap}
+.dash-manage{background:var(--mint-soft);border:1px solid var(--mint);color:var(--mint);height:42px;padding:0 14px;border-radius:11px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:13px;flex:0 0 auto}
+.dash-manage:hover{background:var(--mint-grad);color:var(--mint-ink)}
+.dash-manage svg{width:18px;height:18px}
+.vtk-total-row{display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
+.vtk-total-row label{font-size:13px;font-weight:700;color:var(--txt)}
+.vtk-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+.vtk-table{width:100%;border-collapse:collapse;font-size:13px}
+.vtk-table th,.vtk-table td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:center}
+.vtk-table thead th{background:var(--panel-2);color:var(--txt-dim);font-weight:700;font-size:12px;white-space:nowrap}
+.vtk-table tbody th{text-align:left;color:var(--txt);font-weight:700;white-space:nowrap}
+.vtk-table tbody tr:last-child td,.vtk-table tbody tr:last-child th{border-bottom:0}
+.vtk-in{width:74px;background:var(--bg);border:1px solid var(--line-2);color:var(--txt);border-radius:8px;padding:7px 8px;font-size:13px;text-align:center;font-family:inherit;font-variant-numeric:tabular-nums}
+.vtk-in:focus{outline:none;border-color:var(--mint);box-shadow:0 0 0 2px var(--mint-soft)}
+.vtk-rowtot{font-weight:800;color:var(--txt-dim);font-variant-numeric:tabular-nums}
+.vtk-sum{margin-top:16px;padding:12px 14px;border:1px solid var(--line-2);border-radius:11px;background:var(--panel-2);font-size:13.5px;color:var(--txt-dim);font-variant-numeric:tabular-nums}
+.vtk-sum b{color:var(--txt)}
+.vtk-sum.over{border-color:var(--red-2);background:rgba(255,80,80,.08)}
+.vtk-warn{color:var(--red-2);font-weight:800}
 /* ---- Dashboard racer filter bar ---- */
 .dfilter{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
 .dfilter .df-field{display:flex;flex-direction:column;gap:4px}
@@ -2808,7 +2829,8 @@ const D_ICON = {
   cash:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>',
   file:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>',
   printer:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V2h12v7"/><rect width="12" height="8" x="6" y="14"/></svg>',
-  search:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>'
+  search:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>',
+  ticket:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg>'
 };
 const D_FIRST=['สมชาย','สมหญิง','ณัฐพงษ์','ปิยะ','กิตติ','อนุชา','วิชัย','ธนกร','ศักดิ์ชัย','พรทิพย์','จิราภรณ์','สุริยา','เอกชัย','ภูริ','ชนาธิป','ธีรศักดิ์','อภิสิทธิ์','ณัฐวุฒิ','ปกรณ์','วีระ'];
 const D_LAST=['ใจดี','รักษ์ไทย','ศรีสุข','ทองคำ','บุญมี','แสงทอง','วงศ์ไทย','พรหมมา','จันทร์เพ็ญ','มั่งมี','เกียรติศักดิ์','ไชยวงศ์','สุขสันต์','ผ่องใส','ยอดรัก','เจริญสุข','ธนาคาร','กล้าหาญ','รุ่งเรือง','พิทักษ์'];
@@ -2920,7 +2942,10 @@ function renderDash(){
   <div class="dash-wrap">
     <div class="dash-head">
       <div class="dash-title">Dashboard<small>SOUPED UP 2026 · ADMIN</small></div>
-      <button class="dash-logout" id="dashLogout" title="ออกจากระบบ">${D_ICON.logout}<span>ออกจากระบบ</span></button>
+      <div class="dash-head-actions">
+        <button class="dash-manage" id="dashVipTickets" title="จัดการบัตร VIP">${D_ICON.ticket}<span>จัดการบัตร VIP</span></button>
+        <button class="dash-logout" id="dashLogout" title="ออกจากระบบ">${D_ICON.logout}<span>ออกจากระบบ</span></button>
+      </div>
     </div>
     <div class="dash-source-tabs">
       <button data-dgroup="registration" class="${registration?'active':''}">ข้อมูลผู้สมัคร, นักแข่ง</button>
@@ -2936,6 +2961,7 @@ function renderDash(){
   </div>`;
   el('dashRoot').scrollTop=0;
   el('dashLogout').onclick=logoutDash;
+  el('dashVipTickets').onclick=openVipTickets;
   el('dashRoot').querySelectorAll('[data-dgroup]').forEach(b=>b.onclick=()=>{DASH.group=b.dataset.dgroup;renderDash();});
   if(registration){
     el('dashRoot').querySelectorAll('[data-dtab]').forEach(b=>b.onclick=()=>{DASH.tab=b.dataset.dtab;renderDash();});
@@ -3214,6 +3240,75 @@ function openDashEdit(tab,idx){
     el('dmBody').querySelectorAll('[data-ek]').forEach(inp=>{ r[inp.dataset.ek]=inp.value; });
     imgs.forEach(([k])=>{ r[k]=temp[k]; });
     closeDashModal(); renderDashTable(); toast('บันทึกข้อมูลแล้ว');
+  };
+}
+/* ---- VIP ticket inventory manager ---- */
+const VIP_TK_KEY='suvip_ticket_config';
+const VIP_PKGS=['p1','p2','p3'];
+function defaultVipTickets(){
+  const alloc={}; VIP_DAYS.forEach(d=>{alloc[d.id]={p1:100,p2:100,p3:100};});
+  return {total:900,alloc};
+}
+function loadVipTickets(){
+  try{
+    const o=JSON.parse(localStorage.getItem(VIP_TK_KEY)||'null');
+    if(o&&o.alloc){
+      const alloc={}; VIP_DAYS.forEach(d=>{alloc[d.id]={};VIP_PKGS.forEach(p=>{alloc[d.id][p]=Math.max(0,Number((o.alloc[d.id]||{})[p])||0);});});
+      return {total:Math.max(0,Number(o.total)||0),alloc};
+    }
+  }catch(e){}
+  return defaultVipTickets();
+}
+function saveVipTickets(cfg){try{localStorage.setItem(VIP_TK_KEY,JSON.stringify(cfg));}catch(e){}}
+function openVipTickets(){
+  const cfg=loadVipTickets();
+  const rows=VIP_DAYS.map(d=>`<tr>
+      <th scope="row">${esc(t(d.key))}</th>
+      ${VIP_PKGS.map(p=>`<td><input class="vtk-in" type="number" min="0" step="1" inputmode="numeric" data-day="${d.id}" data-pkg="${p}" value="${cfg.alloc[d.id][p]}"/></td>`).join('')}
+      <td class="vtk-rowtot" data-rowtot="${d.id}">0</td>
+    </tr>`).join('');
+  el('dmBody').innerHTML=`<h3>จัดการบัตร VIP</h3>
+    <div class="vtk-total-row">
+      <label for="vtkTotal">จำนวนบัตรทั้งหมด (Total tickets)</label>
+      <input class="control" id="vtkTotal" type="number" min="0" step="1" inputmode="numeric" value="${cfg.total}"/>
+    </div>
+    <div class="vtk-scroll"><table class="vtk-table">
+      <thead><tr><th>วัน \\ แพ็กเกจ</th>${VIP_PKGS.map(p=>`<th>${esc(t('vipx.'+p))}</th>`).join('')}<th>รวม</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>
+    <div class="vtk-sum" id="vtkSum"></div>
+    <div class="actions" style="margin-top:20px"><button class="btn btn-ghost" id="dmCancel">ยกเลิก</button><div class="spacer"></div><button class="btn btn-primary" id="dmSave">บันทึก</button></div>`;
+  const num=id=>Math.max(0,Math.floor(Number(id.value)||0));
+  const recalc=()=>{
+    const total=num(el('vtkTotal'));
+    let sum=0;
+    VIP_DAYS.forEach(d=>{
+      let rt=0;
+      VIP_PKGS.forEach(p=>{rt+=num(el('dmBody').querySelector(`[data-day="${d.id}"][data-pkg="${p}"]`));});
+      const cell=el('dmBody').querySelector(`[data-rowtot="${d.id}"]`);
+      if(cell)cell.textContent=rt.toLocaleString('th-TH');
+      sum+=rt;
+    });
+    const over=sum>total, remain=total-sum;
+    const sumEl=el('vtkSum');
+    sumEl.className='vtk-sum'+(over?' over':'');
+    sumEl.innerHTML=`รวมที่จัดสรร: <b>${sum.toLocaleString('th-TH')}</b> / ${total.toLocaleString('th-TH')} ใบ · `
+      +(over?`<span class="vtk-warn">เกินจำนวนบัตรทั้งหมด ${(sum-total).toLocaleString('th-TH')} ใบ</span>`
+             :`คงเหลือ <b>${remain.toLocaleString('th-TH')}</b> ใบ`);
+    el('dmSave').disabled=over;
+    return {total,over};
+  };
+  el('dmBody').querySelectorAll('.vtk-in,#vtkTotal').forEach(inp=>inp.addEventListener('input',recalc));
+  recalc();
+  el('dmBack').classList.add('open');
+  el('dmCancel').onclick=closeDashModal;
+  el('dmSave').onclick=()=>{
+    const r=recalc();
+    if(r.over){toast('จำนวนบัตรที่จัดสรรเกินจำนวนบัตรทั้งหมด');return;}
+    const alloc={};
+    VIP_DAYS.forEach(d=>{alloc[d.id]={};VIP_PKGS.forEach(p=>{alloc[d.id][p]=num(el('dmBody').querySelector(`[data-day="${d.id}"][data-pkg="${p}"]`));});});
+    saveVipTickets({total:r.total,alloc});
+    closeDashModal(); toast('บันทึกจำนวนบัตรแล้ว');
   };
 }
 function closeDashModal(){ el('dmBack').classList.remove('open'); }
