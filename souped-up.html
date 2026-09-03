@@ -309,6 +309,12 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .sum-car .sum-line.sub{padding:8px 0;border-bottom:0;font-size:13px}
 .sum-car .sum-line.sub .lab{color:var(--txt-faint)}
 .sum-car .sum-line.sub .val{color:var(--txt-dim)}
+.payment-countdown{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:18px 0;padding:16px 18px;border:1px solid rgba(255,180,60,.45);border-radius:12px;background:rgba(255,180,60,.08)}
+.payment-countdown .countdown-label{font-size:13px;color:var(--txt-dim)}
+.payment-countdown .countdown-time{font:800 26px/1 'Rajdhani',monospace;letter-spacing:2px;color:var(--amber);white-space:nowrap}
+.payment-countdown.expired{border-color:rgba(255,86,86,.5);background:rgba(255,86,86,.08)}
+.payment-countdown.expired .countdown-time{color:#ff6b6b}
+@media(max-width:520px){.payment-countdown{align-items:flex-start;flex-direction:column;gap:8px}}
 /* Receipt table (PDF) */
 .appdoc .rcpt-tbl{width:100%;border-collapse:collapse;margin-top:4px;font-size:13px}
 .appdoc .rcpt-tbl th{background:#f0f2f6;color:#3a4150;font-weight:700;text-align:left;padding:9px 10px;border-bottom:2px solid #0C142A;font-size:12px}
@@ -577,10 +583,6 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .rc-model .rc-model-val{font-size:19px;font-weight:800;color:var(--txt);letter-spacing:.3px;line-height:1.25}
 .rc-imgs{display:flex;gap:8px}
 .prof-empty{color:var(--txt-dim);text-align:center;padding:26px;font-size:14px}
-.home-banner{display:block;margin-top:18px;line-height:0;transition:transform .16s}
-.home-banner:hover{transform:translateY(-2px)}
-.home-banner img{display:block;width:100%;height:auto}
-.home-banner[hidden]{display:none}
 .choose-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:26px}
 @media(max-width:640px){.choose-grid{grid-template-columns:1fr}}
 .choose-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;background:var(--panel-2);border:1px solid var(--line);border-radius:18px;padding:40px 26px;cursor:pointer;transition:transform .16s,border-color .16s,box-shadow .16s;color:var(--txt);font-family:inherit}
@@ -702,10 +704,6 @@ body.vip-frame-mode>.wrap>.foot{display:none}
     <div class="speed-line"></div>
     <div class="card-pad" id="screen"></div>
   </div>
-  <!-- แบนเนอร์ VIP Village (แสดงเฉพาะหน้าแรก) ลิงก์ไปหน้า suvip เปิดแท็บใหม่ -->
-  <a id="homeBanner" class="home-banner" href="https://nidss.github.io/suvip/" target="_blank" rel="noopener" hidden>
-    <img src="asset/ticket.png" alt="Souped Up VIP Village" onerror="this.closest('#homeBanner').hidden=true"/>
-  </a>
   <div class="foot">© 2026 NIDSS · <span data-i18n="foot.rights">All rights reserved</span> · <a class="foot-checkin" href="checkin.html">Check-in</a></div>
 </div>
 
@@ -755,7 +753,7 @@ const I18N = {
     "foot.rights":"สงวนลิขสิทธิ์",
     /* steps */
     "step.auth":"สมาชิก","step.terms":"ข้อตกลง","step.applicant":"ผู้สมัคร","step.racer":"นักแข่ง",
-    "step.parking":"ที่จอดรถ","step.bank":"บัญชีรับเงินรางวัล","step.summary":"สรุปยอด","step.pay":"ชำระเงิน","step.done":"สำเร็จ",
+    "step.parking":"ที่จอดรถ","step.summary":"สรุปยอด","step.pay":"ชำระเงิน","step.done":"สำเร็จ",
     /* auth */
     "auth.eyebrow":"ยินดีต้อนรับ","auth.title":"เข้าร่วมการแข่งขัน",
     "auth.sub":"สมัครสมาชิกหรือเข้าสู่ระบบเพื่อลงทะเบียนการแข่งขัน Souped Up",
@@ -832,11 +830,14 @@ const I18N = {
     "f.accname":"ชื่อบัญชี (Name)","f.accsur":"นามสกุล (Surname)","opt.bank":"— เลือกธนาคาร —","bank.other":"อื่นๆ","bank.foreign":"สำหรับชาวต่างชาติ (International)",
     "fbk.ben.t":"ข้อมูลผู้รับเงิน (Beneficiary Information)","fbk.ben.name":"Beneficiary Name (ชื่อตรงตามบัญชี)","fbk.ben.addr":"Beneficiary Address (ที่อยู่ผู้รับเงิน)","fbk.ben.country":"Country (ประเทศ)",
     "fbk.bank.t":"ข้อมูลธนาคาร (Bank Information)","fbk.bank.name":"Bank Name (ชื่อธนาคาร)","fbk.bank.accno":"Account Number (เลขที่บัญชี)","fbk.bank.swift":"SWIFT Code (รหัส SWIFT)","fbk.bank.addr":"Bank Address (ที่อยู่ธนาคาร)","fbk.bank.country":"Bank Country (ประเทศของธนาคาร)",
+    "bk.account.type":"ประเภทบัญชีรับเงินรางวัล","bk.account.select":"— เลือกประเภทบัญชี —","bk.account.domestic":"บัญชีธนาคารไทย","bk.account.foreign":"บัญชีธนาคารต่างประเทศ (ชาวต่างชาติ)",
+    "bk.country":"ประเทศของธนาคาร","bk.intlbank":"ชื่อธนาคารต่างประเทศ","bk.swift":"SWIFT / BIC Code",
     /* summary */
     "sm.title":"สรุปยอดการลงทะเบียน","sm.sub":"ตรวจสอบรายการและยอดชำระ",
     "sm.entry":"ค่าสมัคร","sm.deposit":"ค่ามัดจำการแข่งขัน","sm.pit":"ค่าช่องจอด (Pit)","sm.privatepit":"พีทถาวร (Private Pit)",
     "sm.discount":"ส่วนลด","sm.total":"ยอดชำระทั้งหมด","sm.code.ph":"กรอกโค้ดส่วนลด","sm.code.apply":"ใช้โค้ด",
     "sm.code.ok":"ใช้โค้ดส่วนลดสำเร็จ","sm.code.bad":"โค้ดส่วนลดไม่ถูกต้อง",
+    "sm.paytime":"กรุณาชำระเงินภายใน 2 ชั่วโมง","sm.expired":"หมดเวลาชำระเงินแล้ว",
     /* payment */
     "py.title":"ชำระเงิน","py.sub":"เลือกวิธีการชำระเงิน",
     "py.card":"บัตรเครดิต","py.card.d":"Visa / Mastercard / JCB","py.qr":"QR / โอนเงิน","py.qr.d":"พร้อมเพย์ / โอนผ่านธนาคาร",
@@ -901,7 +902,7 @@ const I18N = {
     "brand.tag":"COMPETITION REGISTRATION",
     "foot.rights":"All rights reserved",
     "step.auth":"Account","step.terms":"Terms","step.applicant":"Applicant","step.racer":"Racer",
-    "step.parking":"Parking","step.bank":"Prize Account","step.summary":"Summary","step.pay":"Payment","step.done":"Done",
+    "step.parking":"Parking","step.summary":"Summary","step.pay":"Payment","step.done":"Done",
     "auth.eyebrow":"Welcome","auth.title":"Join The Competition",
     "auth.sub":"Register or sign in to enter the Souped Up competition",
     "tab.register":"Register","tab.login":"Sign In",
@@ -972,10 +973,13 @@ const I18N = {
     "f.accname":"Name","f.accsur":"Surname","opt.bank":"— Select bank —","bank.other":"Other","bank.foreign":"For foreigners (International)",
     "fbk.ben.t":"Beneficiary Information","fbk.ben.name":"Beneficiary Name","fbk.ben.addr":"Beneficiary Address","fbk.ben.country":"Country",
     "fbk.bank.t":"Bank Information","fbk.bank.name":"Bank Name","fbk.bank.accno":"Account Number","fbk.bank.swift":"SWIFT Code","fbk.bank.addr":"Bank Address","fbk.bank.country":"Bank Country",
+    "bk.account.type":"Prize account type","bk.account.select":"— Select account type —","bk.account.domestic":"Thai bank account","bk.account.foreign":"International bank account (foreigner)",
+    "bk.country":"Bank country","bk.intlbank":"International bank name","bk.swift":"SWIFT / BIC Code",
     "sm.title":"Registration Summary","sm.sub":"Review your items and amount due",
     "sm.entry":"Registration Fee","sm.deposit":"Competition Deposit","sm.pit":"Pit Fee","sm.privatepit":"Private Pit",
     "sm.discount":"Discount","sm.total":"Total Amount","sm.code.ph":"Enter discount code","sm.code.apply":"Apply",
     "sm.code.ok":"Discount code applied","sm.code.bad":"Invalid discount code",
+    "sm.paytime":"Please complete payment within 2 hours","sm.expired":"Payment time has expired",
     "py.title":"Payment","py.sub":"Choose a payment method",
     "py.card":"Credit Card","py.card.d":"Visa / Mastercard / JCB","py.qr":"QR / Transfer","py.qr.d":"PromptPay / Bank transfer",
     "py.tax":"Request a tax invoice","py.tax.name":"Name / Company","py.tax.taxid":"Tax ID",
@@ -1073,11 +1077,13 @@ const state = {
   discount:{code:"",amount:0},
   payMethod:"card",
   tax:false,
+  paymentDeadline:null,
   files:{},
   takenPits:[],
   vip:freshVipState('choose')
 };
-const STEPS = ["terms","racer","parking","bank","summary","pay","done"];
+let paymentCountdownTimer=null;
+const STEPS = ["terms","racer","parking","summary","pay","done"];
 
 /* ================= Helpers ================= */
 function t(k){return (I18N[state.lang][k]!==undefined?I18N[state.lang][k]:k);}
@@ -1090,10 +1096,10 @@ genTakenPits();
 
 /* ================= Render root ================= */
 function render(){
+  if(paymentCountdownTimer){clearInterval(paymentCountdownTimer);paymentCountdownTimer=null;}
   renderStepper();
   document.body.classList.toggle('vip-frame-mode',state.step==='vip');
   el('stepper').classList.toggle('hidden', state.step==='profile' || state.step==='auth' || state.step==='forgot' || state.step==='choose' || state.step==='onboard' || state.step==='vip' || state.step==='vipPay' || state.step==='vipDone');
-  const hb=el('homeBanner'); if(hb) hb.hidden = state.step!=='auth';
   const s=el("screen");
   s.innerHTML = SCREENS[state.step]();
   window.scrollTo({top:0,behavior:"smooth"});
@@ -1104,7 +1110,7 @@ function stepIndex(s){return STEPS.indexOf(s);}
 
 function renderStepper(){
   const cur=stepIndex(state.step);
-  const labels=[["terms","step.terms"],["racer","step.racer"],["parking","step.parking"],["bank","step.bank"],["summary","step.summary"],["pay","step.pay"],["done","step.done"]];
+  const labels=[["terms","step.terms"],["racer","step.racer"],["parking","step.parking"],["summary","step.summary"],["pay","step.pay"],["done","step.done"]];
   el("stepper").innerHTML = labels.map((l,i)=>{
     const cls = i<cur?"done":(i===cur?"active":"");
     return `<div class="st ${cls}">${esc(t(l[1]))}</div>`;
@@ -1196,6 +1202,7 @@ function clearMemberRegistrationData(){
   state.discount={code:"",amount:0};
   state.payMethod='card';
   state.tax=false;
+  state.paymentDeadline=null;
   state.taxInfo={name:'',id:'',addr:''};
   state.files={};
   state.result=null;
@@ -1420,8 +1427,8 @@ SCREEN_INIT.forgot = function(){
 };
 
 /* ---- CHOOSE (shown before onboarding for new/incomplete accounts) ---- */
-/* ซ่อนหน้า "คุณต้องการทำอะไร?" ไว้ก่อน (เผื่อเปิดกลับมาในอนาคต ให้ตั้งเป็น true) */
-const CHOOSE_ENABLED=false;
+/* หลังสมัครสมาชิก/เข้าสู่ระบบด้วยบัญชีใหม่ ให้เลือกเส้นทางนักแข่งหรือ VIP ก่อน */
+const CHOOSE_ENABLED=true;
 function hasPersonalInfo(){
   const a=state.applicant||{};
   return !!(a.a_name && a.a_surname && a.a_phone && a.a_email && a.a_idaddr);
@@ -1431,13 +1438,13 @@ function hasRefundAccount(){
   if(b.rf_bank==='__foreign__') return !!(b.rf_ben_name && b.rf_ben_country && b.rf_fbank_name && b.rf_fbank_accno && b.rf_swift);
   return !!(b.rf_bank && b.rf_accno && b.rf_accname && (b.rf_bank!=='__other__'||b.rf_bankother));
 }
-/* ปลายทางหลังสมัคร/เข้าสู่ระบบ (บัญชีใหม่): ถ้าซ่อน choose ให้เข้าสู่การลงทะเบียนนักแข่งตรงๆ */
+/* ปลายทางหลังสมัคร/เข้าสู่ระบบ (บัญชีใหม่) */
 function enterPostAuth(){
   if(CHOOSE_ENABLED){ go('choose'); return; }
   if(!hasPersonalInfo()){ state.pendingChoice='racer'; go('onboard'); }
   else openChosenAction('racer');
 }
-/* ปลายทางเมื่อจะย้อนกลับไปหน้า choose ที่ถูกซ่อน */
+/* ปลายทางเมื่อย้อนกลับจาก flow ที่เริ่มจากหน้าเลือก */
 function chooseBackTarget(){ return CHOOSE_ENABLED?'choose':'auth'; }
 SCREENS.choose = function(){
   return `
@@ -1479,6 +1486,8 @@ function startRacerRegistration(backTarget){
   state.racer={};
   state.racers=[newRacer()];
   state.files={};
+  Object.keys(state.bank).filter(key=>key.startsWith('pz_')).forEach(key=>delete state.bank[key]);
+  state.paymentDeadline=null;
   go('terms');
 }
 
@@ -1678,18 +1687,78 @@ function bindBankAccount(form,prefix){
   bank.onchange=apply;
   apply();
 }
+function prizeAccountNames(){
+  const rc=state.racers[0]||state.racer||{};
+  return {name:rc.r_rname||'',surname:rc.r_rsurname||''};
+}
+function syncPrizeAccountNames(){
+  const n=prizeAccountNames();
+  state.bank.pz_accname=n.name;state.bank.pz_accsur=n.surname;
+  state.bank.pz_intl_accname=n.name;state.bank.pz_intl_accsur=n.surname;
+  ['pz_accname','pz_intl_accname'].forEach(id=>{const input=el(id);if(input)input.value=n.name;});
+  ['pz_accsur','pz_intl_accsur'].forEach(id=>{const input=el(id);if(input)input.value=n.surname;});
+}
+function prizeAccountFields(){
+  const b=state.bank, accountType=b.pz_type||'domestic', n=prizeAccountNames();
+  b.pz_accname=n.name;b.pz_accsur=n.surname;b.pz_intl_accname=n.name;b.pz_intl_accsur=n.surname;
+  return `
+    <hr style="border:0;border-top:1px solid var(--line);margin:24px 0"/>
+    <h3 style="margin:6px 0 2px;font-size:16px">${esc(t('bk.prize.t'))}</h3>
+    <p class="page-sub" style="margin-bottom:14px;font-size:12.5px">${esc(t('bk.prize.s'))}</p>
+    ${fieldSelect({id:'pz_type',labelKey:'bk.account.type',req:true,full:true,value:accountType,placeholderKey:'bk.account.select',options:[
+      {v:'domestic',l:t('bk.account.domestic')},{v:'foreign',l:t('bk.account.foreign')}
+    ]})}
+    <div data-prize-account="domestic" class="${accountType==='domestic'?'':'hidden'}">${bankAccountFields('pz')}</div>
+    <div data-prize-account="foreign" class="${accountType==='foreign'?'':'hidden'}">
+      <div class="grid">
+        ${fieldText({id:'pz_country',labelKey:'bk.country',req:true,value:b.pz_country||''})}
+        ${fieldText({id:'pz_bankintl',labelKey:'bk.intlbank',req:true,value:b.pz_bankintl||''})}
+      </div>
+      <div class="grid">
+        ${fieldText({id:'pz_swift',labelKey:'bk.swift',req:true,value:b.pz_swift||''})}
+        ${fieldText({id:'pz_intl_accno',labelKey:'f.accno',req:true,value:b.pz_intl_accno||''})}
+      </div>
+      <div class="grid">
+        ${fieldText({id:'pz_intl_accname',labelKey:'f.accname',req:true,value:n.name,readonly:true})}
+        ${fieldText({id:'pz_intl_accsur',labelKey:'f.accsur',req:true,value:n.surname,readonly:true})}
+      </div>
+    </div>`;
+}
+function bindPrizeAccount(form){
+  bindBankAccount(form,'pz');
+  const sections=[...form.querySelectorAll('[data-prize-account]')];
+  sections.forEach(section=>section.querySelectorAll('input,select').forEach(input=>input.setAttribute('data-prize-req','')));
+  const applyAccountType=()=>{
+    const type=(el('pz_type')||{}).value||'domestic';
+    state.bank.pz_type=type;
+    sections.forEach(section=>{
+      const active=section.dataset.prizeAccount===type;
+      section.classList.toggle('hidden',!active);
+      section.querySelectorAll('[data-prize-req]').forEach(input=>{
+        const required=active&&(input.id!=='pz_bankother'||(el('pz_bank')||{}).value==='__other__');
+        required?input.setAttribute('data-req',''):input.removeAttribute('data-req');
+      });
+      if(!active)section.querySelectorAll('.invalid').forEach(field=>field.classList.remove('invalid'));
+    });
+  };
+  const typeSelect=el('pz_type');if(typeSelect)typeSelect.onchange=applyAccountType;
+  form.querySelectorAll('[data-rk="r_rname"],[data-rk="r_rsurname"]').forEach(input=>input.addEventListener('input',()=>{collectRacers();syncPrizeAccountNames();}));
+  applyAccountType();syncPrizeAccountNames();
+}
+function savePrizeAccount(form){
+  form.querySelectorAll('input:not([type=file]):not([type=checkbox]),select,textarea').forEach(input=>{
+    if(input.id&&input.id.startsWith('pz_'))state.bank[input.id]=input.value;
+  });
+  syncPrizeAccountNames();
+}
 function applicantFormInner(opts={}){
   const a=state.applicant;
   const applicantType=a.a_type||'person';
   const showRefund=opts.showRefund!==false;
   return `
-    <div class="field full">
-      <label>${esc(t('ap.type'))}<span class="req">*</span></label>
-      <div class="applicant-type">
-        <label class="type-option"><input type="radio" name="a_type" value="person" ${applicantType==='person'?'checked':''}/> ${esc(t('ap.type.person'))}</label>
-        <label class="type-option"><input type="radio" name="a_type" value="company" ${applicantType==='company'?'checked':''}/> ${esc(t('ap.type.company'))}</label>
-      </div>
-    </div>
+    ${fieldSelect({id:'a_type',labelKey:'ap.type',req:true,full:true,value:applicantType,placeholderKey:'rc.applicant.select',options:[
+      {v:'person',l:t('ap.type.person')},{v:'company',l:t('ap.type.company')}
+    ]})}
     <div data-app-type="person" class="${applicantType==='person'?'':'hidden'}" style="display:flex;flex-direction:column;gap:16px">
       <div class="grid">
         ${fieldText({id:'a_person_name',labelKey:'f.name',req:true,value:a.a_person_name||a.a_name||''})}
@@ -1736,8 +1805,8 @@ function bindApplicantForm(form){
   const typeSections=[...form.querySelectorAll('[data-app-type]')];
   typeSections.forEach(section=>section.querySelectorAll('[data-req]').forEach(inp=>inp.setAttribute('data-type-req','')));
   const applyApplicantType=()=>{
-    const checked=form.querySelector('input[name="a_type"]:checked');
-    const type=checked?checked.value:'person';
+    const select=el('a_type');
+    const type=select?select.value:'person';
     state.applicant.a_type=type;
     typeSections.forEach(section=>{
       const active=section.dataset.appType===type;
@@ -1767,7 +1836,7 @@ function bindApplicantForm(form){
     applyBranchRequirement();
   };
   const applyBranchRequirement=()=>{
-    const type=(form.querySelector('input[name="a_type"]:checked')||{}).value||'person';
+    const type=(el('a_type')||{}).value||'person';
     const branch=el('a_branch'), wrap=form.querySelector('[data-branch-wrap]'), input=el('a_branchno');
     if(!branch||!wrap||!input)return;
     const required=type==='company'&&branch.value==='branch';
@@ -1776,7 +1845,7 @@ function bindApplicantForm(form){
   };
   // ซิงก์ชื่อ-นามสกุลผู้สมัคร -> บัญชีคืนเงินมัดจำ (อ่านอย่างเดียว) แบบเรียลไทม์
   const syncRefundName=()=>{
-    const type=(form.querySelector('input[name="a_type"]:checked')||{}).value||'person';
+    const type=(el('a_type')||{}).value||'person';
     const nameInp=type==='company'?el('a_contact_name'):el('a_person_name');
     const surInp=type==='company'?el('a_contact_surname'):el('a_person_surname');
     const rfName=el('rf_accname'), rfSur=el('rf_accsur');
@@ -1786,7 +1855,7 @@ function bindApplicantForm(form){
   ['a_person_name','a_person_surname','a_contact_name','a_contact_surname'].forEach(id=>{
     const inp=el(id); if(inp)inp.addEventListener('input',syncRefundName);
   });
-  form.querySelectorAll('input[name="a_type"]').forEach(radio=>radio.onchange=applyApplicantType);
+  const applicantTypeSelect=el('a_type');if(applicantTypeSelect)applicantTypeSelect.onchange=applyApplicantType;
   const branch=el('a_branch');if(branch)branch.onchange=applyBranchRequirement;
   applyApplicantType();
 }
@@ -1811,8 +1880,9 @@ SCREEN_INIT.applicant = function(){
 };
 function saveApplicant(form){
   collect(form,state.applicant);
-  const selected=form.querySelector('input[name="a_type"]:checked');
-  state.applicant.a_type=selected?selected.value:'person';
+  state.applicant.a_type=(el('a_type')||{}).value||'person';
+  (state.racers||[]).forEach(racer=>racer.applicantType=state.applicant.a_type);
+  if(state.profile&&Array.isArray(state.profile.racers))state.profile.racers.forEach(racer=>racer.applicantType=state.applicant.a_type);
   if(state.applicant.a_type==='company'){
     state.applicant.a_name=state.applicant.a_contact_name||'';
     state.applicant.a_surname=state.applicant.a_contact_surname||'';
@@ -1852,7 +1922,7 @@ function restoreApplicantUpload(){
 
 /* ---- RACER ---- */
 let RACER_SEQ=0;
-function newRacer(){return {id:'rc'+(++RACER_SEQ), applicantType:'',r_rname:'',r_rsurname:'',r_idaddr:'',r_team:'',r_carno:'',entries:[{cls:'',engine:'',carno:''}],collapsed:false};}
+function newRacer(){return {id:'rc'+(++RACER_SEQ), applicantType:state.applicant.a_type||'person',r_rname:'',r_rsurname:'',r_idaddr:'',r_team:'',r_carno:'',entries:[{cls:'',engine:'',carno:''}],collapsed:false};}
 function ensureRacers(){
   if(!Array.isArray(state.racers)||!state.racers.length)state.racers=[newRacer()];
   state.racers=state.racers.slice(0,1);
@@ -1901,19 +1971,9 @@ function classSectionInner(rc){
 function racerCardHTML(rc){
   const rid=rc.id;
   const fld=(id,labelKey,val)=>`<div class="field" data-field="${id}"><label>${esc(t(labelKey))}<span class="req">*</span></label><input class="control" id="${id}" data-rk="${id.split('__')[0]}" data-req value="${esc(val||'')}"/><div class="err-msg">${esc(t('v.required'))}</div></div>`;
-  const applicantTypeField=state.account&&state.account.demoKind==='existing'?`<div class="field full" data-field="r_applicant_type__${rid}">
-    <label>${esc(t('rc.applicant.type'))}<span class="req">*</span></label>
-    <select class="control" id="r_applicant_type__${rid}" data-rk="applicantType" data-req>
-      <option value="">${esc(t('rc.applicant.select'))}</option>
-      <option value="person" ${rc.applicantType==='person'?'selected':''}>${esc(t('rc.applicant.person'))}</option>
-      <option value="company" ${rc.applicantType==='company'?'selected':''}>${esc(t('rc.applicant.company'))}</option>
-    </select>
-    <div class="err-msg">${esc(t('v.required'))}</div>
-  </div>`:'';
   return `
   <div class="racer-card2" data-rid="${rid}">
     <div class="rc2-body">
-      ${applicantTypeField}
       <div class="grid">
         ${fld('r_rname__'+rid,'f.rname',rc.r_rname)}
         ${fld('r_rsurname__'+rid,'f.rsurname',rc.r_rsurname)}
@@ -1928,6 +1988,7 @@ function racerCardHTML(rc){
       <div class="class-section" id="cls_${rid}">${classSectionInner(rc)}</div>
       ${fieldUpload({id:'r_idcard__'+rid,labelKey:'f.idcard.rc',req:true})}
       ${fieldUpload({id:'r_photo__'+rid,labelKey:'f.rphoto',req:true})}
+      ${prizeAccountFields()}
     </div>
   </div>`;
 }
@@ -1966,7 +2027,7 @@ function collectRacers(){
 function syncPrimaryRacer(){
   const rc=state.racers[0]||{entries:[]}, es=(rc.entries||[]).filter(e=>e.cls);
   state.racer=Object.assign({}, state.racer, {
-    r_applicant_type:rc.applicantType||'',
+    r_applicant_type:state.applicant.a_type||'',
     r_rname:rc.r_rname||'', r_rsurname:rc.r_rsurname||'', r_idaddr:rc.r_idaddr||'',
     r_team:rc.r_team||'', r_carno:es.map(e=>e.carno).filter(Boolean).join(', ')||'',
     r_model: es.map(e=>e.cls).join(', ')||'-',
@@ -1994,8 +2055,9 @@ SCREEN_INIT.racer = function(){
   const form=el('rcForm');
   bindUploads(form);
   bindRacerCards(form);
-  form.querySelector('[data-back]').onclick=()=>{collectRacers();syncPrimaryRacer();go(state.addRacerMode?'profile':'applicant');};
-  form.onsubmit=(e)=>{e.preventDefault();collectRacers();if(!validateRacers(form)){toast(t('v.fixerr'));return;}syncPrimaryRacer();go('parking');};
+  bindPrizeAccount(form);
+  form.querySelector('[data-back]').onclick=()=>{collectRacers();savePrizeAccount(form);syncPrimaryRacer();go(state.addRacerMode?'profile':'applicant');};
+  form.onsubmit=(e)=>{e.preventDefault();collectRacers();syncPrizeAccountNames();if(!validateRacers(form)){toast(t('v.fixerr'));return;}savePrizeAccount(form);syncPrimaryRacer();go('parking');};
 };
 
 /* ---- PARKING ---- */
@@ -2138,7 +2200,7 @@ SCREENS.parking = function(){
     <div class="actions">
       <button type="button" class="btn btn-ghost" data-back>${esc(t('btn.back'))}</button>
       <div class="spacer"></div>
-      <button type="submit" class="btn btn-primary">${esc(t('btn.next.bank'))}</button>
+      <button type="submit" class="btn btn-primary">${esc(t('btn.summary'))}</button>
     </div>
   </form>`;
 };
@@ -2199,7 +2261,7 @@ SCREEN_INIT.parking = function(){
     requestAnimationFrame(()=>drawLotArrows(el('mapModalBody').querySelector('.lot')));
   };
   form.querySelector('[data-back]').onclick=()=>{savePark(form);go('racer');};
-  form.onsubmit=(e)=>{e.preventDefault();savePark(form);if(!pkValidate()){toast(t('v.pkall'));return;}go('bank');};
+  form.onsubmit=(e)=>{e.preventDefault();savePark(form);if(!pkValidate()){toast(t('v.pkall'));return;}go('summary');};
 };
 function closeMapModal(){ const m=el('mapModalBack'); if(m)m.classList.remove('open'); }
 function savePark(form){
@@ -2223,40 +2285,13 @@ function openBookerModal(s){
   el('dmBack').classList.add('open');
 }
 
-/* ---- BANK ---- */
-SCREENS.bank = function(){
-  const b=state.bank;
-  const rc=state.racers[0]||state.racer||{};
-  b.pz_accname=rc.r_rname||'';
-  b.pz_accsur=rc.r_rsurname||'';
-  return `
-  <h1 class="page-title">${esc(t('bk.title'))}</h1>
-  <p class="page-sub">${esc(t('bk.sub'))}</p>
-  <form id="bkForm" novalidate>
-    <h3 style="margin:6px 0 2px;font-size:16px">${esc(t('bk.prize.t'))}</h3>
-    <p class="page-sub" style="margin-bottom:14px;font-size:12.5px">${esc(t('bk.prize.s'))}</p>
-    ${bankAccountFields('pz')}
-    <div class="actions">
-      <button type="button" class="btn btn-ghost" data-back>${esc(t('btn.back'))}</button>
-      <div class="spacer"></div>
-      <button type="submit" class="btn btn-primary">${esc(t('btn.summary'))}</button>
-    </div>
-  </form>`;
-};
-SCREEN_INIT.bank = function(){
-  const form=el('bkForm');
-  bindBankAccount(form,'pz');
-  form.querySelector('[data-back]').onclick=()=>{saveBank(form);go('parking');};
-  form.onsubmit=(e)=>{e.preventDefault();if(!validateScreen(form)){toast(t('v.fixerr'));return;}saveBank(form);go('summary');};
-};
-function saveBank(form){ collect(form,state.bank); }
-
 /* ---- SUMMARY ---- */
 function calcTotal(){
   const cars=pkSlots().length, perCar=PRICES.entry+PRICES.deposit;
   return {cars, perCar, total:perCar*cars};
 }
 SCREENS.summary = function(){
+  if(!state.paymentDeadline)state.paymentDeadline=Date.now()+(2*60*60*1000);
   const c=calcTotal(), slots=pkSlots();
   const cars=slots.map((s,i)=>`
     <div class="sum-car">
@@ -2273,6 +2308,10 @@ SCREENS.summary = function(){
   <p class="page-sub">${esc(t('sm.sub'))}</p>
   ${cars}
   <div class="sum-line total"><span class="lab">${esc(t('sm.total'))} · ${c.cars} ${esc(t('pk.book.car'))}</span><span class="val">${esc(money(c.total))}</span></div>
+  <div class="payment-countdown" id="paymentCountdown">
+    <div class="countdown-label" id="paymentCountdownLabel">${esc(t('sm.paytime'))}</div>
+    <div class="countdown-time" id="paymentCountdownTime">02:00:00</div>
+  </div>
 
   <label class="checkbox" style="margin:18px 0 4px"><input type="checkbox" id="taxCb" ${state.tax?'checked':''}/> ${esc(t('py.tax'))}</label>
   <div id="taxFields" class="${state.tax?'':'hidden'}">
@@ -2302,10 +2341,23 @@ function collectTax(){
   state.tax=cb.checked;
   state.taxInfo={name:(el('tax_name')||{}).value||'',id:(el('tax_id')||{}).value||'',addr:(el('tax_addr')||{}).value||''};
 }
+function paintPaymentCountdown(){
+  const box=el('paymentCountdown'), time=el('paymentCountdownTime'), label=el('paymentCountdownLabel'), pay=el('toPay');
+  if(!box||!time)return;
+  const left=Math.max(0,(state.paymentDeadline||0)-Date.now()), total=Math.ceil(left/1000);
+  const hours=Math.floor(total/3600), minutes=Math.floor((total%3600)/60), seconds=total%60;
+  time.textContent=[hours,minutes,seconds].map(n=>String(n).padStart(2,'0')).join(':');
+  const expired=left<=0;
+  box.classList.toggle('expired',expired);
+  if(label)label.textContent=t(expired?'sm.expired':'sm.paytime');
+  if(pay)pay.disabled=expired;
+  if(expired&&paymentCountdownTimer){clearInterval(paymentCountdownTimer);paymentCountdownTimer=null;}
+}
 SCREEN_INIT.summary = function(){
   el('taxCb').onchange=(e)=>{state.tax=e.target.checked;el('taxFields').classList.toggle('hidden',!e.target.checked);};
-  el('screen').querySelector('[data-back]').onclick=()=>{collectTax();go('bank');};
+  el('screen').querySelector('[data-back]').onclick=()=>{collectTax();go('parking');};
   el('toPay').onclick=()=>{collectTax();go('pay');};
+  paintPaymentCountdown();paymentCountdownTimer=setInterval(paintPaymentCountdown,1000);
 };
 
 /* ---- PAYMENT ---- */
@@ -2418,7 +2470,7 @@ function buildProfileFromReg(){
     idImg:a.idImg||IMG_IDCARD});
   const racers=(state.racers||[]).filter(rc=>rc.r_rname||rc.r_rsurname||(rc.entries||[]).some(e=>e.cls)).map(rc=>{
     const es=(rc.entries||[]).filter(e=>e.cls);
-    return {applicantType:rc.applicantType||'',r_rname:rc.r_rname||'',r_rsurname:rc.r_rsurname||'',r_idaddr:rc.r_idaddr||'',
+    return {applicantType:a.a_type||'person',r_rname:rc.r_rname||'',r_rsurname:rc.r_rsurname||'',r_idaddr:rc.r_idaddr||'',
       r_vehicle:es.map(e=>e.cls+': '+(e.engine||'-')).join(' · ')||'-',r_model:es.map(e=>e.cls).join(', ')||'-',
       r_team:rc.r_team||'',r_carno:es.map(e=>e.carno).filter(Boolean).join(', ')||'-',idImg:IMG_IDCARD,photo:IMG_RACER};
   });
@@ -2556,11 +2608,6 @@ SCREENS.done = function(){
       <div class="r-row"><span class="rl">${esc(t('dn.racer'))}</span><span class="rv">${esc(r.racer||'-')}</span></div>
       <div class="r-row"><span class="rl">${esc(t('dn.comp'))}</span><span class="rv">${esc(r.model||'-')}</span></div>
       <div class="r-row"><span class="rl">${esc(t('dn.amount'))}</span><span class="rv" style="color:var(--amber)">${esc(money(r.amount||0))}</span></div>
-      <div class="r-qr">
-        <div class="r-qr-t">${esc(t('dn.qr'))}</div>
-        <div class="r-qr-img">${qrCodeSvg(checkinPayload(r.ref,{type:'racer',name:r.racer,model:r.model}),160)}</div>
-        <div class="r-qr-cap">${esc(t('dn.qr.cap'))}</div>
-      </div>
     </div>
     <div class="actions" style="justify-content:center;flex-wrap:wrap">
       <button class="btn btn-ghost" id="dnReceipt">${D_ICON.printer} ${esc(t('dn.receipt'))}</button>
@@ -2571,9 +2618,9 @@ SCREENS.done = function(){
 /* ================= MY PROFILE ================= */
 const PLUS_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:-3px"><path d="M5 12h14"/><path d="M12 5v14"/></svg>';
 function pfAddr(){return (10+Math.floor(Math.random()*900))+' หมู่ '+(1+Math.floor(Math.random()*15))+' จ.'+dRnd(D_PROV);}
-function genProfRacer(i){
+function genProfRacer(i,applicantType){
   const fn=dRnd(D_FIRST),ln=dRnd(D_LAST),carno=1+Math.floor(Math.random()*120);
-  return {applicantType:i%2?'company':'person',r_rname:fn,r_rsurname:ln,r_idaddr:pfAddr(),r_vehicle:dRnd(D_VEH),r_model:dRnd(MODELS.th),r_team:dRnd(D_TEAM),r_carno:String(carno),
+  return {applicantType:applicantType||'person',r_rname:fn,r_rsurname:ln,r_idaddr:pfAddr(),r_vehicle:dRnd(D_VEH),r_model:dRnd(MODELS.th),r_team:dRnd(D_TEAM),r_carno:String(carno),
     idImg:IMG_IDCARD,photo:IMG_RACER};
 }
 function buildProfile(acct){
@@ -2584,7 +2631,7 @@ function buildProfile(acct){
     a_email:(acct&&acct.email)||'you@email.com',
     chan_line_on:true,chan_line:'soupedup_company',chan_wechat_on:false,chan_wechat:'',chan_whatsapp_on:false,chan_whatsapp:'',
     companyDoc:{name:'company-certificate.pdf',data:''}};
-  const racers=[genProfRacer(0),genProfRacer(1)];
+  const racers=[genProfRacer(0,ap.a_type),genProfRacer(1,ap.a_type)];
   const history=racers.map((r,i)=>({ref:'SU26-'+Math.random().toString(36).slice(2,7).toUpperCase()+'-'+(1000+Math.floor(Math.random()*9000)),
     racer:r.r_rname+' '+r.r_rsurname,model:r.r_model,carno:r.r_carno,date:'2026-0'+(2+i)+'-'+dPad(8+i*5),amount:17000,status:'paid'}));
   return {applicant:ap,racers,history,vips:[genVip(0)]};
@@ -2675,7 +2722,6 @@ function profileHistoryReceiptPdfHTML(h,p){
     <div class="ad-top"><div class="ad-brand"><img class="ad-logo" src="asset/logo-main-b.png" alt="SOUPED UP 2026"/><div class="ad-sub">ใบเสร็จรับเงินชั่วคราว · PROVISIONAL RECEIPT</div></div><div class="ad-meta"><div>${state.lang==='th'?'เลขที่ใบเสร็จ':'Receipt No.'}</div><div class="ad-ref">${esc(h.ref||'')}</div><div style="margin-top:8px">${esc(t('hist.date'))} <b>${esc(h.date||'-')}</b></div><div>${esc(t('hist.status'))} <b style="color:#1f9d55">${esc(t('hist.paid'))}</b></div></div></div>
     <div class="ad-sec"><div class="ad-sec-h">${state.lang==='th'?'ข้อมูลผู้ชำระเงิน':'Payer Information'}</div><div class="ad-grid">${info.join('')}</div></div>
     <div class="ad-sec"><div class="ad-sec-h">${state.lang==='th'?'รายการชำระเงิน':'Payment Details'}</div><table class="rcpt-tbl"><thead><tr><th>#</th><th>${esc(t('hist.racer'))}</th><th>${esc(t('hist.carno'))}</th><th>${esc(t('hist.model'))}</th><th class="num">${esc(t('hist.amount'))}</th></tr></thead><tbody><tr><td>1</td><td>${esc(h.racer||'-')}</td><td>${h.carno?'#'+esc(h.carno):'-'}</td><td>${esc(h.model||'-')}</td><td class="num">${esc(money(h.amount||0))}</td></tr></tbody><tfoot><tr><td colspan="4" class="tot-l">${esc(t('dn.amount'))}</td><td class="num tot-v">${esc(money(h.amount||0))}</td></tr></tfoot></table></div>
-    ${checkinQrBlock(h.ref,{type:'racer',name:h.racer,model:h.model,carno:h.carno})}
     <div class="ad-foot"><span>Souped Up 2026 · NIDSS</span><span class="ad-demo">DEMO</span></div>
   </div></div>`;
 }
@@ -2814,9 +2860,8 @@ function setLang(lang){
 }
 function persistCurrentForm(){
   const form=el('apForm')||el('obForm')||el('apInfoForm'); if(form)saveApplicant(form);
-  const rf=el('rcForm'); if(rf)collectRacers();
+  const rf=el('rcForm'); if(rf){collectRacers();savePrizeAccount(rf);}
   const pf=el('pkForm'); if(pf)savePark(pf);
-  const bf=el('bkForm'); if(bf)saveBank(bf);
   if(el('taxCb'))collectTax();
 }
 
@@ -3286,7 +3331,6 @@ function receiptPdfHTML(){
         <tfoot><tr><td colspan="6" class="tot-l">ยอดชำระทั้งหมด (${slots.length} คัน)</td><td class="num tot-v">${esc(money(c.total))}</td></tr></tfoot>
       </table>
     </div>
-    ${checkinQrBlock(r.ref,{type:'racer',name:r.racer||slots.map(s=>s.name).filter(Boolean).join(', '),model:r.model||slots.map(s=>s.cls).filter(Boolean).join(', '),carno:slots.map(s=>s.carno).filter(Boolean).join(', ')})}
     <div class="ad-foot"><span>Souped Up 2026 · ระบบลงทะเบียนการแข่งขัน · NIDSS</span><span class="ad-demo">เอกสารตัวอย่าง (DEMO)</span></div>
   </div></div>`;
 }
