@@ -456,10 +456,19 @@ select.control{appearance:none;background-image:url("data:image/svg+xml;utf8,<sv
 .vtk-in{width:74px;background:var(--bg);border:1px solid var(--line-2);color:var(--txt);border-radius:8px;padding:7px 8px;font-size:13px;text-align:center;font-family:inherit;font-variant-numeric:tabular-nums}
 .vtk-in:focus{outline:none;border-color:var(--mint);box-shadow:0 0 0 2px var(--mint-soft)}
 .vtk-rowtot{font-weight:800;color:var(--txt-dim);font-variant-numeric:tabular-nums}
-.vtk-sum{margin-top:16px;padding:12px 14px;border:1px solid var(--line-2);border-radius:11px;background:var(--panel-2);font-size:13.5px;color:var(--txt-dim);font-variant-numeric:tabular-nums}
-.vtk-sum b{color:var(--txt)}
-.vtk-sum.over{border-color:var(--red-2);background:rgba(255,80,80,.08)}
-.vtk-warn{color:var(--red-2);font-weight:800}
+.vtk-sum{margin-top:18px;padding:16px;border:1px solid var(--mint);border-radius:14px;background:linear-gradient(180deg,var(--mint-soft),var(--panel-2));box-shadow:0 6px 20px var(--mint-glow)}
+.vtk-sum.over{border-color:var(--red-2);background:rgba(255,80,80,.1);box-shadow:0 6px 20px rgba(255,80,80,.2)}
+.vtk-sum-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center}
+.vtk-stat{display:flex;flex-direction:column;gap:5px;padding:4px 2px;position:relative}
+.vtk-stat+.vtk-stat::before{content:"";position:absolute;left:-4px;top:18%;height:64%;width:1px;background:var(--line-2)}
+.vtk-stat-lab{font-size:12px;font-weight:700;color:var(--txt-dim);letter-spacing:.3px}
+.vtk-stat-val{font-size:clamp(24px,6vw,32px);font-weight:800;letter-spacing:.5px;line-height:1.05;font-variant-numeric:tabular-nums;color:var(--txt)}
+.vtk-stat-val small{font-size:13px;font-weight:700;color:var(--txt-dim);margin-left:3px}
+.vtk-stat.vtk-alloc .vtk-stat-val{color:var(--mint)}
+.vtk-stat.vtk-remain .vtk-stat-val{color:var(--lime)}
+.vtk-sum.over .vtk-stat.vtk-remain .vtk-stat-val{color:var(--red-2)}
+.vtk-warn-line{margin-top:13px;padding-top:13px;border-top:1px solid rgba(255,80,80,.32);color:var(--red-2);font-weight:800;font-size:13.5px;text-align:center;display:flex;align-items:center;justify-content:center;gap:7px}
+.vtk-warn-line svg{width:17px;height:17px;flex:0 0 auto}
 /* ---- Dashboard racer filter bar ---- */
 .dfilter{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
 .dfilter .df-field{display:flex;flex-direction:column;gap:4px}
@@ -3290,11 +3299,16 @@ function openVipTickets(){
       sum+=rt;
     });
     const over=sum>total, remain=total-sum;
+    const th=n=>n.toLocaleString('th-TH');
     const sumEl=el('vtkSum');
     sumEl.className='vtk-sum'+(over?' over':'');
-    sumEl.innerHTML=`รวมที่จัดสรร: <b>${sum.toLocaleString('th-TH')}</b> / ${total.toLocaleString('th-TH')} ใบ · `
-      +(over?`<span class="vtk-warn">เกินจำนวนบัตรทั้งหมด ${(sum-total).toLocaleString('th-TH')} ใบ</span>`
-             :`คงเหลือ <b>${remain.toLocaleString('th-TH')}</b> ใบ`);
+    sumEl.innerHTML=`
+      <div class="vtk-sum-stats">
+        <div class="vtk-stat vtk-alloc"><span class="vtk-stat-lab">จัดสรรแล้ว</span><span class="vtk-stat-val">${th(sum)}<small>ใบ</small></span></div>
+        <div class="vtk-stat"><span class="vtk-stat-lab">บัตรทั้งหมด</span><span class="vtk-stat-val">${th(total)}<small>ใบ</small></span></div>
+        <div class="vtk-stat vtk-remain"><span class="vtk-stat-lab">${over?'เกินโควตา':'คงเหลือ'}</span><span class="vtk-stat-val">${th(Math.abs(remain))}<small>ใบ</small></span></div>
+      </div>
+      ${over?`<div class="vtk-warn-line"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>จัดสรรเกินจำนวนบัตรทั้งหมด กรุณาปรับให้ไม่เกิน ${th(total)} ใบ</div>`:''}`;
     el('dmSave').disabled=over;
     return {total,over};
   };
